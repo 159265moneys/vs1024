@@ -1,1 +1,6 @@
 Unity/
+node_modules/
+ios/
+android/
+www/
+.DS_Store

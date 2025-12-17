@@ -1,0 +1,8 @@
+{
+  "appId": "com.vs1024.game",
+  "appName": "VS1024",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
