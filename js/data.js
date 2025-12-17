@@ -6,8 +6,8 @@
 const GameData = {
     // デフォルトデータ
     defaults: {
-        crystal: 1000,  // 初期クリスタル
-        sp: 1000,       // 初期SP
+        crystal: 50000,  // 初期クリスタル（デバッグ用）
+        sp: 50000,       // 初期SP（デバッグ用）
         highestStage: 0,
         totalDamage: 0,
         clearedStages: [],
