@@ -1,17 +1,19 @@
 /* ========================================
-   対戦型 2048 - スタイルシート v2.5
-   スキル: 合成時5%ランダム発動
+   VS1024 - スタイルシート v3.0
+   タブUI + 新システム対応
    ======================================== */
 
 :root {
     --bg-primary: #0a0a0f;
     --bg-secondary: #12121a;
     --bg-card: #1a1a25;
+    --bg-card-hover: #252535;
     --accent-cyan: #00f5ff;
     --accent-pink: #ff00aa;
     --accent-yellow: #ffd700;
     --accent-green: #00ff88;
     --accent-red: #ff3366;
+    --accent-purple: #aa55ff;
     --text-primary: #ffffff;
     --text-secondary: #8888aa;
     
@@ -26,6 +28,9 @@
     --tile-512: #edc53f;
     --tile-1024: #edc22e;
     --tile-2048: #3c3a32;
+    
+    --tab-height: 60px;
+    --header-height: 50px;
 }
 
 html, body {
@@ -52,7 +57,895 @@ body {
 }
 
 /* ========================================
-   画面管理
+   アプリコンテナ
+   ======================================== */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(var(--vh, 1vh) * 100);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   ヘッダー（通貨表示）
+   ======================================== */
+.app-header {
+    height: var(--header-height);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 15px;
+    flex-shrink: 0;
+}
+
+.currency-display {
+    display: flex;
+    gap: 15px;
+}
+
+.currency {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.currency.crystal {
+    border: 1px solid var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+.currency.sp {
+    border: 1px solid var(--accent-yellow);
+    color: var(--accent-yellow);
+}
+
+.currency-icon {
+    font-size: 1rem;
+}
+
+/* ========================================
+   タブコンテンツエリア
+   ======================================== */
+.tab-content-area {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.tab-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+.tab-inner {
+    padding: 20px 15px;
+    padding-bottom: calc(var(--tab-height) + 20px);
+}
+
+.tab-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ========================================
+   タブバー
+   ======================================== */
+.tab-bar {
+    height: var(--tab-height);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--bg-card);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.tab-btn {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: var(--accent-cyan);
+}
+
+.tab-btn:active {
+    transform: scale(0.95);
+}
+
+.tab-icon {
+    font-size: 1.3rem;
+}
+
+.tab-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+/* ========================================
+   ホームタブ
+   ======================================== */
+.home-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - var(--tab-height));
+    gap: 25px;
+}
+
+.game-title {
+    text-align: center;
+}
+
+.title-vs {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent-yellow);
+    display: block;
+    letter-spacing: 0.3em;
+}
+
+.title-1024 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5)); }
+    to { filter: drop-shadow(0 0 20px rgba(255, 0, 170, 0.5)); }
+}
+
+.vs-button {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.4), 0 0 80px rgba(255, 0, 170, 0.2);
+    transition: all 0.3s ease;
+    animation: vsButtonPulse 2s ease infinite;
+}
+
+@keyframes vsButtonPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 245, 255, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 245, 255, 0.6), 0 0 100px rgba(255, 0, 170, 0.3); }
+}
+
+.vs-button:active {
+    transform: scale(0.95) !important;
+}
+
+.vs-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.vs-sub {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.quick-info {
+    display: flex;
+    gap: 15px;
+}
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    min-width: 100px;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+}
+
+.info-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+.info-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.rules-preview {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 15px 20px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.rules-preview h3 {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.rules-preview ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+.rules-preview li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: white;
+}
+
+.badge.b128 { background: var(--tile-128); }
+.badge.b512 { background: var(--tile-512); }
+.badge.b1024 { background: var(--tile-1024); }
+
+/* ========================================
+   ガチャ画面
+   ======================================== */
+.gacha-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.gacha-type-btn {
+    flex: 1;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 2px solid var(--bg-card);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.gacha-type-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.gacha-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.gacha-machine {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--accent-purple);
+    box-shadow: 0 0 30px rgba(170, 85, 255, 0.3);
+}
+
+.gacha-preview {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--accent-purple);
+    animation: gachaSpin 3s ease infinite;
+}
+
+@keyframes gachaSpin {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+.gacha-info {
+    text-align: center;
+}
+
+.gacha-rate {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.gacha-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.gacha-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.gacha-btn.single {
+    background: var(--bg-card);
+    border: 2px solid var(--accent-cyan);
+    color: var(--text-primary);
+}
+
+.gacha-btn.multi {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    color: white;
+}
+
+.gacha-btn:active {
+    transform: scale(0.95);
+}
+
+.gacha-btn-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.gacha-btn-cost {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* ========================================
+   ステージ画面
+   ======================================== */
+.stage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stage-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.stage-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-cyan);
+}
+
+.stage-item.cleared {
+    border-color: var(--accent-green);
+}
+
+.stage-item.locked {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.stage-num {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: white;
+}
+
+.stage-name {
+    flex: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.stage-reward {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+}
+
+.stage-item[data-stage="10"] .stage-name {
+    background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: worldEndGlow 2s ease infinite;
+}
+
+@keyframes worldEndGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+}
+
+/* ========================================
+   スキル画面
+   ======================================== */
+.section-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cost-display {
+    margin-left: auto;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+}
+
+.skill-asset-section {
+    margin-bottom: 25px;
+}
+
+.skill-asset-slots {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.asset-slot {
+    flex: 1;
+    aspect-ratio: 1;
+    background: var(--bg-card);
+    border: 2px dashed var(--text-secondary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.asset-slot:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+.asset-slot.filled {
+    border-style: solid;
+    border-color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.asset-presets {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.preset-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.preset-btn {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-card);
+    border: 2px solid var(--text-secondary);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.preset-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.skill-inventory-section {
+    margin-bottom: 20px;
+}
+
+.skill-inventory {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.skill-card {
+    aspect-ratio: 1;
+    background: var(--bg-card);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.skill-card:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
+
+.skill-card .skill-icon {
+    font-size: 1.8rem;
+}
+
+.skill-card .skill-stars {
+    font-size: 0.5rem;
+    color: var(--accent-yellow);
+}
+
+.skill-card .skill-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--accent-pink);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+}
+
+.skill-card.rarity-5 { border-color: var(--accent-yellow); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+.skill-card.rarity-4 { border-color: var(--accent-purple); }
+.skill-card.rarity-3 { border-color: var(--accent-cyan); }
+.skill-card.rarity-2 { border-color: var(--accent-green); }
+.skill-card.rarity-1 { border-color: var(--text-secondary); }
+
+.empty-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+/* ========================================
+   コレクション画面
+   ======================================== */
+.current-skin-section {
+    margin-bottom: 25px;
+}
+
+.current-skin-preview {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.preview-tile {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+}
+
+.preview-tile[data-value="2"] { background: var(--tile-2); color: var(--text-primary); }
+.preview-tile[data-value="4"] { background: var(--tile-4); color: var(--text-primary); }
+.preview-tile[data-value="8"] { background: var(--tile-8); }
+.preview-tile[data-value="16"] { background: var(--tile-16); }
+.preview-tile[data-value="32"] { background: var(--tile-32); }
+.preview-tile[data-value="64"] { background: var(--tile-64); }
+.preview-tile[data-value="128"] { background: var(--tile-128); }
+.preview-tile[data-value="256"] { background: var(--tile-256); }
+.preview-tile[data-value="512"] { background: var(--tile-512); }
+.preview-tile[data-value="1024"] { background: var(--tile-1024); }
+
+.skin-collection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.skin-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.skin-card:hover {
+    border-color: var(--accent-cyan);
+}
+
+.skin-card.equipped {
+    border-color: var(--accent-green);
+}
+
+.skin-card .skin-name {
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.skin-card .skin-preview-small {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.skin-card .mini-tile {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    font-size: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================
+   モーダル
+   ======================================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 25px;
+    max-width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--accent-cyan);
+}
+
+.modal-close-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 2px solid var(--accent-cyan);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* ガチャ結果モーダル */
+.gacha-results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.gacha-result-item {
+    background: var(--bg-card);
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+}
+
+.gacha-result-item .item-icon {
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.gacha-result-item .item-name {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.gacha-result-item .item-rarity {
+    font-size: 0.6rem;
+    color: var(--accent-yellow);
+}
+
+.gacha-result-item.rarity-5 { border: 2px solid var(--accent-yellow); animation: rarity5Glow 1s ease infinite; }
+.gacha-result-item.rarity-4 { border: 2px solid var(--accent-purple); }
+
+@keyframes rarity5Glow {
+    0%, 100% { box-shadow: 0 0 10px var(--accent-yellow); }
+    50% { box-shadow: 0 0 25px var(--accent-yellow); }
+}
+
+/* スキル詳細モーダル */
+.skill-detail {
+    min-width: 280px;
+}
+
+.skill-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.skill-detail-header .skill-icon {
+    font-size: 3rem;
+}
+
+.skill-detail-info h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.skill-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8rem;
+}
+
+.skill-rarity {
+    color: var(--accent-yellow);
+}
+
+.skill-cost {
+    color: var(--accent-cyan);
+}
+
+.skill-description {
+    background: var(--bg-card);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.skill-detail-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.action-btn.equip {
+    background: var(--accent-cyan);
+    color: var(--bg-primary);
+}
+
+.action-btn.upgrade {
+    background: var(--accent-purple);
+    color: white;
+}
+
+.action-btn.sell {
+    background: var(--bg-card);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+/* ========================================
+   画面管理（ゲーム画面・結果画面）
    ======================================== */
 .screen {
     position: fixed;
@@ -64,6 +957,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s ease;
     overflow: hidden;
+    z-index: 100;
 }
 
 .screen.active {
@@ -72,217 +966,11 @@ body {
 }
 
 /* ========================================
-   ホーム画面
-   ======================================== */
-.home-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    overflow-y: auto;
-}
-
-.game-title {
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-.title-2048 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-.title-battle {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent-yellow);
-    letter-spacing: 0.5em;
-    display: block;
-    margin-top: -5px;
-}
-
-@keyframes glow {
-    from { filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5)); }
-    to { filter: drop-shadow(0 0 20px rgba(255, 0, 170, 0.5)); }
-}
-
-.menu-section {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.menu-btn {
-    width: 100%;
-    padding: 14px 30px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: 2px solid var(--accent-cyan);
-    background: transparent;
-    color: var(--text-primary);
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-}
-
-.menu-btn.primary {
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
-    border: none;
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
-}
-
-.menu-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 25px rgba(0, 245, 255, 0.4);
-}
-
-.menu-btn:active {
-    transform: translateY(0);
-}
-
-.btn-icon {
-    font-size: 1.2rem;
-}
-
-.cpu-level-selector {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
-
-.level-label {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-}
-
-.level-buttons {
-    display: flex;
-    gap: 6px;
-}
-
-.level-btn {
-    width: 38px;
-    height: 38px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    border: 2px solid var(--text-secondary);
-    background: transparent;
-    color: var(--text-secondary);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.level-btn.active {
-    border-color: var(--accent-cyan);
-    color: var(--accent-cyan);
-    background: rgba(0, 245, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
-}
-
-.level-btn:hover:not(.active) {
-    border-color: var(--text-primary);
-    color: var(--text-primary);
-}
-
-/* ========================================
-   ルール & スキル一覧
-   ======================================== */
-.rules-section,
-.skill-info-section {
-    width: 100%;
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 15px;
-}
-
-.section-title {
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.rules-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-}
-
-.rules-list li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.tile-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 18px;
-    border-radius: 4px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: white;
-}
-
-.tile-badge.t128 { background: var(--tile-128); }
-.tile-badge.t256 { background: var(--tile-256); }
-.tile-badge.t512 { background: var(--tile-512); }
-.tile-badge.t1024 { background: var(--tile-1024); }
-
-.skill-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-}
-
-.skill-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    font-size: 0.75rem;
-    color: var(--text-primary);
-}
-
-.skill-item span {
-    margin-left: auto;
-    font-size: 0.65rem;
-    color: var(--text-secondary);
-}
-
-/* ========================================
    ゲーム画面
    ======================================== */
 #game-screen {
     touch-action: none;
+    background: var(--bg-primary);
 }
 
 .game-container {
@@ -336,7 +1024,6 @@ body {
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* マッチポイント時の盤面枠光り */
 .game-board.match-point {
     animation: matchPointGlow 0.8s ease infinite alternate;
 }
@@ -354,7 +1041,6 @@ body {
     100% { box-shadow: 0 0 30px currentColor, 0 0 60px currentColor, inset 0 0 20px rgba(255, 255, 255, 0.2); }
 }
 
-/* フリーズオーバーレイ */
 .freeze-overlay {
     position: absolute;
     top: 0;
@@ -384,9 +1070,6 @@ body {
     50% { opacity: 1; }
 }
 
-/* ========================================
-   バトルログエリア
-   ======================================== */
 .battle-log-area {
     display: flex;
     align-items: center;
@@ -408,25 +1091,10 @@ body {
     max-width: 100%;
 }
 
-.battle-log.attack {
-    color: var(--accent-red);
-    text-shadow: 0 0 15px var(--accent-red);
-}
-
-.battle-log.interference {
-    color: var(--accent-pink);
-    text-shadow: 0 0 15px var(--accent-pink);
-}
-
-.battle-log.damage {
-    color: var(--accent-cyan);
-    text-shadow: 0 0 15px var(--accent-cyan);
-}
-
-.battle-log.stuck {
-    color: #ff8800;
-    text-shadow: 0 0 15px #ff8800;
-}
+.battle-log.attack { color: var(--accent-red); text-shadow: 0 0 15px var(--accent-red); }
+.battle-log.interference { color: var(--accent-pink); text-shadow: 0 0 15px var(--accent-pink); }
+.battle-log.damage { color: var(--accent-cyan); text-shadow: 0 0 15px var(--accent-cyan); }
+.battle-log.stuck { color: #ff8800; text-shadow: 0 0 15px #ff8800; }
 
 @keyframes logPulse {
     0% { transform: scale(1.2); opacity: 0; }
@@ -624,7 +1292,6 @@ body {
 .tile[data-value="32"] { background: var(--tile-32); color: white; }
 .tile[data-value="64"] { background: var(--tile-64); color: white; }
 
-/* 敵の妨害タイル（2）- 赤く光る */
 .enemy-area .tile[data-value="2"].interference-tile {
     background: #4a1a1a;
     box-shadow: 0 0 12px var(--accent-red);
@@ -636,7 +1303,6 @@ body {
     100% { box-shadow: 0 0 20px var(--accent-red), 0 0 30px rgba(255, 51, 102, 0.5); }
 }
 
-/* ボムタイル */
 .tile.bomb-tile {
     background: #4a1a3a !important;
     box-shadow: 0 0 15px var(--accent-pink) !important;
@@ -656,7 +1322,6 @@ body {
     50% { transform: scale(1.08); }
 }
 
-/* 128 - 妨害タイル（攻撃可能） */
 .tile[data-value="128"] { 
     background: var(--tile-128); 
     color: white;
@@ -664,14 +1329,12 @@ body {
     animation: attackable 1s ease infinite;
 }
 
-/* 256 - 自動妨害タイル */
 .tile[data-value="256"] { 
     background: var(--tile-256); 
     color: white;
     box-shadow: 0 0 12px var(--tile-256);
 }
 
-/* 512 - 攻撃タイル */
 .tile[data-value="512"] { 
     background: var(--tile-512); 
     color: white;
@@ -679,7 +1342,6 @@ body {
     animation: attackable 1s ease infinite;
 }
 
-/* 1024 - 必殺攻撃タイル */
 .tile[data-value="1024"] { 
     background: var(--tile-1024); 
     color: white;
@@ -698,18 +1360,14 @@ body {
     50% { transform: scale(1.03); }
 }
 
-.tile.new {
-    animation: pop 0.15s ease;
-}
+.tile.new { animation: pop 0.15s ease; }
 
 @keyframes pop {
     0% { transform: scale(0); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
-.tile.merged {
-    animation: merge 0.15s ease;
-}
+.tile.merged { animation: merge 0.15s ease; }
 
 @keyframes merge {
     0% { transform: scale(1); }
@@ -717,9 +1375,7 @@ body {
     100% { transform: scale(1); }
 }
 
-.tile.attack-target {
-    cursor: pointer;
-}
+.tile.attack-target { cursor: pointer; }
 
 .player-area .tile.attack-target::after {
     content: '⚔️';
@@ -732,7 +1388,6 @@ body {
     padding: 2px;
 }
 
-/* 戻るボタン */
 .back-btn {
     position: absolute;
     top: 8px;
@@ -803,6 +1458,10 @@ body {
     min-width: 240px;
 }
 
+.stat.rewards {
+    border: 1px solid var(--accent-yellow);
+}
+
 .stat-label {
     color: var(--text-secondary);
 }
@@ -817,6 +1476,29 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.menu-btn {
+    width: 100%;
+    padding: 14px 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2px solid var(--accent-cyan);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.menu-btn.primary {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
 }
 
 .result-buttons .menu-btn {
@@ -851,18 +1533,9 @@ body {
 }
 
 @keyframes skillBulletFly {
-    0% {
-        transform: translate(0, 0) scale(0.5);
-        opacity: 1;
-    }
-    50% {
-        transform: translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5)) scale(1.2);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(var(--end-x), var(--end-y)) scale(1);
-        opacity: 0;
-    }
+    0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+    50% { transform: translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5)) scale(1.2); opacity: 1; }
+    100% { transform: translate(var(--end-x), var(--end-y)) scale(1); opacity: 0; }
 }
 
 /* ========================================
@@ -898,13 +1571,13 @@ body {
     .player-area .tile { font-size: 1.1rem; }
     .enemy-area .tile { font-size: 0.6rem; }
     .battle-log { font-size: 0.75rem; }
+    .title-1024 { font-size: 3rem; }
+    .vs-button { width: 150px; height: 150px; }
+    .vs-text { font-size: 1.6rem; }
 }
 
 @media (max-height: 650px) {
-    .game-container {
-        padding: 4px;
-        gap: 3px;
-    }
+    .game-container { padding: 4px; gap: 3px; }
     .enemy-area .game-board { width: min(55vw, 170px); height: min(55vw, 170px); }
     .player-area .game-board { width: min(75vw, 280px); height: min(75vw, 280px); }
     .battle-log { font-size: 0.7rem; }

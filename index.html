@@ -11,67 +11,253 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/skins.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- ホーム画面 -->
-    <div id="home-screen" class="screen active">
-        <div class="home-container">
-            <h1 class="game-title">
-                <span class="title-2048">2048</span>
-                <span class="title-battle">BATTLE</span>
-            </h1>
-            
-            <div class="menu-section">
-                <button id="btn-cpu-battle" class="menu-btn primary">
-                    <span class="btn-icon">🎮</span>
-                    <span class="btn-text">CPU対戦</span>
-                </button>
-                
-                <div class="cpu-level-selector">
-                    <span class="level-label">CPUレベル</span>
-                    <div class="level-buttons">
-                        <button class="level-btn" data-level="1">1</button>
-                        <button class="level-btn" data-level="2">2</button>
-                        <button class="level-btn active" data-level="3">3</button>
-                        <button class="level-btn" data-level="4">4</button>
-                        <button class="level-btn" data-level="5">5</button>
+    <!-- メインアプリ（タブ付き） -->
+    <div id="main-app" class="app-container">
+        <!-- ヘッダー（通貨表示） -->
+        <header class="app-header">
+            <div class="currency-display">
+                <div class="currency crystal">
+                    <span class="currency-icon">💎</span>
+                    <span class="currency-value" id="crystal-count">0</span>
+                </div>
+                <div class="currency sp">
+                    <span class="currency-icon">⚡</span>
+                    <span class="currency-value" id="sp-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- タブコンテンツエリア -->
+        <main class="tab-content-area">
+            <!-- ガチャ画面 -->
+            <div id="tab-gacha" class="tab-content">
+                <div class="tab-inner">
+                    <h2 class="tab-title">ガチャ</h2>
+                    
+                    <div class="gacha-toggle">
+                        <button class="gacha-type-btn active" data-type="tile">タイルガチャ</button>
+                        <button class="gacha-type-btn" data-type="skill">スキルガチャ</button>
+                    </div>
+                    
+                    <div class="gacha-display">
+                        <div class="gacha-machine">
+                            <div class="gacha-preview">?</div>
+                        </div>
+                        <div class="gacha-info">
+                            <p class="gacha-rate">★5: 5% | ★4: 10% | ★3: 20% | ★2: 25% | ★1: 30%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gacha-buttons">
+                        <button class="gacha-btn single" id="btn-gacha-single">
+                            <span class="gacha-btn-text">1回</span>
+                            <span class="gacha-btn-cost">💎 300</span>
+                        </button>
+                        <button class="gacha-btn multi" id="btn-gacha-multi">
+                            <span class="gacha-btn-text">11連</span>
+                            <span class="gacha-btn-cost">💎 3000</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="rules-section">
-                <h2 class="section-title">ルール</h2>
-                <ul class="rules-list">
-                    <li><span class="tile-badge t128">128</span> タップ → 妨害 ×1</li>
-                    <li><span class="tile-badge t256">256</span> 作成 → 自動妨害 ×1</li>
-                    <li><span class="tile-badge t512">512</span> タップ → 1ダメ + 妨害 ×3</li>
-                    <li><span class="tile-badge t1024">1024</span> タップ → 4ダメージ</li>
-                    <li>⚠️ 妨害は3秒後に届く</li>
-                    <li>💀 詰み → HP-2 & 2を全消し</li>
-                    <li>✨ 合成時5%でスキル発動!</li>
-                </ul>
-            </div>
-            
-            <div class="skill-info-section">
-                <h2 class="section-title">スキル一覧</h2>
-                <div class="skill-grid">
-                    <div class="skill-item">🛡️ シールド<span>攻撃無効</span></div>
-                    <div class="skill-item">🪞 リフレクト<span>妨害跳返</span></div>
-                    <div class="skill-item">🧹 クリーン<span>2全消し</span></div>
-                    <div class="skill-item">⚡ ダブル<span>攻撃2倍</span></div>
-                    <div class="skill-item">💣 ボム<span>3×3爆破</span></div>
-                    <div class="skill-item">❄️ フリーズ<span>3秒停止</span></div>
-                    <div class="skill-item">🔄 コンバート<span>2→4変換</span></div>
-                    <div class="skill-item">🎲 ダイス<span>ランダム消</span></div>
+
+            <!-- ステージ画面 -->
+            <div id="tab-stage" class="tab-content">
+                <div class="tab-inner">
+                    <h2 class="tab-title">ステージ</h2>
+                    
+                    <div class="stage-list">
+                        <div class="stage-item" data-stage="1">
+                            <div class="stage-num">1</div>
+                            <div class="stage-name">EASY</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="2">
+                            <div class="stage-num">2</div>
+                            <div class="stage-name">NORMAL</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="3">
+                            <div class="stage-num">3</div>
+                            <div class="stage-name">HARD</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="4">
+                            <div class="stage-num">4</div>
+                            <div class="stage-name">EXPERT</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="5">
+                            <div class="stage-num">5</div>
+                            <div class="stage-name">MASTER</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="6">
+                            <div class="stage-num">6</div>
+                            <div class="stage-name">NIGHTMARE</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="7">
+                            <div class="stage-num">7</div>
+                            <div class="stage-name">INFERNO</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="8">
+                            <div class="stage-num">8</div>
+                            <div class="stage-name">ABYSS</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="9">
+                            <div class="stage-num">9</div>
+                            <div class="stage-name">CHAOS</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                        <div class="stage-item" data-stage="10">
+                            <div class="stage-num">10</div>
+                            <div class="stage-name">WORLD END</div>
+                            <div class="stage-reward">💎300</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- ホーム画面 -->
+            <div id="tab-home" class="tab-content active">
+                <div class="tab-inner home-tab">
+                    <h1 class="game-title">
+                        <span class="title-vs">VS</span>
+                        <span class="title-1024">1024</span>
+                    </h1>
+                    
+                    <button id="btn-vs-battle" class="vs-button">
+                        <span class="vs-text">BATTLE</span>
+                        <span class="vs-sub">CPU対戦</span>
+                    </button>
+                    
+                    <div class="quick-info">
+                        <div class="info-card">
+                            <span class="info-icon">🏆</span>
+                            <span class="info-label">最高ステージ</span>
+                            <span class="info-value" id="highest-stage">-</span>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-icon">⚔️</span>
+                            <span class="info-label">総ダメージ</span>
+                            <span class="info-value" id="total-damage">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="rules-preview">
+                        <h3>基本ルール</h3>
+                        <ul>
+                            <li><span class="badge b128">128</span> 妨害×1</li>
+                            <li><span class="badge b512">512</span> 1ダメ+妨害×3</li>
+                            <li><span class="badge b1024">1024</span> 4ダメージ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- スキル画面 -->
+            <div id="tab-skill" class="tab-content">
+                <div class="tab-inner">
+                    <h2 class="tab-title">スキル</h2>
+                    
+                    <!-- スキルアセット -->
+                    <div class="skill-asset-section">
+                        <h3 class="section-subtitle">装備中 <span class="cost-display">コスト: <span id="current-cost">0</span>/20</span></h3>
+                        <div class="skill-asset-slots" id="skill-asset-slots">
+                            <div class="asset-slot empty">+</div>
+                            <div class="asset-slot empty">+</div>
+                            <div class="asset-slot empty">+</div>
+                            <div class="asset-slot empty">+</div>
+                            <div class="asset-slot empty">+</div>
+                        </div>
+                        <div class="asset-presets">
+                            <span class="preset-label">プリセット:</span>
+                            <button class="preset-btn active" data-preset="1">1</button>
+                            <button class="preset-btn" data-preset="2">2</button>
+                            <button class="preset-btn" data-preset="3">3</button>
+                            <button class="preset-btn" data-preset="4">4</button>
+                            <button class="preset-btn" data-preset="5">5</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 所持スキル一覧 -->
+                    <div class="skill-inventory-section">
+                        <h3 class="section-subtitle">所持スキル</h3>
+                        <div class="skill-inventory" id="skill-inventory">
+                            <!-- JSで生成 -->
+                            <div class="empty-message">スキルがありません<br>ガチャで入手しよう!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- コレクション画面 -->
+            <div id="tab-collection" class="tab-content">
+                <div class="tab-inner">
+                    <h2 class="tab-title">コレクション</h2>
+                    
+                    <div class="current-skin-section">
+                        <h3 class="section-subtitle">使用中のスキン</h3>
+                        <div class="current-skin-preview" id="current-skin-preview">
+                            <div class="preview-tile" data-value="2">2</div>
+                            <div class="preview-tile" data-value="4">4</div>
+                            <div class="preview-tile" data-value="8">8</div>
+                            <div class="preview-tile" data-value="16">16</div>
+                            <div class="preview-tile" data-value="32">32</div>
+                            <div class="preview-tile" data-value="64">64</div>
+                            <div class="preview-tile" data-value="128">128</div>
+                            <div class="preview-tile" data-value="256">256</div>
+                            <div class="preview-tile" data-value="512">512</div>
+                            <div class="preview-tile" data-value="1024">1024</div>
+                        </div>
+                    </div>
+                    
+                    <div class="skin-collection-section">
+                        <h3 class="section-subtitle">所持タイルセット</h3>
+                        <div class="skin-collection" id="skin-collection">
+                            <!-- JSで生成 -->
+                            <div class="empty-message">タイルセットがありません<br>ガチャで入手しよう!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- タブバー -->
+        <nav class="tab-bar">
+            <button class="tab-btn" data-tab="gacha">
+                <span class="tab-icon">🎰</span>
+                <span class="tab-label">ガチャ</span>
+            </button>
+            <button class="tab-btn" data-tab="stage">
+                <span class="tab-icon">🏔️</span>
+                <span class="tab-label">ステージ</span>
+            </button>
+            <button class="tab-btn active" data-tab="home">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">ホーム</span>
+            </button>
+            <button class="tab-btn" data-tab="skill">
+                <span class="tab-icon">⚡</span>
+                <span class="tab-label">スキル</span>
+            </button>
+            <button class="tab-btn" data-tab="collection">
+                <span class="tab-icon">📦</span>
+                <span class="tab-label">コレクション</span>
+            </button>
+        </nav>
     </div>
-    
-    <!-- ゲーム画面 -->
+
+    <!-- ゲーム画面（タブ外） -->
     <div id="game-screen" class="screen">
         <div class="game-container">
             <div class="game-layout">
@@ -147,6 +333,10 @@
                     <span class="stat-label">与ダメージ</span>
                     <span class="stat-value" id="result-damage">0</span>
                 </div>
+                <div class="stat rewards">
+                    <span class="stat-label">獲得SP</span>
+                    <span class="stat-value" id="result-sp">0</span>
+                </div>
             </div>
             <div class="result-buttons">
                 <button class="menu-btn primary" id="btn-retry">もう一度</button>
@@ -154,7 +344,42 @@
             </div>
         </div>
     </div>
+
+    <!-- ガチャ結果モーダル -->
+    <div id="gacha-result-modal" class="modal">
+        <div class="modal-content gacha-result">
+            <h2 class="modal-title">ガチャ結果</h2>
+            <div class="gacha-results" id="gacha-results">
+                <!-- JSで生成 -->
+            </div>
+            <button class="modal-close-btn" id="btn-close-gacha">OK</button>
+        </div>
+    </div>
+
+    <!-- スキル詳細モーダル -->
+    <div id="skill-detail-modal" class="modal">
+        <div class="modal-content skill-detail">
+            <div class="skill-detail-header">
+                <span class="skill-icon" id="detail-skill-icon">🛡️</span>
+                <div class="skill-detail-info">
+                    <h3 id="detail-skill-name">ガーディアン</h3>
+                    <div class="skill-meta">
+                        <span class="skill-rarity" id="detail-skill-rarity">★4</span>
+                        <span class="skill-cost" id="detail-skill-cost">コスト: 5</span>
+                    </div>
+                </div>
+            </div>
+            <p class="skill-description" id="detail-skill-desc">次の攻撃を無効化する</p>
+            <div class="skill-detail-actions">
+                <button class="action-btn equip" id="btn-equip-skill">装備</button>
+                <button class="action-btn upgrade" id="btn-upgrade-skill">強化</button>
+                <button class="action-btn sell" id="btn-sell-skill">売却 (500 SP)</button>
+            </div>
+            <button class="modal-close-btn" id="btn-close-skill-detail">閉じる</button>
+        </div>
+    </div>
     
+    <script src="js/data.js"></script>
     <script src="js/skills.js"></script>
     <script src="js/board.js"></script>
     <script src="js/game.js"></script>

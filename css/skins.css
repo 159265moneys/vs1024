@@ -1,0 +1,321 @@
+/* ========================================
+   タイルセットスキン v1.0
+   13種類のタイルスキン定義
+   ======================================== */
+
+/* ========================================
+   ★1 ノーマル（デフォルト）
+   ======================================== */
+.skin-normal .tile[data-value="2"] { background: var(--tile-2); color: var(--text-primary); }
+.skin-normal .tile[data-value="4"] { background: var(--tile-4); color: var(--text-primary); }
+.skin-normal .tile[data-value="8"] { background: var(--tile-8); color: white; }
+.skin-normal .tile[data-value="16"] { background: var(--tile-16); color: white; }
+.skin-normal .tile[data-value="32"] { background: var(--tile-32); color: white; }
+.skin-normal .tile[data-value="64"] { background: var(--tile-64); color: white; }
+.skin-normal .tile[data-value="128"] { background: var(--tile-128); color: white; }
+.skin-normal .tile[data-value="256"] { background: var(--tile-256); color: white; }
+.skin-normal .tile[data-value="512"] { background: var(--tile-512); color: white; }
+.skin-normal .tile[data-value="1024"] { background: var(--tile-1024); color: white; }
+
+/* ========================================
+   ★2 ネオン - 発光エフェクト
+   ======================================== */
+.skin-neon .tile {
+    border: 1px solid transparent;
+    text-shadow: 0 0 10px currentColor;
+}
+.skin-neon .tile[data-value="2"] { background: #1a1a2e; color: #00ff88; border-color: #00ff88; box-shadow: 0 0 15px #00ff88; }
+.skin-neon .tile[data-value="4"] { background: #1a1a2e; color: #00f5ff; border-color: #00f5ff; box-shadow: 0 0 15px #00f5ff; }
+.skin-neon .tile[data-value="8"] { background: #1a1a2e; color: #ff00aa; border-color: #ff00aa; box-shadow: 0 0 15px #ff00aa; }
+.skin-neon .tile[data-value="16"] { background: #1a1a2e; color: #ff3366; border-color: #ff3366; box-shadow: 0 0 15px #ff3366; }
+.skin-neon .tile[data-value="32"] { background: #1a1a2e; color: #ffd700; border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+.skin-neon .tile[data-value="64"] { background: #1a1a2e; color: #ff6600; border-color: #ff6600; box-shadow: 0 0 15px #ff6600; }
+.skin-neon .tile[data-value="128"] { background: #1a1a2e; color: #aa55ff; border-color: #aa55ff; box-shadow: 0 0 20px #aa55ff; }
+.skin-neon .tile[data-value="256"] { background: #1a1a2e; color: #55aaff; border-color: #55aaff; box-shadow: 0 0 20px #55aaff; }
+.skin-neon .tile[data-value="512"] { background: #1a1a2e; color: #55ff55; border-color: #55ff55; box-shadow: 0 0 25px #55ff55; }
+.skin-neon .tile[data-value="1024"] { background: #1a1a2e; color: #ffffff; border-color: #ffffff; box-shadow: 0 0 30px #ffffff; }
+
+/* ========================================
+   ★2 パステル - 淡い色合い
+   ======================================== */
+.skin-pastel .tile[data-value="2"] { background: #fce4ec; color: #880e4f; }
+.skin-pastel .tile[data-value="4"] { background: #f3e5f5; color: #4a148c; }
+.skin-pastel .tile[data-value="8"] { background: #e3f2fd; color: #0d47a1; }
+.skin-pastel .tile[data-value="16"] { background: #e0f7fa; color: #006064; }
+.skin-pastel .tile[data-value="32"] { background: #e8f5e9; color: #1b5e20; }
+.skin-pastel .tile[data-value="64"] { background: #fff8e1; color: #ff6f00; }
+.skin-pastel .tile[data-value="128"] { background: #fff3e0; color: #e65100; }
+.skin-pastel .tile[data-value="256"] { background: #fbe9e7; color: #bf360c; }
+.skin-pastel .tile[data-value="512"] { background: #fce4ec; color: #c2185b; }
+.skin-pastel .tile[data-value="1024"] { background: #f8bbd9; color: #880e4f; box-shadow: 0 0 20px rgba(136, 14, 79, 0.5); }
+
+/* ========================================
+   ★2 ダーク - ダークモード
+   ======================================== */
+.skin-dark .tile[data-value="2"] { background: #1a1a1a; color: #666; border: 1px solid #333; }
+.skin-dark .tile[data-value="4"] { background: #252525; color: #888; border: 1px solid #444; }
+.skin-dark .tile[data-value="8"] { background: #333; color: #aaa; border: 1px solid #555; }
+.skin-dark .tile[data-value="16"] { background: #444; color: #ccc; }
+.skin-dark .tile[data-value="32"] { background: #555; color: #ddd; }
+.skin-dark .tile[data-value="64"] { background: #666; color: #eee; }
+.skin-dark .tile[data-value="128"] { background: #777; color: #fff; }
+.skin-dark .tile[data-value="256"] { background: #888; color: #fff; }
+.skin-dark .tile[data-value="512"] { background: #999; color: #fff; }
+.skin-dark .tile[data-value="1024"] { background: #aaa; color: #111; box-shadow: 0 0 20px rgba(170, 170, 170, 0.5); }
+
+/* ========================================
+   ★3 ゴールド - 金色グラデーション
+   ======================================== */
+.skin-gold .tile {
+    background: linear-gradient(145deg, #b8860b, #ffd700, #b8860b) !important;
+    color: #3d2914 !important;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+.skin-gold .tile[data-value="2"] { filter: brightness(0.6); }
+.skin-gold .tile[data-value="4"] { filter: brightness(0.7); }
+.skin-gold .tile[data-value="8"] { filter: brightness(0.8); }
+.skin-gold .tile[data-value="16"] { filter: brightness(0.85); }
+.skin-gold .tile[data-value="32"] { filter: brightness(0.9); }
+.skin-gold .tile[data-value="64"] { filter: brightness(0.95); }
+.skin-gold .tile[data-value="128"] { filter: brightness(1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+.skin-gold .tile[data-value="256"] { filter: brightness(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+.skin-gold .tile[data-value="512"] { filter: brightness(1.1); box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
+.skin-gold .tile[data-value="1024"] { filter: brightness(1.2); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+
+/* ========================================
+   ★3 クリスタル - 透明感のある輝き
+   ======================================== */
+.skin-crystal .tile {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(200,220,255,0.7)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.8), 0 2px 10px rgba(100, 150, 255, 0.3);
+}
+.skin-crystal .tile[data-value="2"] { color: #6080a0; }
+.skin-crystal .tile[data-value="4"] { color: #5070a0; }
+.skin-crystal .tile[data-value="8"] { color: #4060a0; background: linear-gradient(145deg, rgba(255,220,200,0.9), rgba(200,150,100,0.7)) !important; }
+.skin-crystal .tile[data-value="16"] { color: #905020; background: linear-gradient(145deg, rgba(255,200,180,0.9), rgba(200,100,80,0.7)) !important; }
+.skin-crystal .tile[data-value="32"] { color: #a04030; background: linear-gradient(145deg, rgba(255,180,180,0.9), rgba(200,80,80,0.7)) !important; }
+.skin-crystal .tile[data-value="64"] { color: #b03020; background: linear-gradient(145deg, rgba(255,150,150,0.9), rgba(200,60,60,0.7)) !important; }
+.skin-crystal .tile[data-value="128"] { color: #606000; background: linear-gradient(145deg, rgba(255,255,200,0.9), rgba(200,200,100,0.7)) !important; }
+.skin-crystal .tile[data-value="256"] { color: #707000; background: linear-gradient(145deg, rgba(255,255,180,0.9), rgba(200,200,80,0.7)) !important; }
+.skin-crystal .tile[data-value="512"] { color: #808000; background: linear-gradient(145deg, rgba(255,255,150,0.9), rgba(200,200,50,0.7)) !important; }
+.skin-crystal .tile[data-value="1024"] { color: #404000; background: linear-gradient(145deg, rgba(255,255,100,1), rgba(200,200,0,0.9)) !important; box-shadow: 0 0 30px rgba(255, 255, 0, 0.6); }
+
+/* ========================================
+   ★3 ファイア - 炎エフェクト
+   ======================================== */
+.skin-fire .tile {
+    background: linear-gradient(180deg, #ff4500, #ff8c00, #ffd700) !important;
+    color: #fff !important;
+    text-shadow: 0 0 5px #000;
+    animation: fireFlicker 0.5s ease infinite alternate;
+}
+@keyframes fireFlicker {
+    0% { filter: brightness(0.9); }
+    100% { filter: brightness(1.1); }
+}
+.skin-fire .tile[data-value="2"] { background: linear-gradient(180deg, #8b0000, #b22222) !important; }
+.skin-fire .tile[data-value="4"] { background: linear-gradient(180deg, #a52a2a, #cd5c5c) !important; }
+.skin-fire .tile[data-value="8"] { background: linear-gradient(180deg, #cd5c5c, #ff4500) !important; }
+.skin-fire .tile[data-value="16"] { background: linear-gradient(180deg, #ff4500, #ff6347) !important; }
+.skin-fire .tile[data-value="32"] { background: linear-gradient(180deg, #ff6347, #ff7f50) !important; }
+.skin-fire .tile[data-value="64"] { background: linear-gradient(180deg, #ff7f50, #ff8c00) !important; }
+.skin-fire .tile[data-value="128"] { background: linear-gradient(180deg, #ff8c00, #ffa500) !important; box-shadow: 0 0 20px #ff4500; }
+.skin-fire .tile[data-value="256"] { background: linear-gradient(180deg, #ffa500, #ffc700) !important; box-shadow: 0 0 25px #ff6600; }
+.skin-fire .tile[data-value="512"] { background: linear-gradient(180deg, #ffc700, #ffd700) !important; box-shadow: 0 0 30px #ff8800; }
+.skin-fire .tile[data-value="1024"] { background: linear-gradient(180deg, #ffd700, #fff) !important; color: #8b0000 !important; box-shadow: 0 0 40px #ffaa00; }
+
+/* ========================================
+   ★3 アイス - 氷エフェクト
+   ======================================== */
+.skin-ice .tile {
+    background: linear-gradient(180deg, #e0f7fa, #80deea, #00bcd4) !important;
+    color: #004d40 !important;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+}
+.skin-ice .tile[data-value="2"] { background: linear-gradient(180deg, #e0f7fa, #b2ebf2) !important; }
+.skin-ice .tile[data-value="4"] { background: linear-gradient(180deg, #b2ebf2, #80deea) !important; }
+.skin-ice .tile[data-value="8"] { background: linear-gradient(180deg, #80deea, #4dd0e1) !important; }
+.skin-ice .tile[data-value="16"] { background: linear-gradient(180deg, #4dd0e1, #26c6da) !important; }
+.skin-ice .tile[data-value="32"] { background: linear-gradient(180deg, #26c6da, #00bcd4) !important; }
+.skin-ice .tile[data-value="64"] { background: linear-gradient(180deg, #00bcd4, #00acc1) !important; }
+.skin-ice .tile[data-value="128"] { background: linear-gradient(180deg, #00acc1, #0097a7) !important; color: #fff !important; box-shadow: 0 0 20px #00bcd4; }
+.skin-ice .tile[data-value="256"] { background: linear-gradient(180deg, #0097a7, #00838f) !important; color: #fff !important; box-shadow: 0 0 25px #00acc1; }
+.skin-ice .tile[data-value="512"] { background: linear-gradient(180deg, #00838f, #006064) !important; color: #fff !important; box-shadow: 0 0 30px #0097a7; }
+.skin-ice .tile[data-value="1024"] { background: linear-gradient(180deg, #006064, #004d40) !important; color: #80deea !important; box-shadow: 0 0 40px #00bcd4; }
+
+/* ========================================
+   ★4 ギャラクシー - 宇宙柄
+   ======================================== */
+.skin-galaxy .tile {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
+    color: #fff !important;
+    position: relative;
+    overflow: hidden;
+}
+.skin-galaxy .tile::before {
+    content: '✦';
+    position: absolute;
+    font-size: 0.4em;
+    top: 5px;
+    right: 5px;
+    opacity: 0.5;
+    animation: starTwinkle 1s ease infinite alternate;
+}
+@keyframes starTwinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
+}
+.skin-galaxy .tile[data-value="2"] { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; }
+.skin-galaxy .tile[data-value="4"] { background: linear-gradient(135deg, #16213e, #1f2e4d) !important; }
+.skin-galaxy .tile[data-value="8"] { background: linear-gradient(135deg, #1f2e4d, #2a3f5f) !important; }
+.skin-galaxy .tile[data-value="16"] { background: linear-gradient(135deg, #2a3f5f, #3a506b) !important; }
+.skin-galaxy .tile[data-value="32"] { background: linear-gradient(135deg, #3a506b, #4a607b) !important; }
+.skin-galaxy .tile[data-value="64"] { background: linear-gradient(135deg, #4a607b, #5a708b) !important; }
+.skin-galaxy .tile[data-value="128"] { background: linear-gradient(135deg, #5c2d91, #8e44ad) !important; box-shadow: 0 0 20px #8e44ad; }
+.skin-galaxy .tile[data-value="256"] { background: linear-gradient(135deg, #8e44ad, #9b59b6) !important; box-shadow: 0 0 25px #9b59b6; }
+.skin-galaxy .tile[data-value="512"] { background: linear-gradient(135deg, #9b59b6, #bb8fce) !important; box-shadow: 0 0 30px #9b59b6; }
+.skin-galaxy .tile[data-value="1024"] { background: linear-gradient(135deg, #bb8fce, #e8daef, #bb8fce) !important; color: #2c3e50 !important; box-shadow: 0 0 40px #e8daef; }
+
+/* ========================================
+   ★4 レインボー - 虹色グラデーション
+   ======================================== */
+.skin-rainbow .tile {
+    background: linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3) !important;
+    color: #fff !important;
+    text-shadow: 0 0 3px #000;
+    background-size: 200% 200%;
+    animation: rainbowShift 3s ease infinite;
+}
+@keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.skin-rainbow .tile[data-value="2"] { filter: saturate(0.3) brightness(0.7); }
+.skin-rainbow .tile[data-value="4"] { filter: saturate(0.4) brightness(0.75); }
+.skin-rainbow .tile[data-value="8"] { filter: saturate(0.5) brightness(0.8); }
+.skin-rainbow .tile[data-value="16"] { filter: saturate(0.6) brightness(0.85); }
+.skin-rainbow .tile[data-value="32"] { filter: saturate(0.7) brightness(0.9); }
+.skin-rainbow .tile[data-value="64"] { filter: saturate(0.8) brightness(0.95); }
+.skin-rainbow .tile[data-value="128"] { filter: saturate(0.9) brightness(1); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+.skin-rainbow .tile[data-value="256"] { filter: saturate(1) brightness(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+.skin-rainbow .tile[data-value="512"] { filter: saturate(1) brightness(1.1); box-shadow: 0 0 25px rgba(255,255,255,0.7); }
+.skin-rainbow .tile[data-value="1024"] { filter: saturate(1) brightness(1.2); box-shadow: 0 0 35px rgba(255,255,255,0.9); }
+
+/* ========================================
+   ★4 サイバー - サイバーパンク風
+   ======================================== */
+.skin-cyber .tile {
+    background: #0a0a0a !important;
+    border: 2px solid #00f5ff !important;
+    color: #00f5ff !important;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px #00f5ff;
+    box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.1);
+}
+.skin-cyber .tile[data-value="2"] { border-color: #333 !important; color: #333 !important; text-shadow: none; }
+.skin-cyber .tile[data-value="4"] { border-color: #444 !important; color: #444 !important; text-shadow: none; }
+.skin-cyber .tile[data-value="8"] { border-color: #ff00aa !important; color: #ff00aa !important; text-shadow: 0 0 10px #ff00aa; }
+.skin-cyber .tile[data-value="16"] { border-color: #ff00aa !important; color: #ff00aa !important; box-shadow: 0 0 10px #ff00aa; }
+.skin-cyber .tile[data-value="32"] { border-color: #ff3366 !important; color: #ff3366 !important; box-shadow: 0 0 12px #ff3366; }
+.skin-cyber .tile[data-value="64"] { border-color: #ff6600 !important; color: #ff6600 !important; box-shadow: 0 0 14px #ff6600; }
+.skin-cyber .tile[data-value="128"] { border-color: #ffd700 !important; color: #ffd700 !important; box-shadow: 0 0 16px #ffd700; }
+.skin-cyber .tile[data-value="256"] { border-color: #00ff88 !important; color: #00ff88 !important; box-shadow: 0 0 18px #00ff88; }
+.skin-cyber .tile[data-value="512"] { border-color: #00f5ff !important; color: #00f5ff !important; box-shadow: 0 0 20px #00f5ff; }
+.skin-cyber .tile[data-value="1024"] { 
+    border-color: #fff !important; 
+    color: #fff !important; 
+    box-shadow: 0 0 25px #fff, 0 0 50px #00f5ff;
+    animation: cyberGlitch 0.3s ease infinite;
+}
+@keyframes cyberGlitch {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-2px, 1px); }
+    94% { transform: translate(2px, -1px); }
+    96% { transform: translate(-1px, 2px); }
+    98% { transform: translate(1px, -2px); }
+}
+
+/* ========================================
+   ★5 ホログラム - ホログラフィック
+   ======================================== */
+.skin-hologram .tile {
+    background: linear-gradient(135deg, 
+        rgba(255,0,0,0.3), 
+        rgba(255,127,0,0.3), 
+        rgba(255,255,0,0.3), 
+        rgba(0,255,0,0.3), 
+        rgba(0,0,255,0.3), 
+        rgba(75,0,130,0.3), 
+        rgba(148,0,211,0.3)
+    ) !important;
+    background-size: 400% 400%;
+    animation: holoShift 2s ease infinite;
+    border: 1px solid rgba(255,255,255,0.5);
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+@keyframes holoShift {
+    0% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+    50% { background-position: 100% 50%; filter: hue-rotate(180deg); }
+    100% { background-position: 0% 50%; filter: hue-rotate(360deg); }
+}
+.skin-hologram .tile[data-value="2"] { opacity: 0.5; }
+.skin-hologram .tile[data-value="4"] { opacity: 0.6; }
+.skin-hologram .tile[data-value="8"] { opacity: 0.7; }
+.skin-hologram .tile[data-value="16"] { opacity: 0.75; }
+.skin-hologram .tile[data-value="32"] { opacity: 0.8; }
+.skin-hologram .tile[data-value="64"] { opacity: 0.85; }
+.skin-hologram .tile[data-value="128"] { opacity: 0.9; box-shadow: 0 0 25px rgba(255,255,255,0.5); }
+.skin-hologram .tile[data-value="256"] { opacity: 0.95; box-shadow: 0 0 30px rgba(255,255,255,0.6); }
+.skin-hologram .tile[data-value="512"] { opacity: 1; box-shadow: 0 0 35px rgba(255,255,255,0.7); }
+.skin-hologram .tile[data-value="1024"] { 
+    opacity: 1; 
+    box-shadow: 0 0 40px rgba(255,255,255,1), 0 0 80px rgba(255,255,255,0.5);
+    animation: holoShift 1s ease infinite, holoPulse 0.5s ease infinite alternate;
+}
+@keyframes holoPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+/* ========================================
+   ★5 プラズマ - プラズマエフェクト
+   ======================================== */
+.skin-plasma .tile {
+    background: radial-gradient(ellipse at center, #ff00ff, #8800ff, #0044ff, #00ffff) !important;
+    background-size: 200% 200%;
+    animation: plasmaMove 2s ease infinite;
+    color: #fff !important;
+    text-shadow: 0 0 15px #fff;
+    border: none;
+}
+@keyframes plasmaMove {
+    0% { background-position: 0% 0%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
+    100% { background-position: 0% 0%; }
+}
+.skin-plasma .tile[data-value="2"] { filter: brightness(0.4) saturate(0.5); }
+.skin-plasma .tile[data-value="4"] { filter: brightness(0.5) saturate(0.6); }
+.skin-plasma .tile[data-value="8"] { filter: brightness(0.6) saturate(0.7); }
+.skin-plasma .tile[data-value="16"] { filter: brightness(0.7) saturate(0.8); }
+.skin-plasma .tile[data-value="32"] { filter: brightness(0.8) saturate(0.85); }
+.skin-plasma .tile[data-value="64"] { filter: brightness(0.85) saturate(0.9); }
+.skin-plasma .tile[data-value="128"] { filter: brightness(0.9) saturate(0.95); box-shadow: 0 0 20px #ff00ff; }
+.skin-plasma .tile[data-value="256"] { filter: brightness(0.95) saturate(1); box-shadow: 0 0 25px #8800ff; }
+.skin-plasma .tile[data-value="512"] { filter: brightness(1) saturate(1); box-shadow: 0 0 30px #0044ff; }
+.skin-plasma .tile[data-value="1024"] { 
+    filter: brightness(1.2) saturate(1.2); 
+    box-shadow: 0 0 40px #00ffff, 0 0 80px #ff00ff;
+    animation: plasmaMove 1s ease infinite, plasmaPulse 0.3s ease infinite alternate;
+}
+@keyframes plasmaPulse {
+    0% { filter: brightness(1.1) saturate(1.1); }
+    100% { filter: brightness(1.3) saturate(1.3); }
+}
+
