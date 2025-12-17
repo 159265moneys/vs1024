@@ -1,6 +1,6 @@
 /**
  * AI - CPU対戦AI（レベル1-5）v2.5
- * スキル: 合成時3%でランダム発動
+ * スキル: 合成時5%でランダム発動
  */
 class AI {
     constructor(game, level = 3) {

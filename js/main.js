@@ -1,6 +1,6 @@
 /**
  * Main - ゲーム初期化 & イベントハンドリング v2.5
- * スキル: 合成時3%ランダム発動
+ * スキル: 合成時5%ランダム発動
  */
 document.addEventListener('DOMContentLoaded', () => {
     // iOS Safari対策: vh計算
