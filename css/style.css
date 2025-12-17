@@ -1,0 +1,911 @@
+/* ========================================
+   対戦型 2048 - スタイルシート v2.5
+   スキル: 合成時3%ランダム発動
+   ======================================== */
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #1a1a25;
+    --accent-cyan: #00f5ff;
+    --accent-pink: #ff00aa;
+    --accent-yellow: #ffd700;
+    --accent-green: #00ff88;
+    --accent-red: #ff3366;
+    --text-primary: #ffffff;
+    --text-secondary: #8888aa;
+    
+    --tile-2: #2a2a3a;
+    --tile-4: #3a3a4a;
+    --tile-8: #f2b179;
+    --tile-16: #f59563;
+    --tile-32: #f67c5f;
+    --tile-64: #f65e3b;
+    --tile-128: #edcf72;
+    --tile-256: #edc850;
+    --tile-512: #edc53f;
+    --tile-1024: #edc22e;
+    --tile-2048: #3c3a32;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    position: fixed;
+    inset: 0;
+    touch-action: none;
+}
+
+/* ========================================
+   画面管理
+   ======================================== */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* ========================================
+   ホーム画面
+   ======================================== */
+.home-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    overflow-y: auto;
+}
+
+.game-title {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.title-2048 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.title-battle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-yellow);
+    letter-spacing: 0.5em;
+    display: block;
+    margin-top: -5px;
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5)); }
+    to { filter: drop-shadow(0 0 20px rgba(255, 0, 170, 0.5)); }
+}
+
+.menu-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-btn {
+    width: 100%;
+    padding: 14px 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2px solid var(--accent-cyan);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.menu-btn.primary {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+}
+
+.menu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(0, 245, 255, 0.4);
+}
+
+.menu-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.cpu-level-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.level-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.level-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.level-btn {
+    width: 38px;
+    height: 38px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: 2px solid var(--text-secondary);
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.level-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+}
+
+.level-btn:hover:not(.active) {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+/* ========================================
+   ルール & スキル一覧
+   ======================================== */
+.rules-section,
+.skill-info-section {
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.section-title {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.rules-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.rules-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tile-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 18px;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: white;
+}
+
+.tile-badge.t128 { background: var(--tile-128); }
+.tile-badge.t256 { background: var(--tile-256); }
+.tile-badge.t512 { background: var(--tile-512); }
+.tile-badge.t1024 { background: var(--tile-1024); }
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+}
+
+.skill-item span {
+    margin-left: auto;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   ゲーム画面
+   ======================================== */
+#game-screen {
+    touch-action: none;
+}
+
+.game-container {
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 100);
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+}
+
+.game-layout {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 28fr auto 62fr;
+    gap: 4px;
+}
+
+.hud-area {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+}
+
+.enemy-area,
+.player-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-wrapper {
+    position: relative;
+}
+
+.enemy-area .game-board {
+    width: min(68vw, 210px);
+    height: min(68vw, 210px);
+    border: 2px solid var(--accent-red);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.player-area .game-board {
+    width: min(88vw, 340px);
+    height: min(88vw, 340px);
+    border: 2px solid transparent;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* マッチポイント時の盤面枠光り */
+.game-board.match-point {
+    animation: matchPointGlow 0.8s ease infinite alternate;
+}
+
+.enemy-area .game-board.match-point {
+    border-color: var(--accent-cyan);
+}
+
+.player-area .game-board.match-point {
+    border-color: var(--accent-red);
+}
+
+@keyframes matchPointGlow {
+    0% { box-shadow: 0 0 10px currentColor, inset 0 0 10px rgba(255, 255, 255, 0.1); }
+    100% { box-shadow: 0 0 30px currentColor, 0 0 60px currentColor, inset 0 0 20px rgba(255, 255, 255, 0.2); }
+}
+
+/* フリーズオーバーレイ */
+.freeze-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 200, 255, 0.3);
+    border-radius: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    z-index: 50;
+}
+
+.frozen .freeze-overlay {
+    display: flex;
+    animation: freezePulse 1s ease infinite;
+}
+
+.frozen .game-board {
+    filter: brightness(0.7);
+}
+
+@keyframes freezePulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* ========================================
+   バトルログエリア
+   ======================================== */
+.battle-log-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+}
+
+.battle-log {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-yellow);
+    text-align: center;
+    text-shadow: 0 0 10px var(--accent-yellow);
+    animation: logPulse 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.battle-log.attack {
+    color: var(--accent-red);
+    text-shadow: 0 0 15px var(--accent-red);
+}
+
+.battle-log.interference {
+    color: var(--accent-pink);
+    text-shadow: 0 0 15px var(--accent-pink);
+}
+
+.battle-log.damage {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 15px var(--accent-cyan);
+}
+
+.battle-log.stuck {
+    color: #ff8800;
+    text-shadow: 0 0 15px #ff8800;
+}
+
+@keyframes logPulse {
+    0% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 5px;
+}
+
+.player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.player-info.player-enemy {
+    align-items: flex-end;
+}
+
+.hp-bar {
+    width: 100%;
+    height: 18px;
+    background: var(--bg-card);
+    border-radius: 9px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--accent-green);
+}
+
+.hp-bar.enemy {
+    border-color: var(--accent-red);
+}
+
+.hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-green), #00cc66);
+    border-radius: 7px;
+    transition: width 0.3s ease;
+    width: 100%;
+}
+
+.hp-bar.enemy .hp-fill {
+    background: linear-gradient(90deg, var(--accent-red), #cc0033);
+}
+
+.hp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.score {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.vs-badge {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--accent-yellow);
+    padding: 4px 6px;
+}
+
+.cpu-level {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+.warning-bar {
+    background: rgba(255, 51, 102, 0.2);
+    border: 1px solid var(--accent-red);
+    border-radius: 6px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    min-height: 28px;
+}
+
+.warning-bar.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.warning-icon {
+    font-size: 0.9rem;
+    animation: shake 0.5s ease infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+.warning-text {
+    font-size: 0.7rem;
+    color: var(--accent-red);
+}
+
+.warning-queue {
+    margin-left: auto;
+    display: flex;
+    gap: 3px;
+}
+
+.warning-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-red);
+    border-radius: 50%;
+}
+
+.game-board {
+    background: var(--bg-card);
+    border-radius: 10px;
+    padding: 6px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 5px;
+    position: relative;
+}
+
+.board-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-red);
+    text-align: center;
+    padding: 15px;
+}
+
+.board-overlay.active {
+    display: flex;
+    animation: overlayPop 0.3s ease;
+}
+
+@keyframes overlayPop {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.tile-cell {
+    background: var(--bg-secondary);
+    border-radius: 5px;
+}
+
+/* タイル */
+.tile {
+    position: absolute;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    transition: left 0.1s ease, top 0.1s ease;
+    z-index: 10;
+}
+
+.player-area .tile { font-size: 1.3rem; }
+.enemy-area .tile { font-size: 0.7rem; }
+
+.tile[data-value="2"] { background: var(--tile-2); color: var(--text-primary); }
+.tile[data-value="4"] { background: var(--tile-4); color: var(--text-primary); }
+.tile[data-value="8"] { background: var(--tile-8); color: white; }
+.tile[data-value="16"] { background: var(--tile-16); color: white; }
+.tile[data-value="32"] { background: var(--tile-32); color: white; }
+.tile[data-value="64"] { background: var(--tile-64); color: white; }
+
+/* 敵の妨害タイル（2）- 赤く光る */
+.enemy-area .tile[data-value="2"].interference-tile {
+    background: #4a1a1a;
+    box-shadow: 0 0 12px var(--accent-red);
+    animation: interferenceGlow 0.8s ease infinite alternate;
+}
+
+@keyframes interferenceGlow {
+    0% { box-shadow: 0 0 8px var(--accent-red); }
+    100% { box-shadow: 0 0 20px var(--accent-red), 0 0 30px rgba(255, 51, 102, 0.5); }
+}
+
+/* ボムタイル */
+.tile.bomb-tile {
+    background: #4a1a3a !important;
+    box-shadow: 0 0 15px var(--accent-pink) !important;
+    animation: bombPulse 0.5s ease infinite !important;
+}
+
+.tile.bomb-tile::after {
+    content: '💣';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.6rem;
+}
+
+@keyframes bombPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* 128 - 妨害タイル（攻撃可能） */
+.tile[data-value="128"] { 
+    background: var(--tile-128); 
+    color: white;
+    box-shadow: 0 0 10px var(--tile-128);
+    animation: attackable 1s ease infinite;
+}
+
+/* 256 - 自動妨害タイル */
+.tile[data-value="256"] { 
+    background: var(--tile-256); 
+    color: white;
+    box-shadow: 0 0 12px var(--tile-256);
+}
+
+/* 512 - 攻撃タイル */
+.tile[data-value="512"] { 
+    background: var(--tile-512); 
+    color: white;
+    box-shadow: 0 0 15px var(--tile-512);
+    animation: attackable 1s ease infinite;
+}
+
+/* 1024 - 必殺攻撃タイル */
+.tile[data-value="1024"] { 
+    background: var(--tile-1024); 
+    color: white;
+    box-shadow: 0 0 20px var(--tile-1024);
+    animation: attackable 0.7s ease infinite;
+}
+
+.tile[data-value="2048"] { 
+    background: var(--tile-2048); 
+    color: var(--accent-yellow);
+    box-shadow: 0 0 25px var(--accent-yellow);
+}
+
+@keyframes attackable {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+.tile.new {
+    animation: pop 0.15s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.tile.merged {
+    animation: merge 0.15s ease;
+}
+
+@keyframes merge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+.tile.attack-target {
+    cursor: pointer;
+}
+
+.player-area .tile.attack-target::after {
+    content: '⚔️';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.6rem;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    padding: 2px;
+}
+
+/* 戻るボタン */
+.back-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: var(--bg-card);
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.back-btn:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+/* ========================================
+   結果画面
+   ======================================== */
+#result-screen {
+    background: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+.result-container {
+    text-align: center;
+    padding: 40px;
+}
+
+.result-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+
+.result-title.victory {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: glow 1s ease infinite alternate;
+}
+
+.result-title.defeat {
+    color: var(--accent-red);
+}
+
+.result-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    min-width: 240px;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.result-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-buttons .menu-btn {
+    min-width: 200px;
+}
+
+/* ========================================
+   スキル弾演出
+   ======================================== */
+.skill-bullet {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 200;
+    pointer-events: none;
+    animation: skillBulletFly 0.5s ease-out forwards;
+}
+
+.skill-bullet.player-bullet {
+    background: radial-gradient(circle, var(--accent-cyan), rgba(0, 245, 255, 0.3));
+    box-shadow: 0 0 30px var(--accent-cyan), 0 0 60px var(--accent-cyan);
+}
+
+.skill-bullet.enemy-bullet {
+    background: radial-gradient(circle, var(--accent-red), rgba(255, 51, 102, 0.3));
+    box-shadow: 0 0 30px var(--accent-red), 0 0 60px var(--accent-red);
+}
+
+@keyframes skillBulletFly {
+    0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5)) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   エフェクト
+   ======================================== */
+.damage-effect {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--accent-red);
+    text-shadow: 0 0 20px var(--accent-red);
+    animation: damageFloat 0.8s ease forwards;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+@keyframes damageFloat {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -70%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -100%) scale(1); }
+}
+
+/* ========================================
+   レスポンシブ
+   ======================================== */
+@media (max-width: 400px) {
+    .enemy-area .game-board { width: min(65vw, 190px); height: min(65vw, 190px); }
+    .player-area .game-board { width: min(85vw, 310px); height: min(85vw, 310px); }
+    .player-area .tile { font-size: 1.1rem; }
+    .enemy-area .tile { font-size: 0.6rem; }
+    .battle-log { font-size: 0.75rem; }
+}
+
+@media (max-height: 650px) {
+    .game-container {
+        padding: 4px;
+        gap: 3px;
+    }
+    .enemy-area .game-board { width: min(55vw, 170px); height: min(55vw, 170px); }
+    .player-area .game-board { width: min(75vw, 280px); height: min(75vw, 280px); }
+    .battle-log { font-size: 0.7rem; }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>対戦型 2048</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ホーム画面 -->
+    <div id="home-screen" class="screen active">
+        <div class="home-container">
+            <h1 class="game-title">
+                <span class="title-2048">2048</span>
+                <span class="title-battle">BATTLE</span>
+            </h1>
+            
+            <div class="menu-section">
+                <button id="btn-cpu-battle" class="menu-btn primary">
+                    <span class="btn-icon">🎮</span>
+                    <span class="btn-text">CPU対戦</span>
+                </button>
+                
+                <div class="cpu-level-selector">
+                    <span class="level-label">CPUレベル</span>
+                    <div class="level-buttons">
+                        <button class="level-btn" data-level="1">1</button>
+                        <button class="level-btn" data-level="2">2</button>
+                        <button class="level-btn active" data-level="3">3</button>
+                        <button class="level-btn" data-level="4">4</button>
+                        <button class="level-btn" data-level="5">5</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h2 class="section-title">ルール</h2>
+                <ul class="rules-list">
+                    <li><span class="tile-badge t128">128</span> タップ → 妨害 ×1</li>
+                    <li><span class="tile-badge t256">256</span> 作成 → 自動妨害 ×1</li>
+                    <li><span class="tile-badge t512">512</span> タップ → 1ダメ + 妨害 ×3</li>
+                    <li><span class="tile-badge t1024">1024</span> タップ → 4ダメージ</li>
+                    <li>⚠️ 妨害は3秒後に届く</li>
+                    <li>💀 詰み → HP-2 & 2を全消し</li>
+                    <li>✨ 合成時5%でスキル発動!</li>
+                </ul>
+            </div>
+            
+            <div class="skill-info-section">
+                <h2 class="section-title">スキル一覧</h2>
+                <div class="skill-grid">
+                    <div class="skill-item">🛡️ シールド<span>攻撃無効</span></div>
+                    <div class="skill-item">🪞 リフレクト<span>妨害跳返</span></div>
+                    <div class="skill-item">🧹 クリーン<span>2全消し</span></div>
+                    <div class="skill-item">⚡ ダブル<span>攻撃2倍</span></div>
+                    <div class="skill-item">💣 ボム<span>3×3爆破</span></div>
+                    <div class="skill-item">❄️ フリーズ<span>3秒停止</span></div>
+                    <div class="skill-item">🔄 コンバート<span>2→4変換</span></div>
+                    <div class="skill-item">🎲 ダイス<span>ランダム消</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ゲーム画面 -->
+    <div id="game-screen" class="screen">
+        <div class="game-container">
+            <div class="game-layout">
+                <!-- UIエリア -->
+                <div class="hud-area">
+                    <div class="game-header">
+                        <div class="player-info player-self">
+                            <div class="hp-bar">
+                                <div class="hp-fill" id="player-hp-fill"></div>
+                                <span class="hp-text" id="player-hp-text">5</span>
+                            </div>
+                            <div class="score"><span id="player-score">0</span></div>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="player-info player-enemy">
+                            <div class="hp-bar enemy">
+                                <div class="hp-fill" id="enemy-hp-fill"></div>
+                                <span class="hp-text" id="enemy-hp-text">5</span>
+                            </div>
+                            <div class="cpu-level" id="cpu-level-display">CPU Lv.3</div>
+                        </div>
+                    </div>
+
+                    <div class="warning-bar" id="warning-bar">
+                        <span class="warning-icon">⚠️</span>
+                        <span class="warning-text">妨害: <span id="warning-timer">3.0</span>秒後</span>
+                        <div class="warning-queue" id="warning-queue"></div>
+                    </div>
+                </div>
+
+                <!-- 敵エリア -->
+                <div class="enemy-area">
+                    <div class="board-wrapper">
+                        <div class="game-board" id="enemy-board"></div>
+                        <div class="board-overlay" id="enemy-overlay"></div>
+                        <div class="freeze-overlay">❄️</div>
+                    </div>
+                </div>
+
+                <!-- バトルログ -->
+                <div class="battle-log-area">
+                    <div class="battle-log" id="battle-log">GAME START!</div>
+                </div>
+
+                <!-- 自分エリア -->
+                <div class="player-area">
+                    <div class="board-wrapper">
+                        <div class="game-board" id="player-board"></div>
+                        <div class="board-overlay" id="player-overlay"></div>
+                        <div class="freeze-overlay">❄️</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="back-btn" id="btn-back">✕</button>
+        </div>
+    </div>
+    
+    <!-- 結果画面 -->
+    <div id="result-screen" class="screen">
+        <div class="result-container">
+            <h1 class="result-title" id="result-title">VICTORY!</h1>
+            <div class="result-stats">
+                <div class="stat">
+                    <span class="stat-label">スコア</span>
+                    <span class="stat-value" id="result-score">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">最大タイル</span>
+                    <span class="stat-value" id="result-max-tile">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">与ダメージ</span>
+                    <span class="stat-value" id="result-damage">0</span>
+                </div>
+            </div>
+            <div class="result-buttons">
+                <button class="menu-btn primary" id="btn-retry">もう一度</button>
+                <button class="menu-btn" id="btn-home">ホームへ</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/skills.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
