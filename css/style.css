@@ -719,18 +719,23 @@ body {
     padding: 8px;
 }
 
-/* 防御系 - ダイヤ枠 */
+/* 防御系 - ダイヤ枠（clip-pathで生成） */
 .skill-frame-card.cat-defense .frame-inner {
-    border-radius: 8px;
-    transform: rotate(45deg);
-    border: 3px solid #00ff88;
-    width: 65px;
-    height: 65px;
-    padding: 6px;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: linear-gradient(135deg, #00ff88, #00aa55);
+    padding: 3px;
+    width: 85px;
+    height: 85px;
+    position: relative;
 }
 
-.skill-frame-card.cat-defense .frame-inner > * {
-    transform: rotate(-45deg);
+.skill-frame-card.cat-defense .frame-inner::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: rgba(0, 0, 0, 0.9);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    z-index: -1;
 }
 
 /* 効果系 - 六角形枠 */
@@ -1652,14 +1657,18 @@ body {
 }
 
 .tile-skill-frame.cat-defense {
-    border-radius: 3px;
-    transform: rotate(45deg);
-    border: 2px solid #00ff88;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: linear-gradient(135deg, #00ff88, #00aa55);
+    border: none;
     box-shadow: 0 0 6px #00ff88;
 }
 
-.tile-skill-frame.cat-defense img {
-    transform: rotate(-45deg);
+.tile-skill-frame.cat-defense::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: rgba(0, 0, 0, 0.9);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
 .tile-skill-frame.cat-effect {
@@ -1731,16 +1740,17 @@ body {
 }
 
 .skill-frame-full.cat-defense .frame-bg {
-    width: 50px;
-    height: 50px;
-    border-radius: 6px;
-    transform: rotate(45deg);
-    border: 3px solid #00ff88;
-    background: rgba(0, 255, 136, 0.15);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 170, 85, 0.3));
+    border: none;
 }
 
-.skill-frame-full.cat-defense img {
-    transform: rotate(-45deg);
+.skill-frame-full.cat-defense .frame-bg::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: rgba(0, 0, 0, 0.85);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
 .skill-frame-full.cat-effect .frame-bg {
