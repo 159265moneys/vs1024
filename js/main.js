@@ -177,19 +177,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 card.addEventListener('click', () => openSkillDetail(skillId));
             } else {
-                // 未所持の場合：完全グレーアウト
-                card.className = 'skill-frame-card not-owned';
+                // 未所持の場合：色だけグレー（構造はそのまま）
+                card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity} not-owned`;
                 
                 card.innerHTML = `
+                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                     <div class="frame-inner">
                         <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
                         <span class="skill-name">${skill.name}</span>
                     </div>
-                    <span class="not-owned-label">???</span>
                 `;
                 
-                // 未所持はクリックしても詳細見れない（または見れるようにする？）
-                card.style.cursor = 'not-allowed';
+                // 未所持でも詳細は見れる（ボタンは無効）
+                card.addEventListener('click', () => openSkillDetail(skillId, false));  // false = 未所持
             }
             
             card.dataset.skillId = skillId;
@@ -715,10 +715,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentDetailSkillId = null;
     
-    function openSkillDetail(skillId) {
+    function openSkillDetail(skillId, isOwned = true) {
         currentDetailSkillId = skillId;
         const skill = SKILLS[skillId];
         if (!skill) return;
+        
+        const modal = document.getElementById('skill-detail-modal');
+        
+        // 未所持の場合はグレー表示クラスを追加
+        if (!isOwned) {
+            modal.classList.add('not-owned-detail');
+        } else {
+            modal.classList.remove('not-owned-detail');
+        }
         
         // フル版フレーム付きアイコン
         document.getElementById('detail-skill-icon').innerHTML = `
@@ -781,6 +790,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // 売却価格
         const sellPrice = GachaSystem.sellPrices.skill[skill.rarity];
         document.getElementById('btn-sell-skill').textContent = `売却 (${sellPrice} SP)`;
+        
+        // 未所持の場合は全ボタン無効化
+        const equipBtn = document.getElementById('btn-equip-skill');
+        const sellBtn = document.getElementById('btn-sell-skill');
+        const upgradeBtn = document.getElementById('btn-upgrade-skill');
+        
+        if (!isOwned) {
+            equipBtn.disabled = true;
+            equipBtn.textContent = '未所持';
+            sellBtn.disabled = true;
+            sellBtn.textContent = '未所持';
+            upgradeBtn.disabled = true;
+            upgradeBtn.textContent = '未所持';
+            document.getElementById('upgrade-section').style.display = 'none';
+        }
         
         showModal('skillDetail');
     }
