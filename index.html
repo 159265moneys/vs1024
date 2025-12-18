@@ -337,14 +337,28 @@
         </div>
     </div>
 
-    <!-- ガチャ結果モーダル -->
-    <div id="gacha-result-modal" class="modal">
-        <div class="modal-content gacha-result">
-            <h2 class="modal-title">ガチャ結果</h2>
-            <div class="gacha-results" id="gacha-results">
+    <!-- ガチャ演出画面 -->
+    <div id="gacha-animation-screen" class="screen">
+        <div class="gacha-animation-container">
+            <div class="gacha-orbs" id="gacha-orbs">
+                <!-- JSで演出生成 -->
+            </div>
+            <div class="gacha-text">抽選中...</div>
+        </div>
+    </div>
+
+    <!-- ガチャ結果画面 -->
+    <div id="gacha-result-screen" class="screen">
+        <div class="gacha-result-container">
+            <h2 class="result-title">ガチャ結果</h2>
+            <div class="gacha-result-grid" id="gacha-results">
                 <!-- JSで生成 -->
             </div>
-            <button class="modal-close-btn" id="btn-close-gacha">OK</button>
+            <!-- 選択したアイテムの詳細 -->
+            <div class="gacha-item-detail" id="gacha-item-detail">
+                <div class="detail-placeholder">タップで詳細表示</div>
+            </div>
+            <button class="gacha-ok-btn" id="btn-gacha-ok">OK</button>
         </div>
     </div>
 

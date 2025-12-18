@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 画面要素
     const screens = {
         game: document.getElementById('game-screen'),
-        result: document.getElementById('result-screen')
+        result: document.getElementById('result-screen'),
+        'gacha-animation': document.getElementById('gacha-animation-screen'),
+        'gacha-result': document.getElementById('gacha-result-screen')
     };
     
     const mainApp = document.getElementById('main-app');
@@ -30,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // モーダル
     const modals = {
-        gachaResult: document.getElementById('gacha-result-modal'),
         skillDetail: document.getElementById('skill-detail-modal')
     };
     
@@ -380,41 +381,145 @@ document.addEventListener('DOMContentLoaded', () => {
             ? GachaSystem.rollTileGacha(count)
             : GachaSystem.rollSkillGacha(count);
         
-        // 結果表示
-        showGachaResults(results);
+        // 演出画面へ遷移
+        showGachaAnimation(results);
         updateCurrencyDisplay();
+    }
+    
+    let currentGachaResults = [];
+    let selectedGachaIndex = -1;
+    
+    function showGachaAnimation(results) {
+        currentGachaResults = results;
+        
+        // 演出用オーブ生成
+        const orbsContainer = document.getElementById('gacha-orbs');
+        orbsContainer.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const orb = document.createElement('div');
+            orb.className = 'gacha-orb';
+            orbsContainer.appendChild(orb);
+        }
+        
+        // 演出画面表示
+        showScreen('gacha-animation');
+        
+        // 1.5秒後に結果画面へ
+        setTimeout(() => {
+            showGachaResults(results);
+        }, 1500);
     }
     
     function showGachaResults(results) {
         const container = document.getElementById('gacha-results');
         container.innerHTML = '';
+        selectedGachaIndex = -1;
         
-        results.forEach(result => {
-            const item = document.createElement('div');
-            item.className = `gacha-result-item rarity-${result.rarity}`;
+        results.forEach((result, index) => {
+            const card = document.createElement('div');
+            card.className = `gacha-result-card rarity-${result.rarity}`;
+            card.dataset.index = index;
             
             let iconHtml;
             if (result.type === 'skill') {
                 const skill = result.item;
-                iconHtml = `
-                    <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                        <img src="${skill.icon}" alt="${skill.name}">
-                        ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
-                    </div>
-                `;
+                iconHtml = `<img src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">`;
             } else {
-                iconHtml = '<div class="tile-gacha-icon">🎨</div>';
+                iconHtml = '🎨';
             }
             
-            item.innerHTML = `
-                <div class="item-icon">${iconHtml}</div>
-                <div class="item-name">${result.item.name}</div>
-                <div class="item-rarity">${'★'.repeat(result.rarity)}${result.isNew ? ' NEW!' : ''}</div>
+            card.innerHTML = `
+                <div class="card-icon">${iconHtml}</div>
+                <div class="card-name">${result.item.name}</div>
+                <div class="card-rarity">${'★'.repeat(result.rarity)}${result.isNew ? ' NEW!' : ''}</div>
             `;
-            container.appendChild(item);
+            
+            card.addEventListener('click', () => selectGachaItem(index));
+            container.appendChild(card);
         });
         
-        showModal('gachaResult');
+        // 詳細エリアをリセット
+        document.getElementById('gacha-item-detail').innerHTML = '<div class="detail-placeholder">タップで詳細表示</div>';
+        
+        // 結果画面表示
+        showScreen('gacha-result');
+        
+        // 最初のアイテムを自動選択
+        if (results.length > 0) {
+            setTimeout(() => selectGachaItem(0), 100);
+        }
+    }
+    
+    function selectGachaItem(index) {
+        const results = currentGachaResults;
+        if (index < 0 || index >= results.length) return;
+        
+        selectedGachaIndex = index;
+        const result = results[index];
+        
+        // 選択状態更新
+        document.querySelectorAll('.gacha-result-card').forEach((card, i) => {
+            card.classList.toggle('selected', i === index);
+        });
+        
+        // 詳細表示
+        const detailArea = document.getElementById('gacha-item-detail');
+        
+        if (result.type === 'skill') {
+            const skill = result.item;
+            const catInfo = SKILL_CATEGORIES[skill.category];
+            detailArea.innerHTML = `
+                <div class="gacha-skill-detail">
+                    <div class="detail-header">
+                        <div class="detail-icon">
+                            <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
+                                <img src="${skill.icon}" alt="${skill.name}">
+                                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                            </div>
+                        </div>
+                        <div class="detail-info">
+                            <h3>${skill.name}</h3>
+                            <div class="detail-meta">
+                                <span style="color:var(--accent-yellow);">${'★'.repeat(skill.rarity)}</span>
+                                <span style="color:${catInfo ? catInfo.color : '#fff'};">${catInfo ? catInfo.name : ''}</span>
+                                <span style="color:var(--accent-cyan);">コスト: ${skill.cost}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-desc">${skill.description}</div>
+                </div>
+            `;
+        } else {
+            // タイル
+            const tile = result.item;
+            detailArea.innerHTML = `
+                <div class="gacha-tile-detail">
+                    <div class="tile-preview" style="background:var(--tile-2);">2</div>
+                    <div class="tile-info">
+                        <h3>${tile.name}</h3>
+                        <p>${'★'.repeat(result.rarity)} タイルスキン</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    function closeGachaResult() {
+        currentGachaResults = [];
+        selectedGachaIndex = -1;
+        showScreen('main');
+        // ガチャタブを表示
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        tabs.gacha.classList.add('active');
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.querySelector('.tab-item[data-tab="gacha"]').classList.add('active');
+        
+        // スキルガチャだったらスキル一覧更新
+        if (currentGachaType === 'skill') {
+            updateSkillInventory();
+        } else {
+            updateTileCollection();
+        }
     }
     
     // ========================================
@@ -647,15 +752,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-gacha-single').addEventListener('click', () => rollGacha(1));
         document.getElementById('btn-gacha-multi').addEventListener('click', () => rollGacha(11));
         
-        // ガチャ結果閉じる
-        document.getElementById('btn-close-gacha').addEventListener('click', () => {
-            hideModal('gachaResult');
-            if (currentGachaType === 'skill') {
-                updateSkillInventory();
-            } else {
-                updateTileCollection();
-            }
-        });
+        // ガチャ結果OKボタン
+        document.getElementById('btn-gacha-ok').addEventListener('click', closeGachaResult);
         
         // スキル詳細
         document.getElementById('btn-equip-skill').addEventListener('click', () => equipSkill(currentDetailSkillId));
