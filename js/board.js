@@ -17,7 +17,7 @@ class Board {
         this.onAttackableTap = null;
         
         // スキル付与確率（生成時）
-        this.skillAttachChance = 0.15; // 15%でスキル付き
+        this.skillAttachChance = 0.05; // 5%でスキル付き
     }
 
     init(element, isPlayer = true) {

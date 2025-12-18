@@ -500,15 +500,15 @@ const GachaSystem = {
 // ステージ定義
 // ========================================
 const STAGES = [
-    { id: 1, name: 'EASY', cpuLevel: 1 },
-    { id: 2, name: 'NORMAL', cpuLevel: 1 },
-    { id: 3, name: 'HARD', cpuLevel: 2 },
-    { id: 4, name: 'EXPERT', cpuLevel: 2 },
-    { id: 5, name: 'MASTER', cpuLevel: 3 },
-    { id: 6, name: 'NIGHTMARE', cpuLevel: 3 },
-    { id: 7, name: 'INFERNO', cpuLevel: 4 },
-    { id: 8, name: 'ABYSS', cpuLevel: 4 },
-    { id: 9, name: 'CHAOS', cpuLevel: 5 },
-    { id: 10, name: 'WORLD END', cpuLevel: 5 }
+    { id: 1,  name: 'EASY',      cpuLevel: 1 },
+    { id: 2,  name: 'NORMAL',    cpuLevel: 2 },
+    { id: 3,  name: 'HARD',      cpuLevel: 3 },
+    { id: 4,  name: 'EXPERT',    cpuLevel: 4 },
+    { id: 5,  name: 'MASTER',    cpuLevel: 5 },
+    { id: 6,  name: 'LEGEND',    cpuLevel: 6 },
+    { id: 7,  name: 'NIGHTMARE', cpuLevel: 7 },
+    { id: 8,  name: 'INFERNO',   cpuLevel: 8 },
+    { id: 9,  name: 'ABYSS',     cpuLevel: 9 },
+    { id: 10, name: 'WORLD END', cpuLevel: 10 }
 ];
 
