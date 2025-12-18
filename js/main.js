@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHomeStats();
         updateStageList();
         updateSkillInventory();
-        updateSkinCollection();
+        updateTileCollection();
         setupEventListeners();
     }
     
