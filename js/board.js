@@ -244,16 +244,30 @@ class Board {
     }
 
     getTilePosition(row, col) {
-        const style = getComputedStyle(this.element);
-        const boardWidth = this.element.clientWidth;
-        const padding = parseFloat(style.padding) || 8;
-        const gap = parseFloat(style.gap) || 6;
+        const boardWidth = this.element.clientWidth || this.element.offsetWidth;
+        
+        // ボードがまだ表示されていない場合のフォールバック
+        if (boardWidth <= 0) {
+            // デフォルト値で計算
+            const defaultSize = this.isPlayer ? 340 : 210;
+            const padding = 8;
+            const gap = 6;
+            const tileSize = (defaultSize - padding * 2 - gap * 3) / 4;
+            return {
+                left: padding + col * (tileSize + gap),
+                top: padding + row * (tileSize + gap),
+                size: tileSize
+            };
+        }
+        
+        const padding = 8;
+        const gap = 6;
         const tileSize = (boardWidth - padding * 2 - gap * 3) / 4;
         
         return {
             left: padding + col * (tileSize + gap),
             top: padding + row * (tileSize + gap),
-            size: tileSize
+            size: Math.max(tileSize, 20) // 最小サイズ保証
         };
     }
 
