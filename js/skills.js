@@ -52,6 +52,17 @@ const SKILLS = {
         category: 'effect',
         description: 'スキル使用時の相手の盤面と全く同じにする'
     },
+    curse: {
+        id: 'curse',
+        name: 'カース',
+        nameEn: 'Curse',
+        icon: 'sprite/curse.png',
+        cost: 7,
+        rarity: 5,
+        weight: 2,
+        category: 'attack',
+        description: '次にダメージを受けた時、同じダメージを相手にも与える'
+    },
 
     // ========================================
     // ★4 エピック（5種）
@@ -331,17 +342,6 @@ const SKILLS = {
         weight: 7,
         category: 'effect',
         description: 'お互いの盤面を入れ替える'
-    },
-    curse: {
-        id: 'curse',
-        name: 'カース',
-        nameEn: 'Curse',
-        icon: 'sprite/curse.png',
-        cost: 7,
-        rarity: 5,
-        weight: 2,
-        category: 'attack',
-        description: '次にダメージを受けた時、同じダメージを相手にも与える'
     },
     fusion: {
         id: 'fusion',
