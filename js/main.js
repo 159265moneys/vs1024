@@ -397,8 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const skill = result.item;
                 iconHtml = `
                     <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                        <div class="frame-bg"></div>
                         <img src="${skill.icon}" alt="${skill.name}">
+                        ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                     </div>
                 `;
             } else {
@@ -430,8 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // フル版フレーム付きアイコン
         document.getElementById('detail-skill-icon').innerHTML = `
             <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                <div class="frame-bg"></div>
                 <img src="${skill.icon}" alt="${skill.name}">
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
             </div>
         `;
         document.getElementById('detail-skill-name').textContent = skill.name;
