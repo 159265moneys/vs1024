@@ -971,7 +971,44 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.setCPULevel(stage.cpuLevel);
         ui.showBattleLog(`STAGE ${stageId}: ${stage.name}`, '');
         
+        // 装備スキルバー更新
+        updateEquippedSkillsBar();
+        
         ai.start();
+    }
+    
+    /**
+     * バトル画面の装備スキルバーを更新
+     */
+    function updateEquippedSkillsBar() {
+        const bar = document.getElementById('equipped-skills-bar');
+        if (!bar) return;
+        
+        bar.innerHTML = '';
+        
+        const equippedSkills = GameData.getEquippedSkills();
+        if (!equippedSkills || equippedSkills.length === 0) {
+            bar.style.display = 'none';
+            return;
+        }
+        
+        bar.style.display = 'flex';
+        
+        equippedSkills.forEach(skillId => {
+            const skill = SKILLS[skillId];
+            if (!skill) return;
+            
+            const icon = document.createElement('div');
+            icon.className = `equipped-skill-icon cat-${skill.category} rarity-${skill.rarity}`;
+            icon.title = `${skill.name}: ${skill.description}`;
+            
+            const img = document.createElement('img');
+            img.src = skill.icon;
+            img.alt = skill.name;
+            
+            icon.appendChild(img);
+            bar.appendChild(icon);
+        });
     }
     
     function showResult(winner, stats) {

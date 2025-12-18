@@ -2138,12 +2138,64 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 12px;
-    margin: 6px 10px;
+    padding: 6px 12px;
+    margin: 4px 10px;
     background: transparent;
     border: 2px solid var(--accent-cyan);
     border-radius: 8px;
+    flex-shrink: 0;
 }
+
+/* 装備スキル表示バー（バトル中） */
+.equipped-skills-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+.equipped-skill-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.equipped-skill-icon img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* カテゴリ別枠色 */
+.equipped-skill-icon.cat-attack {
+    background: linear-gradient(145deg, #ff6b8a, #ff3366);
+    border: 2px solid #ff3366;
+}
+.equipped-skill-icon.cat-defense {
+    background: linear-gradient(145deg, #4ade80, #22c55e);
+    border: 2px solid #22c55e;
+}
+.equipped-skill-icon.cat-effect {
+    background: linear-gradient(145deg, #60a5fa, #3b82f6);
+    border: 2px solid #3b82f6;
+}
+
+/* レアリティ別光り */
+.equipped-skill-icon.rarity-3 { box-shadow: 0 0 6px rgba(96, 165, 250, 0.6); }
+.equipped-skill-icon.rarity-4 { box-shadow: 0 0 8px rgba(251, 191, 36, 0.8); }
+.equipped-skill-icon.rarity-5 { box-shadow: 0 0 10px rgba(244, 114, 182, 0.9); }
 
 .battle-log {
     font-family: 'Orbitron', sans-serif;
@@ -2301,7 +2353,7 @@ body {
 }
 
 .game-board {
-    background: #bbada0;
+    background: #e6e6e6;
     border-radius: 10px;
     padding: 8px;
     display: grid;
@@ -2314,7 +2366,7 @@ body {
 
 /* 16マス背景セル */
 .tile-cell {
-    background: rgba(238, 228, 218, 0.35);
+    background: #cfcfcf;
     border-radius: 5px;
 }
 
@@ -2462,115 +2514,81 @@ body {
    スキルアイコン共通
    ======================================== */
 
-/* バトル中のタイル上スキルアイコン（簡略版） */
+/* バトル中のタイル上スキルアイコン（オーバーレイ版） */
 .tile.has-skill {
-    overflow: visible;
+    position: relative;
 }
 
 /* ========================================
-   タイル上スキルフレーム（バトル中）
-   ※親タイルのisolateコンテキスト内
+   タイル上スキルオーバーレイ（バトル中）
+   タイル全体を覆う半透明オーバーレイ
    ======================================== */
 .tile-skill-frame {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 20px;
-    height: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 10;
     pointer-events: none;
+    border-radius: 5px;
+    /* 半透明背景でタイル数字を見せる */
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .tile-skill-frame img {
-    width: 12px;
-    height: 12px;
+    width: 50%;
+    height: 50%;
+    max-width: 32px;
+    max-height: 32px;
     object-fit: contain;
     position: relative;
     z-index: 5;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* 🔴 攻撃系 - 円枠（バトル中） */
+/* カテゴリ別オーバーレイ色（バトル中） */
 .tile-skill-frame.cat-attack {
-    border-radius: 50%;
-    background: var(--tile-rarity-bg, #666);
-    border: 1.5px solid var(--frame-color, #888);
+    background: rgba(255, 51, 102, 0.25);
+    border: 2px solid rgba(255, 51, 102, 0.6);
 }
-
-/* 🟢 防御系 - 角丸正方形（バトル中） */
 .tile-skill-frame.cat-defense {
-    border-radius: 6px;
-    background: var(--tile-rarity-bg, #666);
-    border: 1.5px solid var(--frame-color, #888);
+    background: rgba(34, 197, 94, 0.25);
+    border: 2px solid rgba(34, 197, 94, 0.6);
+}
+.tile-skill-frame.cat-effect {
+    background: rgba(59, 130, 246, 0.25);
+    border: 2px solid rgba(59, 130, 246, 0.6);
 }
 
-/* 🔵 効果系 - 八角形（バトル中） */
-.tile-skill-frame.cat-effect::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: var(--frame-color, #888);
-    clip-path: var(--sk-octagon);
-    z-index: 1;
-}
-
-.tile-skill-frame.cat-effect::after {
-    content: '';
-    position: absolute;
-    width: 90%;
-    height: 90%;
-    background: var(--tile-rarity-bg, #666);
-    clip-path: var(--sk-octagon);
-    z-index: 2;
-}
-
-/* レアリティ別（バトル中）- 新カラースキーム */
-.tile-skill-frame.rarity-1 { 
-    --frame-color: #888;
-    --tile-rarity-bg: linear-gradient(145deg, #666, #555);
-}
+/* レアリティ別光り（バトル中） */
+.tile-skill-frame.rarity-1 { }
 .tile-skill-frame.rarity-2 { 
-    --frame-color: #2ecc71;
-    --tile-rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
+    box-shadow: inset 0 0 8px rgba(34, 197, 94, 0.4);
 }
 .tile-skill-frame.rarity-3 { 
-    --frame-color: #3498db;
-    --tile-rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
+    box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.5);
 }
 .tile-skill-frame.rarity-4 { 
-    --frame-color: #f1c40f;
-    --tile-rarity-bg: linear-gradient(45deg, #f39c12, #d68910);
-    animation: tileGlow4 1.5s ease-in-out infinite;
+    box-shadow: inset 0 0 12px rgba(251, 191, 36, 0.6);
+    animation: tileOverlayGlow4 1.5s ease-in-out infinite;
 }
 .tile-skill-frame.rarity-5 { 
-    --frame-color: #e74c3c;
-    --tile-rarity-bg: linear-gradient(45deg, #c0392b, #922b21);
-    animation: tileGlow5 1.2s ease-in-out infinite;
+    box-shadow: inset 0 0 15px rgba(244, 114, 182, 0.7);
+    animation: tileOverlayGlow5 1.2s ease-in-out infinite;
 }
 
-.tile-skill-frame.cat-attack.rarity-1 { border-color: #888; }
-.tile-skill-frame.cat-attack.rarity-2 { border-color: #2ecc71; }
-.tile-skill-frame.cat-attack.rarity-3 { border-color: #3498db; }
-.tile-skill-frame.cat-attack.rarity-4 { border-color: #f1c40f; }
-.tile-skill-frame.cat-attack.rarity-5 { border-color: #e74c3c; }
-
-.tile-skill-frame.cat-defense.rarity-1 { border-color: #888; }
-.tile-skill-frame.cat-defense.rarity-2 { border-color: #2ecc71; }
-.tile-skill-frame.cat-defense.rarity-3 { border-color: #3498db; }
-.tile-skill-frame.cat-defense.rarity-4 { border-color: #f1c40f; }
-.tile-skill-frame.cat-defense.rarity-5 { border-color: #e74c3c; }
-
-@keyframes tileGlow4 {
-    0%, 100% { box-shadow: 0 0 6px rgba(241, 196, 15, 0.5); }
-    50% { box-shadow: 0 0 12px rgba(241, 196, 15, 0.8), 0 0 20px rgba(243, 156, 18, 0.4); }
+@keyframes tileOverlayGlow4 {
+    0%, 100% { box-shadow: inset 0 0 12px rgba(251, 191, 36, 0.4); }
+    50% { box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.7); }
 }
 
-@keyframes tileGlow5 {
-    0%, 100% { box-shadow: 0 0 8px rgba(231, 76, 60, 0.6); }
-    50% { box-shadow: 0 0 16px rgba(231, 76, 60, 0.9), 0 0 25px rgba(192, 57, 43, 0.5); }
+@keyframes tileOverlayGlow5 {
+    0%, 100% { box-shadow: inset 0 0 15px rgba(244, 114, 182, 0.5); }
+    50% { box-shadow: inset 0 0 25px rgba(244, 114, 182, 0.8); }
 }
 
 /* ========================================
