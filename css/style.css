@@ -647,73 +647,152 @@ body {
 
 .skill-inventory {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    justify-items: center;
 }
 
-.skill-card {
-    background: var(--bg-card);
-    border-radius: 10px;
+/* ========================================
+   スキルフレームカード（カテゴリ形状）
+   ======================================== */
+
+.skill-frame-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 8px;
+}
+
+.skill-frame-card:hover {
+    transform: scale(1.05);
+}
+
+.skill-frame-card .frame-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 4px;
     gap: 4px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
-    position: relative;
-    min-height: 90px;
+    padding: 10px 8px;
+    background: rgba(0, 0, 0, 0.85);
+    width: 70px;
+    height: 80px;
 }
 
-.skill-card:hover {
-    border-color: var(--accent-cyan);
-    transform: translateY(-2px);
+.skill-frame-card .skill-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
-.skill-card .skill-frame-full {
-    width: 50px;
-    height: 50px;
-}
-
-.skill-card .skill-frame-full img {
-    width: 28px;
-    height: 28px;
-}
-
-.skill-card .skill-name {
-    font-size: 0.6rem;
+.skill-frame-card .skill-name {
+    font-size: 0.55rem;
     color: var(--text-primary);
     text-align: center;
-    line-height: 1.2;
+    line-height: 1.1;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-all;
 }
 
-.skill-card .skill-count {
+.skill-frame-card .skill-count {
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: 0;
+    right: 0;
     background: var(--accent-pink);
     color: white;
     font-size: 0.55rem;
     font-weight: 700;
-    padding: 1px 4px;
+    padding: 1px 5px;
     border-radius: 10px;
+    z-index: 5;
 }
 
-/* カテゴリ別ボーダー */
-.skill-card.cat-attack { border-color: rgba(255, 51, 102, 0.5); }
-.skill-card.cat-defense { border-color: rgba(0, 255, 136, 0.5); }
-.skill-card.cat-effect { border-color: rgba(0, 170, 255, 0.5); }
+/* 攻撃系 - 円枠 */
+.skill-frame-card.cat-attack .frame-inner {
+    border-radius: 50%;
+    border: 3px solid #ff3366;
+    width: 75px;
+    height: 75px;
+    padding: 8px;
+}
 
-/* レアリティ別グロー */
-.skill-card.rarity-5 { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
-.skill-card.rarity-4 { box-shadow: 0 0 10px rgba(170, 85, 255, 0.3); }
-.skill-card.rarity-3 { box-shadow: 0 0 8px rgba(0, 245, 255, 0.2); }
+/* 防御系 - ダイヤ枠 */
+.skill-frame-card.cat-defense .frame-inner {
+    border-radius: 8px;
+    transform: rotate(45deg);
+    border: 3px solid #00ff88;
+    width: 65px;
+    height: 65px;
+    padding: 6px;
+}
+
+.skill-frame-card.cat-defense .frame-inner > * {
+    transform: rotate(-45deg);
+}
+
+/* 効果系 - 六角形枠 */
+.skill-frame-card.cat-effect .frame-inner {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: linear-gradient(135deg, #00aaff, #0066cc);
+    padding: 3px;
+    width: 78px;
+    height: 85px;
+}
+
+.skill-frame-card.cat-effect .frame-inner::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: rgba(0, 0, 0, 0.9);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    z-index: -1;
+}
+
+/* レアリティ別背景演出 */
+.skill-frame-card.rarity-2 .frame-inner {
+    box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.skill-frame-card.rarity-3 .frame-inner {
+    box-shadow: inset 0 0 20px rgba(0, 170, 255, 0.4);
+}
+
+.skill-frame-card.rarity-4 .frame-inner {
+    box-shadow: inset 0 0 25px rgba(255, 170, 0, 0.5);
+    animation: rarity4InnerGlow 0.8s ease infinite alternate;
+}
+
+@keyframes rarity4InnerGlow {
+    0% { box-shadow: inset 0 0 20px rgba(255, 200, 0, 0.4); }
+    100% { box-shadow: inset 0 0 35px rgba(255, 100, 0, 0.6); }
+}
+
+.skill-frame-card.rarity-5 .frame-inner {
+    box-shadow: inset 0 0 30px rgba(255, 51, 102, 0.6);
+    animation: rarity5InnerGlow 0.5s ease infinite alternate;
+}
+
+.skill-frame-card.rarity-5::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    background: radial-gradient(circle, transparent 30%, rgba(255, 51, 102, 0.15) 50%, transparent 70%);
+    animation: rarity5Sparkle 2s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rarity5InnerGlow {
+    0% { box-shadow: inset 0 0 25px rgba(255, 51, 102, 0.5); }
+    100% { box-shadow: inset 0 0 45px rgba(255, 0, 68, 0.8); }
+}
+
+@keyframes rarity5Sparkle {
+    0% { transform: rotate(0deg); opacity: 0.7; }
+    100% { transform: rotate(360deg); opacity: 0.7; }
+}
 
 .empty-message {
     grid-column: 1 / -1;

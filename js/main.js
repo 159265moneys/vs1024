@@ -113,14 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skill) return;
             
             const card = document.createElement('div');
-            card.className = `skill-card rarity-${skill.rarity} cat-${skill.category}`;
+            card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             card.dataset.skillId = skillId;
             card.innerHTML = `
-                <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                    <div class="frame-bg"></div>
-                    <img src="${skill.icon}" alt="${skill.name}">
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                    <span class="skill-name">${skill.name}</span>
                 </div>
-                <span class="skill-name">${skill.name}</span>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
             `;
             
