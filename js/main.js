@@ -598,7 +598,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skill) return;
             
             const icon = document.createElement('div');
-            icon.className = `buff-icon ${buff.type}`;
+            // カテゴリ別枠色 + レアリティ別背景
+            icon.className = `buff-icon ${buff.type} cat-${skill.category} rarity-${skill.rarity}`;
             icon.title = skill.name;
             
             const img = document.createElement('img');

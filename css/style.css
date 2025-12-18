@@ -2180,18 +2180,38 @@ body {
     z-index: 2;
 }
 
-/* カテゴリ別枠色 */
+/* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
 .equipped-skill-icon.cat-attack {
-    background: linear-gradient(145deg, #ff6b8a, #ff3366);
     border: 2px solid #ff3366;
 }
 .equipped-skill-icon.cat-defense {
-    background: linear-gradient(145deg, #4ade80, #22c55e);
     border: 2px solid #22c55e;
 }
 .equipped-skill-icon.cat-effect {
-    background: linear-gradient(145deg, #60a5fa, #3b82f6);
     border: 2px solid #3b82f6;
+}
+
+/* レアリティ別背景演出 */
+.equipped-skill-icon.rarity-1 {
+    background: linear-gradient(145deg, #9ca3af, #6b7280);
+}
+.equipped-skill-icon.rarity-2 {
+    background: linear-gradient(145deg, #3dd9a0, #28b882);
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+.equipped-skill-icon.rarity-3 {
+    background: linear-gradient(145deg, #60a5fa, #3b82f6);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+.equipped-skill-icon.rarity-4 {
+    background: linear-gradient(145deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
+    animation: rarity4Pulse 1.5s ease-in-out infinite;
+}
+.equipped-skill-icon.rarity-5 {
+    background: linear-gradient(145deg, #f472b6, #ec4899);
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+    animation: rarity5Glow 2s ease-in-out infinite;
 }
 
 /* レアリティ別光り */
@@ -2315,19 +2335,27 @@ body {
     object-fit: contain;
 }
 
-/* バフ（自分に有利）= 緑枠 */
-.buff-icon.buff {
-    background: rgba(34, 197, 94, 0.3);
-    border: 1px solid var(--accent-green);
-    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+/* バフアイコン - カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
+.buff-icon.cat-attack {
+    border: 1px solid #ff3366;
+}
+.buff-icon.cat-defense {
+    border: 1px solid #22c55e;
+}
+.buff-icon.cat-effect {
+    border: 1px solid #3b82f6;
 }
 
-/* デバフ（自分に不利）= 赤枠 */
-.buff-icon.debuff {
-    background: rgba(255, 59, 92, 0.3);
-    border: 1px solid var(--accent-red);
-    box-shadow: 0 0 5px rgba(255, 59, 92, 0.5);
-}
+/* バフアイコン - レアリティ別背景 */
+.buff-icon.rarity-1 { background: rgba(156, 163, 175, 0.4); }
+.buff-icon.rarity-2 { background: rgba(52, 211, 153, 0.4); box-shadow: 0 0 4px rgba(52, 211, 153, 0.5); }
+.buff-icon.rarity-3 { background: rgba(59, 130, 246, 0.4); box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+.buff-icon.rarity-4 { background: rgba(251, 191, 36, 0.4); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6); }
+.buff-icon.rarity-5 { background: rgba(236, 72, 153, 0.4); box-shadow: 0 0 8px rgba(236, 72, 153, 0.7); }
+
+/* バフ/デバフ区別（アイコン自体は同じ、効果の有利不利で判断） */
+.buff-icon.buff { opacity: 1; }
+.buff-icon.debuff { opacity: 0.8; }
 
 /* 時間制限付きは残り時間表示 */
 .buff-icon .buff-timer {
@@ -2610,7 +2638,7 @@ body {
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
 }
 
-/* カテゴリ別オーバーレイ色（バトル中） */
+/* カテゴリ別オーバーレイ色（バトル中タイル上）攻撃=赤、防御=緑、効果=青 */
 .tile-skill-frame.cat-attack {
     border-color: rgba(255, 51, 102, 0.8);
     background: rgba(255, 51, 102, 0.15);
@@ -2623,6 +2651,12 @@ body {
     border-color: rgba(59, 130, 246, 0.8);
     background: rgba(59, 130, 246, 0.15);
 }
+
+/* タイル上スキルアイコンのレアリティ光り */
+.tile-skill-frame.rarity-2 { box-shadow: inset 0 0 6px rgba(52, 211, 153, 0.4); }
+.tile-skill-frame.rarity-3 { box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.5); }
+.tile-skill-frame.rarity-4 { box-shadow: inset 0 0 10px rgba(251, 191, 36, 0.6); }
+.tile-skill-frame.rarity-5 { box-shadow: inset 0 0 12px rgba(236, 72, 153, 0.7); }
 
 /* レアリティ別光り（バトル中オーバーレイ） */
 .tile-skill-frame.rarity-1 { }

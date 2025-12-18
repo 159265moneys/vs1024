@@ -358,9 +358,9 @@ const SKILLS = {
 
 // カテゴリ定義
 const SKILL_CATEGORIES = {
-    attack:  { name: '攻撃', color: '#ff3366', shape: 'circle' },
-    defense: { name: '防御', color: '#00ff88', shape: 'rounded-square' },
-    effect:  { name: '効果', color: '#00aaff', shape: 'rounded-octagon' }
+    attack:  { name: '攻撃', color: '#ff3366', shape: 'circle' },         // 赤
+    defense: { name: '防御', color: '#22c55e', shape: 'rounded-square' }, // 緑
+    effect:  { name: '効果', color: '#3b82f6', shape: 'rounded-octagon' } // 青
 };
 
 // ========================================
