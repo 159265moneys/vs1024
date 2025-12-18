@@ -23,9 +23,11 @@ class Game {
         this.playerShield = false;
         this.playerReflect = false;
         this.playerDouble = false;
+        this.playerResurrection = false;
         this.enemyShield = false;
         this.enemyReflect = false;
         this.enemyDouble = false;
+        this.enemyResurrection = false;
         
         // フリーズ状態
         this.enemyFrozen = false;
@@ -71,9 +73,11 @@ class Game {
         this.playerShield = false;
         this.playerReflect = false;
         this.playerDouble = false;
+        this.playerResurrection = false;
         this.enemyShield = false;
         this.enemyReflect = false;
         this.enemyDouble = false;
+        this.enemyResurrection = false;
         this.enemyFrozen = false;
         this.enemyFreezeTimer = 0;
         this.playerFrozen = false;
@@ -527,10 +531,15 @@ class Game {
                 }
                 break;
                 
-            case 'grace':
-                // 詰みダメージ無効（実装は後で）
+            case 'resurrection':
+                // 死亡時復活フラグを設定
+                if (isPlayer) {
+                    this.playerResurrection = true;
+                } else {
+                    this.enemyResurrection = true;
+                }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${casterName}グレイス! 20秒間詰み無効!`, 'attack', skill.icon);
+                    this.onBattleLog(`${casterName}リザレクション! 復活準備完了!`, 'attack', skill.icon);
                 }
                 break;
                 
@@ -907,6 +916,43 @@ class Game {
     }
 
     endGame(winner) {
+        // リザレクション判定
+        if (winner === 'enemy' && this.playerResurrection) {
+            // プレイヤー復活
+            this.playerResurrection = false;
+            this.playerHP = 1;
+            this.playerBoard.resetBoard();
+            if (this.onHPChange) {
+                this.onHPChange('player', this.playerHP);
+            }
+            if (this.onBattleLog) {
+                this.onBattleLog('🔮 リザレクション発動! 復活!', 'attack');
+            }
+            if (this.onBoardReset) {
+                this.onBoardReset('player', 0);
+            }
+            this.checkMatchPoint();
+            return;
+        }
+        
+        if (winner === 'player' && this.enemyResurrection) {
+            // 敵復活
+            this.enemyResurrection = false;
+            this.enemyHP = 1;
+            this.enemyBoard.resetBoard();
+            if (this.onHPChange) {
+                this.onHPChange('enemy', this.enemyHP);
+            }
+            if (this.onBattleLog) {
+                this.onBattleLog('🔮 CPUリザレクション! 復活!', 'attack');
+            }
+            if (this.onEnemyBoardUpdate) {
+                this.onEnemyBoardUpdate();
+            }
+            this.checkMatchPoint();
+            return;
+        }
+        
         this.isGameOver = true;
         this.stopGameLoop();
         

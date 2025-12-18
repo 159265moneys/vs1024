@@ -30,16 +30,16 @@ const SKILLS = {
         category: 'attack',
         description: '敵は10秒間、タイル合成時に生成される2が2個になる'
     },
-    grace: {
-        id: 'grace',
-        name: 'グレイス',
-        nameEn: 'Grace',
+    resurrection: {
+        id: 'resurrection',
+        name: 'リザレクション',
+        nameEn: 'Resurrection',
         icon: 'sprite/grace.png',
         cost: 7,
         rarity: 5,
         weight: 2,
         category: 'defense',
-        description: 'これから20秒間、詰んでもダメージを受けない'
+        description: '死んだとき一度だけ蘇る。ただしタイル盤がリセットされる'
     },
     mirror: {
         id: 'mirror',
@@ -337,9 +337,9 @@ const SKILLS = {
         name: 'カース',
         nameEn: 'Curse',
         icon: 'sprite/curse.png',
-        cost: 2,
-        rarity: 1,
-        weight: 7,
+        cost: 7,
+        rarity: 5,
+        weight: 2,
         category: 'attack',
         description: '次にダメージを受けた時、同じダメージを相手にも与える'
     },
