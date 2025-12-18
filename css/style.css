@@ -846,6 +846,41 @@ body {
     pointer-events: none;
 }
 
+/* 未所持スキル - 完全モノクログレー */
+.skill-frame-card.not-owned {
+    background: #666 !important;
+    border: none !important;
+    opacity: 0.6;
+}
+
+.skill-frame-card.not-owned::before,
+.skill-frame-card.not-owned::after {
+    display: none !important;
+}
+
+.skill-frame-card.not-owned .frame-inner {
+    filter: grayscale(100%) brightness(0.5);
+}
+
+.skill-frame-card.not-owned .skill-icon-img {
+    filter: grayscale(100%) brightness(0.6);
+}
+
+.skill-frame-card.not-owned .skill-name {
+    color: #888 !important;
+}
+
+.skill-frame-card.not-owned .not-owned-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #555;
+    z-index: 30;
+}
+
 /* 装備中バッジは別要素で実装（::afterとの競合回避） */
 .skill-frame-card.equipped-indicator {
     position: relative;
