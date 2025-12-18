@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             card.dataset.skillId = skillId;
             card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                 <div class="frame-inner">
                     <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
                     <span class="skill-name">${skill.name}</span>

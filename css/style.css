@@ -655,15 +655,30 @@ body {
 /* ========================================
    共通スキルフレーム（全シーン統一）
    形状=カテゴリ、色=レアリティ
+   攻撃=円、防御=六芒星、効果=六角形
    ======================================== */
 
 /* レアリティ色変数 */
 :root {
-    --rarity-1: #aaaaaa;
+    --rarity-1: #888888;
     --rarity-2: #00ff88;
     --rarity-3: #00aaff;
     --rarity-4: #ffaa00;
     --rarity-5: #ff3366;
+}
+
+/* 六芒星のclip-path */
+:root {
+    --hexagram: polygon(
+        50% 0%, 63% 25%, 100% 25%, 75% 50%, 
+        100% 75%, 63% 75%, 50% 100%, 37% 75%, 
+        0% 75%, 25% 50%, 0% 25%, 37% 25%
+    );
+    --hexagram-inner: polygon(
+        50% 5%, 61% 27%, 95% 27%, 73% 50%, 
+        95% 73%, 61% 73%, 50% 95%, 39% 73%, 
+        5% 73%, 27% 50%, 5% 27%, 39% 27%
+    );
 }
 
 /* スキルカード（一覧表示用） */
@@ -676,42 +691,39 @@ body {
     transition: all 0.2s ease;
     padding: 8px;
     width: 100px;
-    height: 100px;
+    height: 110px;
 }
 
 .skill-frame-card:hover {
     transform: scale(1.05);
 }
 
-/* 枠の内側コンテンツ */
+/* 枠の内側コンテンツ - 最前面に配置 */
 .skill-frame-card .frame-inner {
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    width: 100%;
-    height: 100%;
+    gap: 2px;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .skill-frame-card .skill-icon-img {
     width: 36px;
     height: 36px;
     object-fit: contain;
-    position: relative;
-    z-index: 2;
 }
 
 .skill-frame-card .skill-name {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     color: var(--text-primary);
     text-align: center;
     line-height: 1.1;
-    max-width: 70px;
+    max-width: 75px;
     word-break: break-all;
-    position: relative;
-    z-index: 2;
+    text-shadow: 0 0 3px rgba(0,0,0,0.8);
 }
 
 .skill-frame-card .skill-count {
@@ -724,44 +736,44 @@ body {
     font-weight: 700;
     padding: 1px 5px;
     border-radius: 10px;
-    z-index: 15;
+    z-index: 20;
 }
 
 /* ========================================
-   カテゴリ別形状（共通）
+   カテゴリ別形状（スキルカード）
    ======================================== */
 
 /* 攻撃系 - 円枠 */
 .skill-frame-card.cat-attack::before {
     content: '';
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.92);
     border: 1px solid var(--frame-color, var(--rarity-1));
-    z-index: 0;
+    z-index: 1;
 }
 
-/* 防御系 - ダイヤ枠 */
+/* 防御系 - 六芒星枠 */
 .skill-frame-card.cat-defense::before {
     content: '';
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 95px;
+    height: 95px;
     background: var(--frame-color, var(--rarity-1));
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    z-index: 0;
+    clip-path: var(--hexagram);
+    z-index: 1;
 }
 
 .skill-frame-card.cat-defense::after {
     content: '';
     position: absolute;
-    width: 88px;
-    height: 88px;
-    background: rgba(0, 0, 0, 0.9);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    z-index: 1;
+    width: 95px;
+    height: 95px;
+    background: rgba(0, 0, 0, 0.92);
+    clip-path: var(--hexagram-inner);
+    z-index: 2;
 }
 
 /* 効果系 - 六角形枠 */
@@ -769,65 +781,157 @@ body {
     content: '';
     position: absolute;
     width: 90px;
-    height: 90px;
+    height: 95px;
     background: var(--frame-color, var(--rarity-1));
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    z-index: 0;
+    z-index: 1;
 }
 
 .skill-frame-card.cat-effect::after {
     content: '';
     position: absolute;
     width: 88px;
-    height: 88px;
-    background: rgba(0, 0, 0, 0.9);
+    height: 93px;
+    background: rgba(0, 0, 0, 0.92);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    z-index: 1;
+    z-index: 2;
 }
 
 /* ========================================
-   レアリティ別枠色
+   レアリティ別枠色＆演出
    ======================================== */
+
+/* ★1 - シンプル */
 .skill-frame-card.rarity-1 { --frame-color: var(--rarity-1); }
-.skill-frame-card.rarity-2 { --frame-color: var(--rarity-2); }
-.skill-frame-card.rarity-3 { --frame-color: var(--rarity-3); }
-.skill-frame-card.rarity-4 { --frame-color: var(--rarity-4); }
-.skill-frame-card.rarity-5 { --frame-color: var(--rarity-5); }
-
-/* 攻撃系のborderにレアリティ色適用 */
 .skill-frame-card.cat-attack.rarity-1::before { border-color: var(--rarity-1); }
-.skill-frame-card.cat-attack.rarity-2::before { border-color: var(--rarity-2); }
-.skill-frame-card.cat-attack.rarity-3::before { border-color: var(--rarity-3); }
-.skill-frame-card.cat-attack.rarity-4::before { border-color: var(--rarity-4); }
-.skill-frame-card.cat-attack.rarity-5::before { border-color: var(--rarity-5); }
 
-/* ========================================
-   レアリティ別背景演出（内側の光）
-   ======================================== */
-.skill-frame-card.rarity-2 .frame-inner {
-    text-shadow: 0 0 8px var(--rarity-2);
+/* ★2 - 緑の静かな光 */
+.skill-frame-card.rarity-2 { --frame-color: var(--rarity-2); }
+.skill-frame-card.cat-attack.rarity-2::before { border-color: var(--rarity-2); box-shadow: 0 0 8px var(--rarity-2); }
+.skill-frame-card.rarity-2::before { box-shadow: 0 0 8px var(--rarity-2); }
+.skill-frame-card.rarity-2 .skill-name { text-shadow: 0 0 6px var(--rarity-2); }
+
+/* ★3 - 青の輝き */
+.skill-frame-card.rarity-3 { --frame-color: var(--rarity-3); }
+.skill-frame-card.cat-attack.rarity-3::before { border-color: var(--rarity-3); box-shadow: 0 0 12px var(--rarity-3); }
+.skill-frame-card.rarity-3::before { box-shadow: 0 0 12px var(--rarity-3); }
+.skill-frame-card.rarity-3 .skill-name { text-shadow: 0 0 8px var(--rarity-3); }
+.skill-frame-card.rarity-3 .skill-icon-img { filter: drop-shadow(0 0 4px var(--rarity-3)); }
+
+/* ★4 - オレンジの炎 脈動する光 */
+.skill-frame-card.rarity-4 { 
+    --frame-color: var(--rarity-4);
+    animation: card4Pulse 1.5s ease-in-out infinite;
+}
+.skill-frame-card.cat-attack.rarity-4::before { 
+    border-color: var(--rarity-4); 
+    box-shadow: 0 0 15px var(--rarity-4), 0 0 30px rgba(255, 170, 0, 0.4);
+    animation: glow4Border 1s ease-in-out infinite alternate;
+}
+.skill-frame-card.rarity-4::before { 
+    box-shadow: 0 0 15px var(--rarity-4), 0 0 30px rgba(255, 170, 0, 0.4);
+    animation: glow4Border 1s ease-in-out infinite alternate;
+}
+.skill-frame-card.rarity-4 .skill-name { 
+    color: #fff8e0;
+    text-shadow: 0 0 10px var(--rarity-4), 0 0 20px rgba(255, 100, 0, 0.6); 
+}
+.skill-frame-card.rarity-4 .skill-icon-img { 
+    filter: drop-shadow(0 0 8px var(--rarity-4)) drop-shadow(0 0 15px rgba(255, 100, 0, 0.5));
+    animation: icon4Glow 1s ease-in-out infinite alternate;
 }
 
-.skill-frame-card.rarity-3 .frame-inner {
-    text-shadow: 0 0 10px var(--rarity-3);
+@keyframes card4Pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
 }
 
-.skill-frame-card.rarity-4 .frame-inner {
-    animation: cardGlow4 0.8s ease infinite alternate;
+@keyframes glow4Border {
+    0% { box-shadow: 0 0 10px var(--rarity-4), 0 0 20px rgba(255, 170, 0, 0.3); }
+    100% { box-shadow: 0 0 20px var(--rarity-4), 0 0 40px rgba(255, 100, 0, 0.6), 0 0 60px rgba(255, 170, 0, 0.2); }
 }
 
-.skill-frame-card.rarity-5 .frame-inner {
-    animation: cardGlow5 0.5s ease infinite alternate;
+@keyframes icon4Glow {
+    0% { filter: drop-shadow(0 0 5px var(--rarity-4)); }
+    100% { filter: drop-shadow(0 0 12px var(--rarity-4)) drop-shadow(0 0 20px rgba(255, 100, 0, 0.7)); }
 }
 
-@keyframes cardGlow4 {
-    0% { filter: drop-shadow(0 0 3px var(--rarity-4)); }
-    100% { filter: drop-shadow(0 0 8px var(--rarity-4)); }
+/* ★5 - 赤の神々しい光 + 粒子 */
+.skill-frame-card.rarity-5 { 
+    --frame-color: var(--rarity-5);
+    animation: card5Pulse 1s ease-in-out infinite;
+}
+.skill-frame-card.cat-attack.rarity-5::before { 
+    border-color: var(--rarity-5); 
+    box-shadow: 0 0 20px var(--rarity-5), 0 0 40px rgba(255, 51, 102, 0.5), 0 0 60px rgba(255, 0, 68, 0.3);
+    animation: glow5Border 0.8s ease-in-out infinite alternate;
+}
+.skill-frame-card.rarity-5::before { 
+    box-shadow: 0 0 20px var(--rarity-5), 0 0 40px rgba(255, 51, 102, 0.5), 0 0 60px rgba(255, 0, 68, 0.3);
+    animation: glow5Border 0.8s ease-in-out infinite alternate;
+}
+.skill-frame-card.rarity-5 .skill-name { 
+    color: #fff0f5;
+    text-shadow: 0 0 12px var(--rarity-5), 0 0 25px rgba(255, 0, 68, 0.8); 
+    animation: text5Glow 0.8s ease-in-out infinite alternate;
+}
+.skill-frame-card.rarity-5 .skill-icon-img { 
+    filter: drop-shadow(0 0 10px var(--rarity-5)) drop-shadow(0 0 20px rgba(255, 0, 68, 0.7));
+    animation: icon5Glow 0.8s ease-in-out infinite alternate;
 }
 
-@keyframes cardGlow5 {
-    0% { filter: drop-shadow(0 0 5px var(--rarity-5)); }
-    100% { filter: drop-shadow(0 0 12px var(--rarity-5)); }
+/* ★5 粒子エフェクト用の追加要素 */
+.skill-frame-card.rarity-5 .particles {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.skill-frame-card.rarity-5 .particles::before,
+.skill-frame-card.rarity-5 .particles::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 200, 200, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 80% 20%, rgba(255, 150, 150, 0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 60% 80%, rgba(255, 220, 220, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 30% 70%, rgba(255, 180, 180, 0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 90% 60%, rgba(255, 200, 200, 0.7) 50%, transparent 100%);
+    animation: particles5Float 3s ease-in-out infinite;
+}
+
+.skill-frame-card.rarity-5 .particles::after {
+    animation-delay: -1.5s;
+    opacity: 0.7;
+}
+
+@keyframes card5Pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+@keyframes glow5Border {
+    0% { box-shadow: 0 0 15px var(--rarity-5), 0 0 30px rgba(255, 51, 102, 0.4); }
+    100% { box-shadow: 0 0 30px var(--rarity-5), 0 0 60px rgba(255, 0, 68, 0.7), 0 0 90px rgba(255, 51, 102, 0.3); }
+}
+
+@keyframes text5Glow {
+    0% { text-shadow: 0 0 10px var(--rarity-5), 0 0 20px rgba(255, 0, 68, 0.6); }
+    100% { text-shadow: 0 0 15px var(--rarity-5), 0 0 30px rgba(255, 0, 68, 1); }
+}
+
+@keyframes icon5Glow {
+    0% { filter: drop-shadow(0 0 8px var(--rarity-5)) drop-shadow(0 0 15px rgba(255, 0, 68, 0.5)); }
+    100% { filter: drop-shadow(0 0 15px var(--rarity-5)) drop-shadow(0 0 30px rgba(255, 0, 68, 0.9)); }
+}
+
+@keyframes particles5Float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+    50% { transform: translateY(-8px) scale(1.1); opacity: 1; }
 }
 
 .empty-message {
@@ -1666,10 +1770,10 @@ body {
    ======================================== */
 .tile-skill-frame {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 24px;
-    height: 24px;
+    top: -5px;
+    right: -5px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1681,7 +1785,7 @@ body {
     height: 14px;
     object-fit: contain;
     position: relative;
-    z-index: 3;
+    z-index: 5;
 }
 
 /* 攻撃系 - 円枠（バトル中） */
@@ -1691,38 +1795,28 @@ body {
     border: 1px solid var(--frame-color, var(--rarity-1));
 }
 
-/* 防御系 - ダイヤ枠（バトル中） */
-.tile-skill-frame.cat-defense {
-    width: 24px;
-    height: 24px;
-}
-
+/* 防御系 - 六芒星枠（バトル中） */
 .tile-skill-frame.cat-defense::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     background: var(--frame-color, var(--rarity-1));
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    clip-path: var(--hexagram);
     z-index: 1;
 }
 
 .tile-skill-frame.cat-defense::after {
     content: '';
     position: absolute;
-    width: 22px;
-    height: 22px;
+    width: 92%;
+    height: 92%;
     background: rgba(0, 0, 0, 0.9);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    clip-path: var(--hexagram);
     z-index: 2;
 }
 
 /* 効果系 - 六角形枠（バトル中） */
-.tile-skill-frame.cat-effect {
-    width: 24px;
-    height: 24px;
-}
-
 .tile-skill-frame.cat-effect::before {
     content: '';
     position: absolute;
@@ -1736,8 +1830,8 @@ body {
 .tile-skill-frame.cat-effect::after {
     content: '';
     position: absolute;
-    width: 22px;
-    height: 22px;
+    width: 92%;
+    height: 92%;
     background: rgba(0, 0, 0, 0.9);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     z-index: 2;
@@ -1745,26 +1839,26 @@ body {
 
 /* レアリティ別枠色（バトル中） */
 .tile-skill-frame.rarity-1 { --frame-color: var(--rarity-1); }
-.tile-skill-frame.rarity-2 { --frame-color: var(--rarity-2); box-shadow: 0 0 4px var(--rarity-2); }
-.tile-skill-frame.rarity-3 { --frame-color: var(--rarity-3); box-shadow: 0 0 5px var(--rarity-3); }
-.tile-skill-frame.rarity-4 { --frame-color: var(--rarity-4); box-shadow: 0 0 6px var(--rarity-4); animation: tileGlow4 0.6s ease infinite alternate; }
-.tile-skill-frame.rarity-5 { --frame-color: var(--rarity-5); box-shadow: 0 0 8px var(--rarity-5); animation: tileGlow5 0.4s ease infinite alternate; }
+.tile-skill-frame.rarity-2 { --frame-color: var(--rarity-2); box-shadow: 0 0 5px var(--rarity-2); }
+.tile-skill-frame.rarity-3 { --frame-color: var(--rarity-3); box-shadow: 0 0 6px var(--rarity-3); }
+.tile-skill-frame.rarity-4 { --frame-color: var(--rarity-4); box-shadow: 0 0 8px var(--rarity-4); animation: tileGlow4 0.6s ease infinite alternate; }
+.tile-skill-frame.rarity-5 { --frame-color: var(--rarity-5); box-shadow: 0 0 10px var(--rarity-5); animation: tileGlow5 0.4s ease infinite alternate; }
 
 /* 攻撃系のborderにレアリティ色適用（バトル中） */
 .tile-skill-frame.cat-attack.rarity-1 { border-color: var(--rarity-1); }
-.tile-skill-frame.cat-attack.rarity-2 { border-color: var(--rarity-2); }
-.tile-skill-frame.cat-attack.rarity-3 { border-color: var(--rarity-3); }
-.tile-skill-frame.cat-attack.rarity-4 { border-color: var(--rarity-4); }
-.tile-skill-frame.cat-attack.rarity-5 { border-color: var(--rarity-5); }
+.tile-skill-frame.cat-attack.rarity-2 { border-color: var(--rarity-2); box-shadow: 0 0 5px var(--rarity-2); }
+.tile-skill-frame.cat-attack.rarity-3 { border-color: var(--rarity-3); box-shadow: 0 0 6px var(--rarity-3); }
+.tile-skill-frame.cat-attack.rarity-4 { border-color: var(--rarity-4); box-shadow: 0 0 8px var(--rarity-4); animation: tileGlow4 0.6s ease infinite alternate; }
+.tile-skill-frame.cat-attack.rarity-5 { border-color: var(--rarity-5); box-shadow: 0 0 10px var(--rarity-5); animation: tileGlow5 0.4s ease infinite alternate; }
 
 @keyframes tileGlow4 {
-    0% { box-shadow: 0 0 4px var(--rarity-4); }
-    100% { box-shadow: 0 0 10px var(--rarity-4); }
+    0% { box-shadow: 0 0 5px var(--rarity-4); }
+    100% { box-shadow: 0 0 12px var(--rarity-4), 0 0 20px rgba(255, 170, 0, 0.4); }
 }
 
 @keyframes tileGlow5 {
-    0% { box-shadow: 0 0 6px var(--rarity-5); }
-    100% { box-shadow: 0 0 14px var(--rarity-5); }
+    0% { box-shadow: 0 0 8px var(--rarity-5); }
+    100% { box-shadow: 0 0 16px var(--rarity-5), 0 0 25px rgba(255, 51, 102, 0.5); }
 }
 
 /* ========================================
@@ -1776,8 +1870,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
 }
 
 .skill-frame-full img {
@@ -1785,7 +1879,7 @@ body {
     height: 40px;
     object-fit: contain;
     position: relative;
-    z-index: 3;
+    z-index: 5;
 }
 
 /* 攻撃系 - 円枠（フル版） */
@@ -1800,24 +1894,24 @@ body {
     z-index: 1;
 }
 
-/* 防御系 - ダイヤ枠（フル版） */
+/* 防御系 - 六芒星枠（フル版） */
 .skill-frame-full.cat-defense::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     background: var(--frame-color, var(--rarity-1));
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    clip-path: var(--hexagram);
     z-index: 1;
 }
 
 .skill-frame-full.cat-defense::after {
     content: '';
     position: absolute;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
+    width: 95%;
+    height: 95%;
     background: rgba(0, 0, 0, 0.9);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    clip-path: var(--hexagram);
     z-index: 2;
 }
 
@@ -1835,49 +1929,122 @@ body {
 .skill-frame-full.cat-effect::after {
     content: '';
     position: absolute;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
+    width: 95%;
+    height: 95%;
     background: rgba(0, 0, 0, 0.9);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     z-index: 2;
 }
 
-/* レアリティ別枠色（フル版） */
+/* レアリティ別枠色＆演出（フル版） */
 .skill-frame-full.rarity-1 { --frame-color: var(--rarity-1); }
-.skill-frame-full.rarity-2 { --frame-color: var(--rarity-2); box-shadow: 0 0 10px var(--rarity-2); }
-.skill-frame-full.rarity-3 { --frame-color: var(--rarity-3); box-shadow: 0 0 15px var(--rarity-3); }
-.skill-frame-full.rarity-4 { --frame-color: var(--rarity-4); box-shadow: 0 0 20px var(--rarity-4); animation: fullGlow4 0.8s ease infinite alternate; }
-.skill-frame-full.rarity-5 { --frame-color: var(--rarity-5); box-shadow: 0 0 25px var(--rarity-5); animation: fullGlow5 0.5s ease infinite alternate; }
+
+.skill-frame-full.rarity-2 { 
+    --frame-color: var(--rarity-2); 
+}
+.skill-frame-full.rarity-2::before { box-shadow: 0 0 12px var(--rarity-2); }
+.skill-frame-full.rarity-2 img { filter: drop-shadow(0 0 5px var(--rarity-2)); }
+
+.skill-frame-full.rarity-3 { 
+    --frame-color: var(--rarity-3); 
+}
+.skill-frame-full.rarity-3::before { box-shadow: 0 0 18px var(--rarity-3); }
+.skill-frame-full.rarity-3 img { filter: drop-shadow(0 0 8px var(--rarity-3)); }
+
+.skill-frame-full.rarity-4 { 
+    --frame-color: var(--rarity-4);
+    animation: fullCard4Pulse 1.5s ease-in-out infinite;
+}
+.skill-frame-full.rarity-4::before { 
+    box-shadow: 0 0 20px var(--rarity-4), 0 0 40px rgba(255, 170, 0, 0.4);
+    animation: fullGlow4 1s ease-in-out infinite alternate;
+}
+.skill-frame-full.rarity-4 img { 
+    filter: drop-shadow(0 0 10px var(--rarity-4)) drop-shadow(0 0 20px rgba(255, 100, 0, 0.6));
+    animation: fullIcon4 1s ease-in-out infinite alternate;
+}
+
+.skill-frame-full.rarity-5 { 
+    --frame-color: var(--rarity-5);
+    animation: fullCard5Pulse 1s ease-in-out infinite;
+}
+.skill-frame-full.rarity-5::before { 
+    box-shadow: 0 0 25px var(--rarity-5), 0 0 50px rgba(255, 51, 102, 0.5), 0 0 80px rgba(255, 0, 68, 0.3);
+    animation: fullGlow5 0.8s ease-in-out infinite alternate;
+}
+.skill-frame-full.rarity-5 img { 
+    filter: drop-shadow(0 0 12px var(--rarity-5)) drop-shadow(0 0 25px rgba(255, 0, 68, 0.7));
+    animation: fullIcon5 0.8s ease-in-out infinite alternate;
+}
 
 /* 攻撃系のborderにレアリティ色適用（フル版） */
 .skill-frame-full.cat-attack.rarity-1::before { border-color: var(--rarity-1); }
-.skill-frame-full.cat-attack.rarity-2::before { border-color: var(--rarity-2); }
-.skill-frame-full.cat-attack.rarity-3::before { border-color: var(--rarity-3); }
-.skill-frame-full.cat-attack.rarity-4::before { border-color: var(--rarity-4); }
-.skill-frame-full.cat-attack.rarity-5::before { border-color: var(--rarity-5); }
+.skill-frame-full.cat-attack.rarity-2::before { border-color: var(--rarity-2); box-shadow: 0 0 12px var(--rarity-2); }
+.skill-frame-full.cat-attack.rarity-3::before { border-color: var(--rarity-3); box-shadow: 0 0 18px var(--rarity-3); }
+.skill-frame-full.cat-attack.rarity-4::before { border-color: var(--rarity-4); box-shadow: 0 0 20px var(--rarity-4), 0 0 40px rgba(255, 170, 0, 0.4); animation: fullGlow4 1s ease-in-out infinite alternate; }
+.skill-frame-full.cat-attack.rarity-5::before { border-color: var(--rarity-5); box-shadow: 0 0 25px var(--rarity-5), 0 0 50px rgba(255, 51, 102, 0.5); animation: fullGlow5 0.8s ease-in-out infinite alternate; }
+
+@keyframes fullCard4Pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
 
 @keyframes fullGlow4 {
-    0% { box-shadow: 0 0 15px var(--rarity-4); }
-    100% { box-shadow: 0 0 30px var(--rarity-4); }
+    0% { box-shadow: 0 0 15px var(--rarity-4), 0 0 30px rgba(255, 170, 0, 0.3); }
+    100% { box-shadow: 0 0 30px var(--rarity-4), 0 0 60px rgba(255, 100, 0, 0.6), 0 0 90px rgba(255, 170, 0, 0.2); }
+}
+
+@keyframes fullIcon4 {
+    0% { filter: drop-shadow(0 0 8px var(--rarity-4)); }
+    100% { filter: drop-shadow(0 0 15px var(--rarity-4)) drop-shadow(0 0 25px rgba(255, 100, 0, 0.7)); }
+}
+
+@keyframes fullCard5Pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
 }
 
 @keyframes fullGlow5 {
-    0% { box-shadow: 0 0 20px var(--rarity-5); }
-    100% { box-shadow: 0 0 40px var(--rarity-5); }
+    0% { box-shadow: 0 0 20px var(--rarity-5), 0 0 40px rgba(255, 51, 102, 0.4); }
+    100% { box-shadow: 0 0 40px var(--rarity-5), 0 0 80px rgba(255, 0, 68, 0.7), 0 0 120px rgba(255, 51, 102, 0.3); }
 }
 
-/* ★5の粒子エフェクト */
+@keyframes fullIcon5 {
+    0% { filter: drop-shadow(0 0 10px var(--rarity-5)) drop-shadow(0 0 20px rgba(255, 0, 68, 0.5)); }
+    100% { filter: drop-shadow(0 0 18px var(--rarity-5)) drop-shadow(0 0 35px rgba(255, 0, 68, 0.9)); }
+}
+
+/* ★5の粒子エフェクト（フル版） */
 .skill-frame-full.rarity-5 .particles {
     position: absolute;
-    inset: -15px;
-    background: radial-gradient(circle, transparent 40%, rgba(255, 51, 102, 0.1) 60%, transparent 70%);
-    animation: particlesSpin 3s linear infinite;
+    width: 100px;
+    height: 100px;
     pointer-events: none;
     z-index: 0;
 }
 
-@keyframes particlesSpin {
-    0% { transform: rotate(0deg); opacity: 0.8; }
+.skill-frame-full.rarity-5 .particles::before,
+.skill-frame-full.rarity-5 .particles::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 200, 200, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 80% 20%, rgba(255, 150, 150, 0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 60% 80%, rgba(255, 220, 220, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 30% 70%, rgba(255, 180, 180, 0.8) 50%, transparent 100%);
+    animation: fullParticlesFloat 3s ease-in-out infinite;
+}
+
+.skill-frame-full.rarity-5 .particles::after {
+    animation-delay: -1.5s;
+    opacity: 0.7;
+}
+
+@keyframes fullParticlesFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+    50% { transform: translateY(-10px) scale(1.15); opacity: 1; }
     50% { opacity: 1; }
     100% { transform: rotate(360deg); opacity: 0.8; }
 }
