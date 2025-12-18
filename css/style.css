@@ -1419,132 +1419,89 @@ body {
 }
 
 /* ========================================
-   ★4 - エピック（8分割縦縞が交互に上下動）
-   奇数列(1,3,5,7)→上、偶数列(2,4,6,8)→下
+   ★4 - エピック（燃え上がる黄金の炎 + 火の粉）
+   黄色・オレンジベースの炎演出
    ======================================== */
 .skill-frame-card.rarity-4 { 
     --frame-color: #f1c40f;
-    /* ベース背景（ダークゴールド） */
-    --rarity-bg: #a67c00;
+    --rarity-bg: linear-gradient(
+        0deg,
+        #5c4a00 0%,      /* 深いゴールド（炎の根元） */
+        #8b6914 15%,     /* ダークゴールド */
+        #b8860b 30%,     /* ゴールデンロッド */
+        #daa520 45%,     /* 明るいゴールデンロッド */
+        #f39c12 60%,     /* オレンジ */
+        #f1c40f 75%,     /* ゴールド */
+        #ffd700 90%,     /* 明るいゴールド */
+        #ffff00 100%     /* 黄色（炎の先端） */
+    );
 }
 .skill-frame-card.rarity-4 .skill-name { 
     color: #fff; 
-    text-shadow: 0 0 6px rgba(241, 196, 15, 0.8); 
+    text-shadow: 0 0 8px #ffd700, 0 0 16px #f39c12, 0 0 24px #b8860b;
 }
 
-/* 攻撃・防御系の背景 */
+/* 攻撃・防御系の背景 - 炎が燃え上がる */
 .skill-frame-card.rarity-4.cat-attack::before,
 .skill-frame-card.rarity-4.cat-defense::before {
-    background: #a67c00;
-    animation: rarity4Pulse 1.2s ease-in-out infinite;
+    background-size: 100% 400%;
+    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
 /* 効果系の背景 */
 .skill-frame-card.rarity-4.cat-effect::after {
-    background: #a67c00;
-    animation: rarity4Pulse 1.2s ease-in-out infinite;
+    background-size: 100% 400%;
+    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
 
+/* 炎が下から上に燃え上がる */
+@keyframes rarity4Flame {
+    0%, 100% { background-position: 0% 100%; }
+    50% { background-position: 0% 0%; }
+}
+
+/* 激しい明暗の脈動 */
 @keyframes rarity4Pulse {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.2); }
+    0%, 100% { filter: brightness(1) saturate(1.2); }
+    50% { filter: brightness(1.4) saturate(1.5); }
 }
 
-/* ★4 奇数列の縦縞（1,3,5,7本目）→ 上に動く */
+/* ★4 火の粉エフェクト（黄色・オレンジ系） */
 .skill-frame-card.rarity-4 .frame-inner::before {
     content: '';
     position: absolute;
-    top: -50%;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 200%;
-    background: repeating-linear-gradient(
-        90deg,
-        /* 縞1 */
-        #ffd700 0%,
-        #f4c430 5%,
-        #daa520 10%,
-        transparent 11%,
-        transparent 12.5%,
-        /* 縞3 */
-        #ffd700 25%,
-        #f4c430 30%,
-        #daa520 35%,
-        transparent 36%,
-        transparent 37.5%,
-        /* 縞5 */
-        #ffd700 50%,
-        #f4c430 55%,
-        #daa520 60%,
-        transparent 61%,
-        transparent 62.5%,
-        /* 縞7 */
-        #ffd700 75%,
-        #f4c430 80%,
-        #daa520 85%,
-        transparent 86%,
-        transparent 100%
-    );
-    animation: rarity4Up 1.5s ease-in-out infinite;
+    height: 100%;
+    background-image: 
+        radial-gradient(3px 3px at 20% 85%, #ffd700 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 40% 75%, #f39c12 0%, transparent 100%),
+        radial-gradient(3px 3px at 60% 90%, #ffd700 0%, transparent 100%),
+        radial-gradient(2px 2px at 80% 80%, #ffaa00 0%, transparent 100%),
+        radial-gradient(3px 3px at 30% 95%, #f1c40f 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 70% 70%, #ffd700 0%, transparent 100%),
+        radial-gradient(2px 2px at 15% 75%, #ffff00 0%, transparent 100%),
+        radial-gradient(3px 3px at 85% 85%, #f39c12 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 50% 98%, #ffd700 0%, transparent 100%),
+        radial-gradient(2px 2px at 25% 65%, #f1c40f 0%, transparent 100%);
+    animation: rarity4Sparks 1.5s ease-out infinite;
     pointer-events: none;
     z-index: 4;
-    border-radius: inherit;
-    clip-path: inherit;
 }
 
-/* ★4 偶数列の縦縞（2,4,6,8本目）→ 下に動く */
-.skill-frame-card.rarity-4 .frame-inner::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: 0;
-    width: 100%;
-    height: 200%;
-    background: repeating-linear-gradient(
-        90deg,
-        transparent 0%,
-        transparent 12.5%,
-        /* 縞2 */
-        #b8860b 12.5%,
-        #cd950c 17.5%,
-        #daa520 22.5%,
-        transparent 23.5%,
-        transparent 25%,
-        /* 縞4 */
-        #b8860b 37.5%,
-        #cd950c 42.5%,
-        #daa520 47.5%,
-        transparent 48.5%,
-        transparent 50%,
-        /* 縞6 */
-        #b8860b 62.5%,
-        #cd950c 67.5%,
-        #daa520 72.5%,
-        transparent 73.5%,
-        transparent 75%,
-        /* 縞8 */
-        #b8860b 87.5%,
-        #cd950c 92.5%,
-        #daa520 97.5%,
-        transparent 98.5%,
-        transparent 100%
-    );
-    animation: rarity4Down 1.5s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 4;
-    border-radius: inherit;
-    clip-path: inherit;
-}
-
-/* 奇数列 - 上方向にアニメーション */
-@keyframes rarity4Up {
-    0%, 100% { transform: translateY(25%); }
-    50% { transform: translateY(-25%); }
-}
-
-/* 偶数列 - 下方向にアニメーション */
-@keyframes rarity4Down {
-    0%, 100% { transform: translateY(-25%); }
-    50% { transform: translateY(25%); }
+/* 火の粉が下から上に舞い上がる */
+@keyframes rarity4Sparks {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-40px) scale(0.3);
+        opacity: 0;
+    }
 }
 
 /* ========================================
