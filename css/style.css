@@ -2514,65 +2514,66 @@ body {
    スキルアイコン共通
    ======================================== */
 
-/* バトル中のタイル上スキルアイコン（バッジ版） */
+/* バトル中のタイル上スキルオーバーレイ */
 .tile.has-skill {
-    /* 特別なスタイルなし */
+    /* 親として機能 */
 }
 
 /* ========================================
-   タイル上スキルバッジ（バトル中）
-   右上に小さく表示
+   タイル上スキルオーバーレイ（バトル中）
+   タイル全面を覆う半透明オーバーレイ
+   数字は見えるように調整
    ======================================== */
 .tile-skill-frame {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 22px;
-    height: 22px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 20;
+    z-index: 2;
     pointer-events: none;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid;
+    border-radius: 5px;
+    border: 3px solid;
 }
 
 .tile-skill-frame img {
-    width: 14px;
-    height: 14px;
+    width: 40%;
+    height: 40%;
     object-fit: contain;
-    filter: brightness(1.2);
+    opacity: 0.7;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
 }
 
-/* カテゴリ別バッジ色（バトル中） */
+/* カテゴリ別オーバーレイ色（バトル中） */
 .tile-skill-frame.cat-attack {
-    border-color: #ff3366;
-    background: rgba(255, 51, 102, 0.8);
+    border-color: rgba(255, 51, 102, 0.8);
+    background: rgba(255, 51, 102, 0.15);
 }
 .tile-skill-frame.cat-defense {
-    border-color: #22c55e;
-    background: rgba(34, 197, 94, 0.8);
+    border-color: rgba(34, 197, 94, 0.8);
+    background: rgba(34, 197, 94, 0.15);
 }
 .tile-skill-frame.cat-effect {
-    border-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.8);
+    border-color: rgba(59, 130, 246, 0.8);
+    background: rgba(59, 130, 246, 0.15);
 }
 
-/* レアリティ別光り（バトル中バッジ） */
+/* レアリティ別光り（バトル中オーバーレイ） */
 .tile-skill-frame.rarity-1 { }
 .tile-skill-frame.rarity-2 { 
-    box-shadow: 0 0 4px rgba(34, 197, 94, 0.6);
+    box-shadow: inset 0 0 10px rgba(34, 197, 94, 0.3);
 }
 .tile-skill-frame.rarity-3 { 
-    box-shadow: 0 0 6px rgba(59, 130, 246, 0.7);
+    box-shadow: inset 0 0 12px rgba(59, 130, 246, 0.4);
 }
 .tile-skill-frame.rarity-4 { 
-    box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+    box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.5);
 }
 .tile-skill-frame.rarity-5 { 
-    box-shadow: 0 0 10px rgba(244, 114, 182, 0.9);
+    box-shadow: inset 0 0 20px rgba(244, 114, 182, 0.6);
 }
 
 /* ========================================
