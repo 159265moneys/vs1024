@@ -399,6 +399,81 @@ document.addEventListener('DOMContentLoaded', () => {
         updateEquippedSkills();
     }
     
+    // オートセット - コスト20ぴったりになるスキルを自動選択
+    function autoSetSkills() {
+        const ownedSkills = GameData.getOwnedSkills();
+        
+        // 所持スキルをリスト化（レアリティ高い順、コスト高い順）
+        const availableSkills = Object.entries(ownedSkills)
+            .filter(([, data]) => data.count > 0)
+            .map(([skillId]) => ({ id: skillId, ...SKILLS[skillId] }))
+            .filter(s => s.cost)
+            .sort((a, b) => {
+                // レアリティ優先、同レアならコスト高い順
+                if (b.rarity !== a.rarity) return b.rarity - a.rarity;
+                return b.cost - a.cost;
+            });
+        
+        if (availableSkills.length === 0) {
+            alert('装備可能なスキルがありません');
+            return;
+        }
+        
+        // コスト20ぴったりの組み合わせを探す（最大5個）
+        const targetCost = 20;
+        const maxSlots = 5;
+        
+        // 動的計画法で解を探索
+        const result = findSkillCombination(availableSkills, targetCost, maxSlots);
+        
+        if (result.length === 0) {
+            alert('コスト20ぴったりの組み合わせが見つかりません');
+            return;
+        }
+        
+        // プリセットに設定
+        const preset = GameData.getCurrentPreset();
+        GameData.setSkillPreset(preset, result.map(s => s.id));
+        updateEquippedSkills();
+    }
+    
+    // コストぴったりの組み合わせを探す（バックトラッキング）
+    function findSkillCombination(skills, targetCost, maxCount) {
+        let bestResult = [];
+        let bestRaritySum = -1;
+        
+        function backtrack(index, currentCost, selected) {
+            // コストぴったりで見つかった
+            if (currentCost === targetCost) {
+                const raritySum = selected.reduce((sum, s) => sum + s.rarity, 0);
+                if (raritySum > bestRaritySum) {
+                    bestRaritySum = raritySum;
+                    bestResult = [...selected];
+                }
+                return;
+            }
+            
+            // 枝刈り
+            if (index >= skills.length || selected.length >= maxCount || currentCost > targetCost) {
+                return;
+            }
+            
+            // このスキルを選ぶ場合
+            const skill = skills[index];
+            if (currentCost + skill.cost <= targetCost) {
+                selected.push(skill);
+                backtrack(index + 1, currentCost + skill.cost, selected);
+                selected.pop();
+            }
+            
+            // このスキルを選ばない場合
+            backtrack(index + 1, currentCost, selected);
+        }
+        
+        backtrack(0, 0, []);
+        return bestResult;
+    }
+    
     // ========================================
     // タブ切り替え
     // ========================================
@@ -1033,6 +1108,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+        
+        // オートセットボタン
+        document.getElementById('btn-auto-set').addEventListener('click', autoSetSkills);
         
         // 全解除ボタン
         document.getElementById('btn-clear-all').addEventListener('click', clearAllEquippedSkills);

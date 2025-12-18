@@ -694,6 +694,22 @@ body {
     gap: 8px;
 }
 
+.btn-auto-set {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-green);
+    border-radius: 4px;
+    color: var(--accent-green);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-auto-set:hover {
+    background: var(--accent-green);
+    color: white;
+}
+
 .btn-clear-all {
     padding: 4px 10px;
     font-size: 0.7rem;
