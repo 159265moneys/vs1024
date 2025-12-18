@@ -1512,7 +1512,47 @@ body {
     50% { filter: brightness(1.5) saturate(1.5); }
 }
 
-/* ★5 火の粉エフェクト（.particles要素内、枠内のみ） - 赤系メイン */
+/* ★5 枠の外側の炎エフェクト（枠より下のレイヤー） */
+.skill-frame-card.rarity-5 {
+    position: relative;
+}
+.skill-frame-card.rarity-5::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(255, 50, 0, 0.6) 20deg,
+        rgba(255, 100, 0, 0.8) 40deg,
+        transparent 60deg,
+        rgba(255, 0, 0, 0.7) 100deg,
+        rgba(255, 80, 0, 0.6) 120deg,
+        transparent 140deg,
+        rgba(220, 20, 60, 0.7) 180deg,
+        rgba(255, 69, 0, 0.8) 200deg,
+        transparent 220deg,
+        rgba(255, 0, 0, 0.6) 260deg,
+        rgba(178, 34, 34, 0.7) 280deg,
+        transparent 300deg,
+        rgba(255, 50, 0, 0.8) 340deg,
+        transparent 360deg
+    );
+    border-radius: inherit;
+    z-index: -1;
+    animation: outerFlame 2s linear infinite;
+    filter: blur(4px);
+}
+
+@keyframes outerFlame {
+    from { transform: rotate(0deg) scale(1.05); }
+    to { transform: rotate(360deg) scale(1.05); }
+}
+
+/* ★5 火の粉エフェクト - 明るい粒子と暗い粒子 */
 .skill-frame-card.rarity-5 .particles,
 .skill-frame-full.rarity-5 .particles {
     position: absolute;
@@ -1521,76 +1561,66 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 3;
+    z-index: 6;
     overflow: hidden;
     border-radius: inherit;
     clip-path: inherit;
 }
 
-/* 火の粉（赤・オレンジ系） */
+/* 明るい粒子（時計回りで漂う） - 黄色〜オレンジ */
 .skill-frame-card.rarity-5 .particles::before,
+.skill-frame-full.rarity-5 .particles::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
+    background-image: 
+        radial-gradient(3px 3px at 30% 30%, #ffd700 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 50% 20%, #ffaa00 0%, transparent 100%),
+        radial-gradient(2px 2px at 70% 40%, #ffd700 0%, transparent 100%),
+        radial-gradient(3px 3px at 20% 60%, #ffcc00 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 80% 50%, #ffd700 0%, transparent 100%),
+        radial-gradient(2px 2px at 40% 70%, #ffaa00 0%, transparent 100%),
+        radial-gradient(3px 3px at 60% 80%, #ffd700 0%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 35% 45%, #ffcc00 0%, transparent 100%);
+    animation: brightParticles 5s linear infinite;
+}
+
+/* 暗い粒子（反時計回りで漂う） - 深い赤〜暗赤 */
 .skill-frame-card.rarity-5 .particles::after,
-.skill-frame-full.rarity-5 .particles::before,
 .skill-frame-full.rarity-5 .particles::after {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
     background-image: 
-        radial-gradient(3px 3px at 20% 85%, #ff0000 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 40% 75%, #ff3300 0%, transparent 100%),
-        radial-gradient(3px 3px at 60% 90%, #ff0000 0%, transparent 100%),
-        radial-gradient(2px 2px at 80% 80%, #ff4500 0%, transparent 100%),
-        radial-gradient(3px 3px at 30% 95%, #dc143c 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 70% 70%, #ff0000 0%, transparent 100%),
-        radial-gradient(2px 2px at 15% 75%, #ff6347 0%, transparent 100%),
-        radial-gradient(3px 3px at 85% 85%, #ff3300 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 50% 98%, #ff0000 0%, transparent 100%),
-        radial-gradient(2px 2px at 25% 65%, #dc143c 0%, transparent 100%),
-        radial-gradient(3px 3px at 45% 80%, #ff4500 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 75% 92%, #ff0000 0%, transparent 100%);
-    animation: sparks 1.5s ease-out infinite;
+        radial-gradient(4px 4px at 25% 35%, #8b0000 0%, transparent 100%),
+        radial-gradient(3px 3px at 55% 25%, #4a0000 0%, transparent 100%),
+        radial-gradient(3.5px 3.5px at 75% 45%, #8b0000 0%, transparent 100%),
+        radial-gradient(3px 3px at 35% 65%, #2d0000 0%, transparent 100%),
+        radial-gradient(4px 4px at 65% 55%, #4a0000 0%, transparent 100%),
+        radial-gradient(3px 3px at 45% 75%, #8b0000 0%, transparent 100%),
+        radial-gradient(3.5px 3.5px at 20% 50%, #2d0000 0%, transparent 100%),
+        radial-gradient(3px 3px at 80% 70%, #4a0000 0%, transparent 100%);
+    animation: darkParticles 6s linear infinite reverse;
 }
 
-.skill-frame-card.rarity-5 .particles::after,
-.skill-frame-full.rarity-5 .particles::after {
-    animation-delay: -0.75s;
-    background-image: 
-        radial-gradient(2.5px 2.5px at 35% 80%, #ff0000 0%, transparent 100%),
-        radial-gradient(3px 3px at 55% 88%, #ff3300 0%, transparent 100%),
-        radial-gradient(2px 2px at 75% 75%, #dc143c 0%, transparent 100%),
-        radial-gradient(3px 3px at 45% 93%, #ff0000 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 65% 70%, #ff4500 0%, transparent 100%),
-        radial-gradient(2px 2px at 10% 85%, #ff0000 0%, transparent 100%),
-        radial-gradient(3px 3px at 90% 78%, #ff3300 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 20% 97%, #dc143c 0%, transparent 100%),
-        radial-gradient(2px 2px at 58% 72%, #ff0000 0%, transparent 100%),
-        radial-gradient(3px 3px at 82% 95%, #ff4500 0%, transparent 100%);
+/* 明るい粒子 - 時計回り */
+@keyframes brightParticles {
+    from { transform: rotate(0deg); opacity: 0.9; }
+    50% { opacity: 1; }
+    to { transform: rotate(360deg); opacity: 0.9; }
 }
 
-/* 火の粉が下から上に舞い上がるアニメーション */
-/* 火の粉が激しく舞い上がる */
-@keyframes sparks {
-    0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-    25% {
-        transform: translateY(-10px) scale(0.9);
-        opacity: 0.9;
-    }
-    50% {
-        transform: translateY(-25px) scale(0.7);
-        opacity: 0.7;
-    }
-    75% {
-        transform: translateY(-40px) scale(0.4);
-        opacity: 0.4;
-    }
-    100% {
-        transform: translateY(-55px) scale(0.1);
-        opacity: 0;
-    }
+/* 暗い粒子 - 反時計回り */
+@keyframes darkParticles {
+    from { transform: rotate(0deg); opacity: 0.7; }
+    50% { opacity: 0.9; }
+    to { transform: rotate(360deg); opacity: 0.7; }
 }
 
 /* ★5 渦巻きオーバーレイ第2層（逆回転でより複雑に） */
