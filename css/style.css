@@ -3098,8 +3098,9 @@ body {
 .skill-frame-full.rarity-5::before { 
     animation: r5Rotate 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
-/* ★5 粒子エフェクト（スキル詳細用） */
-.skill-frame-full.rarity-5::after {
+/* ★5 粒子エフェクト（スキル詳細用 - 攻撃・防御系） */
+.skill-frame-full.rarity-5.cat-attack::after,
+.skill-frame-full.rarity-5.cat-defense::after {
     content: '';
     position: absolute;
     top: 0;
@@ -3118,6 +3119,22 @@ body {
     z-index: 2;
     border-radius: inherit;
 }
+/* ★5 効果系の背景 - 渦巻き炎（スキル詳細用） */
+.skill-frame-full.rarity-5.cat-effect::after {
+    background: conic-gradient(
+        from var(--r5-angle, 0deg),
+        #2d0000 0deg,
+        #8b0000 45deg,
+        #dc143c 90deg,
+        #ff0000 135deg,
+        #ff4500 180deg,
+        #dc143c 225deg,
+        #8b0000 270deg,
+        #2d0000 315deg,
+        #2d0000 360deg
+    ) !important;
+    animation: r5Rotate 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
+}
 @keyframes rarity5Particles {
     0% { opacity: 0.4; }
     100% { opacity: 1; }
@@ -3126,7 +3143,8 @@ body {
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
 .skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
 .skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
-.skill-frame-full.cat-effect::before { border-color: #3b82f6 !important; }
+/* 効果系は枠がbackgroundなのでbackgroundで上書き */
+.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
 
 @keyframes full4Float {
     0%, 100% { transform: translateY(0); }
