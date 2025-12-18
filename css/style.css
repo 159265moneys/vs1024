@@ -1138,20 +1138,43 @@ body {
     cursor: not-allowed;
 }
 
-/* スキルカードの強化レベルバッジ */
+/* スキルカードの強化レベルバッジ - 見やすく改善 */
 .skill-level-badge {
     position: absolute;
-    bottom: 4px;
+    bottom: -2px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.6rem;
-    color: #f472b6;  /* ピンク */
-    background: transparent;
-    padding: 0;
-    text-shadow: 0 0 3px rgba(244, 114, 182, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5);
-    letter-spacing: 1px;
+    font-size: 0.85rem;
+    color: #ffd700;  /* ゴールド */
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.9));
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid #ffd700;
+    text-shadow: 
+        0 0 6px rgba(255, 215, 0, 1),
+        0 0 12px rgba(255, 215, 0, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.8);
+    letter-spacing: 2px;
     z-index: 25;
     white-space: nowrap;
+    box-shadow: 
+        0 0 8px rgba(255, 215, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: starShine 2s ease-in-out infinite;
+}
+
+@keyframes starShine {
+    0%, 100% { 
+        text-shadow: 
+            0 0 6px rgba(255, 215, 0, 1),
+            0 0 12px rgba(255, 215, 0, 0.8);
+    }
+    50% { 
+        text-shadow: 
+            0 0 10px rgba(255, 215, 0, 1),
+            0 0 20px rgba(255, 215, 0, 1),
+            0 0 30px rgba(255, 215, 0, 0.6);
+    }
 }
 
 /* スキル所持数バッジ */
@@ -1328,6 +1351,25 @@ body {
 }
 .skill-frame-card.rarity-1 .skill-name { color: #ccc; }
 
+/* ★1 シマー効果（光が左から右にスライド） */
+.skill-frame-card.rarity-1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer1 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@keyframes shimmer1 {
+    0% { left: -100%; }
+    50%, 100% { left: 150%; }
+}
+
 /* ========================================
    ★2 - アンコモン（緑グラデーション・静的）
    ======================================== */
@@ -1337,14 +1379,75 @@ body {
 }
 .skill-frame-card.rarity-2 .skill-name { color: #fff; }
 
+/* ★2 脈動 + ソフトグロー */
+.skill-frame-card.rarity-2::before {
+    animation: rarity2Pulse 3s ease-in-out infinite;
+}
+.skill-frame-card.rarity-2::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: inherit;
+    background: transparent;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    animation: rarity2Glow 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes rarity2Pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; filter: brightness(1.1); }
+}
+
+@keyframes rarity2Glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(46, 204, 113, 0.6); }
+}
+
 /* ========================================
    ★3 - レア（青グラデーション・静的）
    ======================================== */
 .skill-frame-card.rarity-3 { 
     --frame-color: #3498db;
-    --rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
+    --rarity-bg: linear-gradient(45deg, #2980b9, #1a5276, #3498db, #2471a3);
+    background-size: 200% 200%;
 }
 .skill-frame-card.rarity-3 .skill-name { color: #fff; }
+
+/* ★3 動的グラデ + 光のリング */
+.skill-frame-card.rarity-3::before {
+    animation: rarity3BgMove 4s ease infinite;
+}
+
+.skill-frame-card.rarity-3::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(52, 152, 219, 0.8) 60deg, transparent 120deg);
+    animation: rarity3Ring 3s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(3px);
+}
+
+@keyframes rarity3BgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes rarity3Ring {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
 
 /* ========================================
    ★4 - エピック（黄色動的グラデーション + 鼓動する光）
@@ -1353,11 +1456,45 @@ body {
     --frame-color: #f1c40f;
     --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d);
     background-size: 300% 300%;
+    overflow: visible;
 }
 .skill-frame-card.rarity-4::before {
-    animation: rarity4BgMove 3s ease infinite, rarity4Pulse 1.5s ease-in-out infinite;
+    animation: rarity4BgMove 2.5s ease infinite, rarity4Pulse 1.2s ease-in-out infinite;
 }
 .skill-frame-card.rarity-4 .skill-name { color: #fff; }
+
+/* ★4 枠キラキラ */
+.skill-frame-card.rarity-4::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, #f1c40f, #fff, #f39c12, #fff, #f1c40f);
+    animation: rarity4Sparkle 3s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(4px);
+    opacity: 0.7;
+}
+
+/* ★4 金粒子 */
+.skill-frame-card.rarity-4 .frame-inner::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: 
+        radial-gradient(2px 2px at 15% 25%, rgba(255, 215, 0, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 85% 35%, rgba(255, 215, 0, 0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 45% 75%, rgba(255, 215, 0, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 75% 85%, rgba(255, 215, 0, 0.7) 50%, transparent 100%);
+    animation: particles4Float 3s ease-in-out infinite;
+    z-index: 4;
+}
 
 @keyframes rarity4BgMove {
     0% { background-position: 0% 50%; }
@@ -1366,8 +1503,18 @@ body {
 }
 
 @keyframes rarity4Pulse {
-    0%, 100% { box-shadow: 0 0 15px rgba(241, 196, 15, 0.5), 0 0 30px rgba(243, 156, 18, 0.3); }
-    50% { box-shadow: 0 0 25px rgba(241, 196, 15, 0.8), 0 0 50px rgba(243, 156, 18, 0.5), 0 0 70px rgba(241, 196, 15, 0.3); }
+    0%, 100% { box-shadow: 0 0 20px rgba(241, 196, 15, 0.6), 0 0 40px rgba(243, 156, 18, 0.4); }
+    50% { box-shadow: 0 0 35px rgba(241, 196, 15, 0.9), 0 0 60px rgba(243, 156, 18, 0.6); }
+}
+
+@keyframes rarity4Sparkle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes particles4Float {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(-6px); opacity: 1; }
 }
 
 /* ========================================
@@ -1377,13 +1524,46 @@ body {
     --frame-color: #e74c3c;
     --rarity-bg: linear-gradient(45deg, #c0392b, #922b21, #e74c3c, #a93226);
     background-size: 300% 300%;
+    overflow: visible;
 }
 .skill-frame-card.rarity-5::before {
-    animation: rarity5BgMove 2s ease infinite, rarity5Pulse 1.2s ease-in-out infinite;
+    animation: rarity5BgMove 1.5s ease infinite, rarity5Pulse 1s ease-in-out infinite;
 }
-.skill-frame-card.rarity-5 .skill-name { color: #fff; }
+.skill-frame-card.rarity-5 .skill-name { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-/* ★5 粒子エフェクト - 明るい赤い粒子が渦巻く */
+/* ★5 虹色エッジライン */
+.skill-frame-card.rarity-5::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff0088, #ff0000);
+    animation: rarity5Rainbow 2s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(5px);
+    opacity: 0.8;
+}
+
+/* ★5 オーラエフェクト */
+.skill-frame-card.rarity-5 .frame-inner::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(231, 76, 60, 0.3) 0%, transparent 70%);
+    animation: rarity5Aura 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -2;
+}
+
+/* ★5 粒子エフェクト - 2倍の粒子 */
 .skill-frame-card.rarity-5 .particles,
 .skill-frame-full.rarity-5 .particles {
     position: absolute;
@@ -1391,7 +1571,7 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 3;
-    overflow: hidden;
+    overflow: visible;
     border-radius: inherit;
 }
 
@@ -1401,22 +1581,31 @@ body {
 .skill-frame-full.rarity-5 .particles::after {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
     background-image: 
         radial-gradient(4px 4px at 20% 30%, rgba(255, 100, 100, 1) 50%, transparent 100%),
-        radial-gradient(3px 3px at 80% 20%, rgba(255, 120, 120, 0.95) 50%, transparent 100%),
+        radial-gradient(3px 3px at 80% 20%, rgba(255, 200, 100, 0.95) 50%, transparent 100%),
         radial-gradient(3.5px 3.5px at 70% 80%, rgba(255, 90, 90, 1) 50%, transparent 100%),
-        radial-gradient(3px 3px at 30% 85%, rgba(255, 110, 110, 0.9) 50%, transparent 100%),
+        radial-gradient(3px 3px at 30% 85%, rgba(255, 150, 100, 0.9) 50%, transparent 100%),
         radial-gradient(4px 4px at 50% 15%, rgba(255, 130, 130, 0.95) 50%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 85% 55%, rgba(255, 100, 100, 0.85) 50%, transparent 100%),
-        radial-gradient(3px 3px at 15% 60%, rgba(255, 140, 140, 0.9) 50%, transparent 100%);
-    animation: rarity5ParticlesSwirl 4s linear infinite;
+        radial-gradient(2.5px 2.5px at 85% 55%, rgba(255, 180, 100, 0.85) 50%, transparent 100%),
+        radial-gradient(3px 3px at 15% 60%, rgba(255, 140, 140, 0.9) 50%, transparent 100%),
+        radial-gradient(3.5px 3.5px at 40% 40%, rgba(255, 220, 100, 0.9) 50%, transparent 100%),
+        radial-gradient(2px 2px at 60% 60%, rgba(255, 100, 150, 0.85) 50%, transparent 100%),
+        radial-gradient(3px 3px at 25% 70%, rgba(255, 160, 100, 0.9) 50%, transparent 100%),
+        radial-gradient(4px 4px at 75% 35%, rgba(255, 120, 120, 0.95) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 90% 75%, rgba(255, 200, 150, 0.8) 50%, transparent 100%),
+        radial-gradient(3px 3px at 10% 45%, rgba(255, 110, 110, 0.9) 50%, transparent 100%),
+        radial-gradient(3.5px 3.5px at 55% 90%, rgba(255, 170, 100, 0.85) 50%, transparent 100%);
+    animation: rarity5ParticlesSwirl 3s linear infinite;
 }
 
 .skill-frame-card.rarity-5 .particles::after,
 .skill-frame-full.rarity-5 .particles::after {
-    animation-delay: -2s;
+    animation-delay: -1.5s;
     animation-direction: reverse;
 }
 
@@ -1427,24 +1616,26 @@ body {
 }
 
 @keyframes rarity5Pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6), 0 0 40px rgba(192, 57, 43, 0.4); }
-    50% { box-shadow: 0 0 35px rgba(231, 76, 60, 0.9), 0 0 60px rgba(192, 57, 43, 0.6), 0 0 80px rgba(231, 76, 60, 0.3); }
+    0%, 100% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.7), 0 0 50px rgba(192, 57, 43, 0.5); }
+    50% { box-shadow: 0 0 45px rgba(231, 76, 60, 1), 0 0 80px rgba(192, 57, 43, 0.7), 0 0 100px rgba(255, 100, 100, 0.4); }
+}
+
+@keyframes rarity5Rainbow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rarity5Aura {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
 }
 
 @keyframes rarity5ParticlesSwirl {
-    0% { transform: rotate(0deg) scale(1); opacity: 0.7; }
+    0% { transform: rotate(0deg) scale(1); opacity: 0.8; }
     25% { opacity: 1; }
-    50% { transform: rotate(180deg) scale(1.05); opacity: 0.8; }
+    50% { transform: rotate(180deg) scale(1.1); opacity: 0.9; }
     75% { opacity: 1; }
-    100% { transform: rotate(360deg) scale(1); opacity: 0.7; }
-}
-
-/* 旧アニメーション削除用の空定義 */
-@keyframes legend5Particles {
-    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
-    25% { transform: translateY(-5px) rotate(3deg); opacity: 1; }
-    50% { transform: translateY(-10px) rotate(0deg); opacity: 0.9; }
-    75% { transform: translateY(-5px) rotate(-3deg); opacity: 1; }
+    100% { transform: rotate(360deg) scale(1); opacity: 0.8; }
 }
 
 .empty-message {
