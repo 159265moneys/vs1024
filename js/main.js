@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // モーダル
     const modals = {
-        skillDetail: document.getElementById('skill-detail-modal')
+        skillDetail: document.getElementById('skill-detail-modal'),
+        presetSelect: document.getElementById('preset-select-modal')
     };
     
     // ゲームインスタンス
@@ -43,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ゲーム設定
     let currentStage = 1;
     let currentGachaType = 'tile';
+    let currentSort = 'rarity'; // レア順 / コスト順 / 種類順
+    let pendingStageId = null; // バトル開始待ちのステージID
     
     // ========================================
     // 初期化
@@ -99,23 +102,69 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSkillInventory() {
         const container = document.getElementById('skill-inventory');
         const ownedSkills = GameData.getOwnedSkills();
+        const equippedSkills = GameData.getEquippedSkills();
         
         if (Object.keys(ownedSkills).length === 0) {
             container.innerHTML = '<div class="empty-message">スキルがありません<br>ガチャで入手しよう!</div>';
             return;
         }
         
+        // 現在の総コストと残りコストを計算
+        let currentTotalCost = 0;
+        equippedSkills.forEach(sid => {
+            if (sid && SKILLS[sid]) {
+                currentTotalCost += SKILLS[sid].cost;
+            }
+        });
+        const remainingCost = 20 - currentTotalCost;
+        
+        // スキルをソート
+        let skillEntries = Object.entries(ownedSkills).filter(([, data]) => data.count > 0);
+        
+        skillEntries.sort(([aId], [bId]) => {
+            const a = SKILLS[aId];
+            const b = SKILLS[bId];
+            if (!a || !b) return 0;
+            
+            switch (currentSort) {
+                case 'rarity':
+                    return b.rarity - a.rarity || b.cost - a.cost;
+                case 'cost':
+                    return b.cost - a.cost || b.rarity - a.rarity;
+                case 'category':
+                    const catOrder = { attack: 0, defense: 1, effect: 2 };
+                    return (catOrder[a.category] - catOrder[b.category]) || (b.rarity - a.rarity);
+                default:
+                    return 0;
+            }
+        });
+        
         container.innerHTML = '';
         
-        Object.entries(ownedSkills).forEach(([skillId, data]) => {
-            if (data.count <= 0) return;
-            
+        skillEntries.forEach(([skillId, data]) => {
             const skill = SKILLS[skillId];
             if (!skill) return;
+            
+            const isEquipped = equippedSkills.includes(skillId);
+            const canEquip = skill.cost <= remainingCost && !isEquipped && equippedSkills.filter(Boolean).length < 5;
             
             const card = document.createElement('div');
             card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             card.dataset.skillId = skillId;
+            
+            // 装備中マーカー
+            if (isEquipped) {
+                card.classList.add('equipped-indicator');
+            }
+            // コスト不足で暗転
+            if (!canEquip && !isEquipped) {
+                card.classList.add('disabled');
+            }
+            
+            // 強化レベルを星で表示
+            const level = data.level || 0;
+            const levelStars = '★'.repeat(level) + '☆'.repeat(5 - level);
+            
             card.innerHTML = `
                 ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                 <div class="frame-inner">
@@ -123,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="skill-name">${skill.name}</span>
                 </div>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
+                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
             `;
             
             card.addEventListener('click', () => openSkillDetail(skillId));
@@ -287,23 +337,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 slot.innerHTML = `<img src="${skill.icon}" alt="${skill.name}">`;
                 slot.classList.add('filled');
                 slot.classList.remove('empty');
+                slot.dataset.skillId = skillId;
                 totalCost += skill.cost;
             } else {
                 slot.innerHTML = '+';
                 slot.classList.remove('filled');
                 slot.classList.add('empty');
+                slot.dataset.skillId = '';
             }
         });
         
         document.getElementById('current-cost').textContent = totalCost;
         
+        // 残りコスト表示
+        const remainingCost = 20 - totalCost;
+        const remainingEl = document.getElementById('remaining-cost');
+        if (remainingEl) {
+            remainingEl.textContent = `(残り${remainingCost})`;
+            remainingEl.style.color = remainingCost === 0 ? 'var(--accent-green)' : '';
+        }
+        
         // コスト警告（20ぴったりでないと警告）
         const costDisplay = document.querySelector('.cost-display');
-        if (totalCost !== 20 && equipped.length > 0) {
+        const costWarning = document.getElementById('cost-warning');
+        const hasEquipped = equipped.filter(Boolean).length > 0;
+        
+        if (totalCost !== 20 && hasEquipped) {
             costDisplay.style.color = 'var(--accent-red)';
+            costWarning?.classList.add('visible');
+        } else if (totalCost === 20) {
+            costDisplay.style.color = 'var(--accent-green)';
+            costWarning?.classList.remove('visible');
         } else {
             costDisplay.style.color = '';
+            costWarning?.classList.remove('visible');
         }
+        
+        // スキルインベントリも更新（暗転表示のため）
+        updateSkillInventory();
+    }
+    
+    // スロットからスキルを外す
+    function unequipSkill(slotIndex) {
+        const preset = GameData.getCurrentPreset();
+        const equipped = [...GameData.getSkillPreset(preset)];
+        
+        if (equipped[slotIndex]) {
+            equipped[slotIndex] = null;
+            // 空きを詰める
+            const filtered = equipped.filter(Boolean);
+            while (filtered.length < 5) filtered.push(null);
+            GameData.setSkillPreset(preset, filtered);
+            updateEquippedSkills();
+        }
+    }
+    
+    // 全スキル解除
+    function clearAllEquippedSkills() {
+        const preset = GameData.getCurrentPreset();
+        GameData.setSkillPreset(preset, []);
+        updateEquippedSkills();
     }
     
     // ========================================
@@ -553,11 +646,97 @@ document.addEventListener('DOMContentLoaded', () => {
             catDisplay.style.color = catInfo ? catInfo.color : '';
         }
         
+        // 強化レベル表示
+        const level = GameData.getSkillLevel(skillId);
+        const levelStarsEl = document.getElementById('detail-skill-level');
+        if (levelStarsEl) {
+            levelStarsEl.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('span');
+                star.className = i < level ? 'filled' : 'empty';
+                star.textContent = i < level ? '★' : '☆';
+                levelStarsEl.appendChild(star);
+            }
+        }
+        
+        // 強化に必要なもの計算
+        const upgradeReq = getUpgradeRequirement(level, skill.rarity);
+        const ownedCount = GameData.getSkillCount(skillId);
+        const upgradeSection = document.getElementById('upgrade-section');
+        const upgradeCost = document.getElementById('upgrade-cost');
+        const upgradeMaterial = document.getElementById('upgrade-material-status');
+        const upgradeBtn = document.getElementById('btn-upgrade-skill');
+        
+        if (level >= 5) {
+            // 最大レベル
+            upgradeSection.style.display = 'none';
+            upgradeBtn.disabled = true;
+            upgradeBtn.textContent = '最大強化';
+        } else {
+            upgradeSection.style.display = 'block';
+            upgradeCost.textContent = upgradeReq.text;
+            
+            // 素材チェック
+            const canUpgrade = ownedCount >= upgradeReq.sameSkill + 1; // +1は本体
+            upgradeMaterial.textContent = `所持: ${ownedCount}枚`;
+            upgradeMaterial.className = 'upgrade-materials ' + (canUpgrade ? 'sufficient' : 'insufficient');
+            upgradeBtn.disabled = !canUpgrade;
+            upgradeBtn.textContent = canUpgrade ? '強化する' : '素材不足';
+        }
+        
         // 売却価格
         const sellPrice = GachaSystem.sellPrices.skill[skill.rarity];
         document.getElementById('btn-sell-skill').textContent = `売却 (${sellPrice} SP)`;
         
         showModal('skillDetail');
+    }
+    
+    // 強化に必要な素材を計算
+    function getUpgradeRequirement(currentLevel, rarity) {
+        // ★0 → ★1: 同スキル1枚
+        // ★1 → ★2: 同スキル2枚
+        // ★2 → ★3: 同スキル2枚 + 同レア2枚
+        // ★3 → ★4: 同スキル3枚 + 同レア2枚
+        // ★4 → ★5: 同スキル3枚 + 同レア★3以上2枚
+        const requirements = [
+            { sameSkill: 1, sameRarity: 0, text: '同スキル×1' },
+            { sameSkill: 2, sameRarity: 0, text: '同スキル×2' },
+            { sameSkill: 2, sameRarity: 2, text: '同スキル×2 + 同レア×2' },
+            { sameSkill: 3, sameRarity: 2, text: '同スキル×3 + 同レア×2' },
+            { sameSkill: 3, sameRarity: 2, text: '同スキル×3 + 同レア★3+×2' }
+        ];
+        return requirements[currentLevel] || { sameSkill: 0, sameRarity: 0, text: '最大' };
+    }
+    
+    // スキル強化
+    function upgradeSkill(skillId) {
+        const skill = SKILLS[skillId];
+        if (!skill) return;
+        
+        const currentLevel = GameData.getSkillLevel(skillId);
+        if (currentLevel >= 5) {
+            alert('最大強化済みです');
+            return;
+        }
+        
+        const req = getUpgradeRequirement(currentLevel, skill.rarity);
+        const ownedCount = GameData.getSkillCount(skillId);
+        
+        // 同スキルのチェック（本体1枚 + 素材分）
+        if (ownedCount < req.sameSkill + 1) {
+            alert('素材が足りません');
+            return;
+        }
+        
+        // 素材消費（本体は残す）
+        GameData.removeSkill(skillId, req.sameSkill);
+        
+        // 強化
+        GameData.upgradeSkill(skillId);
+        
+        // UI更新
+        updateSkillInventory();
+        openSkillDetail(skillId); // 詳細画面を更新
     }
     
     function equipSkill(skillId) {
@@ -618,6 +797,84 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCurrencyDisplay();
         updateSkillInventory();
         hideModal('skillDetail');
+    }
+    
+    // ========================================
+    // バトル前プリセット選択
+    // ========================================
+    
+    let selectedPresetForBattle = 0;
+    
+    function showPresetSelectModal(stageId) {
+        pendingStageId = stageId;
+        selectedPresetForBattle = GameData.getCurrentPreset();
+        
+        const container = document.getElementById('preset-select-list');
+        container.innerHTML = '';
+        
+        for (let i = 0; i < 5; i++) {
+            const skills = GameData.getSkillPreset(i);
+            const totalCost = skills.reduce((sum, sid) => {
+                return sum + (SKILLS[sid]?.cost || 0);
+            }, 0);
+            const isValid = totalCost === 20 || skills.filter(Boolean).length === 0; // 空かコスト20
+            
+            const item = document.createElement('div');
+            item.className = `preset-select-item ${i === selectedPresetForBattle ? 'selected' : ''} ${!isValid ? 'invalid' : ''}`;
+            item.dataset.preset = i;
+            
+            const skillIcons = skills.filter(Boolean).map(sid => {
+                const skill = SKILLS[sid];
+                return skill ? `<div class="preset-skill-icon"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
+            }).join('');
+            
+            item.innerHTML = `
+                <div class="preset-item-header">
+                    <span class="preset-number">プリセット ${i + 1}</span>
+                    <span class="preset-cost ${!isValid ? 'invalid' : ''}">${totalCost}/20</span>
+                </div>
+                <div class="preset-skills">
+                    ${skillIcons || '<span class="preset-empty-text">スキル未設定</span>'}
+                </div>
+            `;
+            
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.preset-select-item').forEach(el => el.classList.remove('selected'));
+                item.classList.add('selected');
+                selectedPresetForBattle = i;
+                updatePresetStartButton();
+            });
+            
+            container.appendChild(item);
+        }
+        
+        updatePresetStartButton();
+        showModal('presetSelect');
+    }
+    
+    function updatePresetStartButton() {
+        const btn = document.getElementById('btn-preset-start');
+        const skills = GameData.getSkillPreset(selectedPresetForBattle);
+        const totalCost = skills.reduce((sum, sid) => sum + (SKILLS[sid]?.cost || 0), 0);
+        const isValid = totalCost === 20 || skills.filter(Boolean).length === 0;
+        
+        btn.disabled = !isValid;
+        if (!isValid) {
+            btn.textContent = 'コストが20ではありません';
+        } else {
+            btn.textContent = 'バトル開始';
+        }
+    }
+    
+    function confirmPresetAndStartBattle() {
+        if (pendingStageId === null) return;
+        
+        // 選択したプリセットを現在のプリセットに設定
+        GameData.setCurrentPreset(selectedPresetForBattle);
+        
+        hideModal('presetSelect');
+        startGame(pendingStageId);
+        pendingStageId = null;
     }
     
     // ========================================
@@ -725,12 +982,19 @@ document.addEventListener('DOMContentLoaded', () => {
             switchTab('stage');
         });
         
-        // ステージ選択
+        // ステージ選択（プリセット選択画面を表示）
         document.querySelectorAll('.stage-item').forEach(item => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('locked')) return;
-                startGame(parseInt(item.dataset.stage));
+                showPresetSelectModal(parseInt(item.dataset.stage));
             });
+        });
+        
+        // プリセット選択モーダル
+        document.getElementById('btn-preset-start').addEventListener('click', confirmPresetAndStartBattle);
+        document.getElementById('btn-preset-cancel').addEventListener('click', () => {
+            hideModal('presetSelect');
+            pendingStageId = null;
         });
         
         // ガチャタイプ切り替え
@@ -758,7 +1022,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // スキル詳細
         document.getElementById('btn-equip-skill').addEventListener('click', () => equipSkill(currentDetailSkillId));
         document.getElementById('btn-sell-skill').addEventListener('click', () => sellSkill(currentDetailSkillId));
+        document.getElementById('btn-upgrade-skill').addEventListener('click', () => upgradeSkill(currentDetailSkillId));
         document.getElementById('btn-close-skill-detail').addEventListener('click', () => hideModal('skillDetail'));
+        
+        // 装備スロットクリック（スキルを外す）
+        document.querySelectorAll('.asset-slot').forEach((slot, index) => {
+            slot.addEventListener('click', () => {
+                if (slot.classList.contains('filled')) {
+                    unequipSkill(index);
+                }
+            });
+        });
+        
+        // 全解除ボタン
+        document.getElementById('btn-clear-all').addEventListener('click', clearAllEquippedSkills);
+        
+        // ソートボタン
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSort = btn.dataset.sort;
+                updateSkillInventory();
+            });
+        });
         
         // プリセット切り替え
         document.querySelectorAll('.preset-btn').forEach(btn => {

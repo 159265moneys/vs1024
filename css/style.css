@@ -678,6 +678,358 @@ body {
 }
 
 /* ========================================
+   スキル画面 - 追加UI
+   ======================================== */
+
+/* アセットヘッダー */
+.asset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.asset-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-clear-all {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-red);
+    border-radius: 4px;
+    color: var(--accent-red);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-all:hover {
+    background: var(--accent-red);
+    color: white;
+}
+
+#remaining-cost {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* コスト警告 */
+.cost-warning {
+    font-size: 0.7rem;
+    color: var(--accent-red);
+    text-align: center;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cost-warning.visible {
+    opacity: 1;
+}
+
+/* インベントリヘッダー */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* ソートボタン */
+.sort-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.sort-btn {
+    padding: 3px 8px;
+    font-size: 0.65rem;
+    background: var(--bg-card);
+    border: 1px solid var(--text-secondary);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: rgba(0, 170, 255, 0.1);
+}
+
+/* 暗転スキルカード（コスト不足） */
+.skill-frame-card.disabled {
+    opacity: 0.4;
+    filter: grayscale(0.6);
+    pointer-events: none;
+}
+
+.skill-frame-card.equipped-indicator {
+    position: relative;
+}
+
+.skill-frame-card.equipped-indicator::after {
+    content: '装備中';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 2px 5px;
+    font-size: 0.5rem;
+    background: var(--accent-green);
+    color: white;
+    border-radius: 3px;
+}
+
+/* ========================================
+   プリセット選択モーダル
+   ======================================== */
+.preset-select {
+    max-width: 350px;
+}
+
+.preset-select h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.preset-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.preset-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.preset-select-item {
+    padding: 12px 15px;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.preset-select-item:hover {
+    background: var(--bg-card-hover);
+}
+
+.preset-select-item.selected {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 170, 255, 0.1);
+}
+
+.preset-select-item.invalid {
+    opacity: 0.5;
+    border-color: var(--accent-red);
+}
+
+.preset-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.preset-number {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.preset-cost {
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+}
+
+.preset-cost.invalid {
+    color: var(--accent-red);
+}
+
+.preset-skills {
+    display: flex;
+    gap: 5px;
+    min-height: 30px;
+}
+
+.preset-skill-icon {
+    width: 30px;
+    height: 30px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preset-skill-icon img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.preset-empty-text {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.preset-select-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.preset-select-actions .action-btn {
+    flex: 1;
+    max-width: 140px;
+}
+
+.action-btn.start {
+    background: var(--accent-green);
+    color: white;
+}
+
+.action-btn.start:hover {
+    background: #00bb77;
+}
+
+.action-btn.start:disabled {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.action-btn.cancel {
+    background: var(--bg-card);
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.action-btn.cancel:hover {
+    background: var(--bg-card-hover);
+}
+
+/* ========================================
+   スキル強化セクション
+   ======================================== */
+.skill-level-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.level-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.level-stars {
+    font-size: 0.9rem;
+    color: var(--accent-yellow);
+    letter-spacing: 2px;
+}
+
+.level-stars .filled {
+    color: var(--accent-yellow);
+}
+
+.level-stars .empty {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.upgrade-section {
+    background: var(--bg-card);
+    border-radius: 10px;
+    padding: 12px;
+    margin: 15px 0;
+}
+
+.upgrade-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.upgrade-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.upgrade-cost {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+}
+
+.upgrade-materials {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.upgrade-materials.sufficient {
+    color: var(--accent-green);
+}
+
+.upgrade-materials.insufficient {
+    color: var(--accent-red);
+}
+
+.action-btn.upgrade {
+    background: var(--accent-purple);
+    color: white;
+}
+
+.action-btn.upgrade:hover {
+    background: #7c3aed;
+}
+
+.action-btn.upgrade:disabled {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+/* スキルカードの強化レベルバッジ */
+.skill-level-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.5rem;
+    color: var(--accent-yellow);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+}
+
+/* スキル所持数バッジ */
+.skill-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.6rem;
+    background: var(--accent-cyan);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+/* ========================================
    🎨 スキルフレームシステム（独立スコープ）
    攻撃=円、防御=角丸正方形、効果=角丸八角形
    ※ゲームタイルとは完全に分離

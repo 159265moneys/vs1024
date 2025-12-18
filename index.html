@@ -171,13 +171,24 @@
                     
                     <!-- スキルアセット -->
                     <div class="skill-asset-section">
-                        <h3 class="section-subtitle">装備中 <span class="cost-display">コスト: <span id="current-cost">0</span>/20</span></h3>
+                        <div class="asset-header">
+                            <h3 class="section-subtitle">
+                                装備中 
+                                <span class="cost-display">
+                                    <span id="current-cost">0</span>/20 
+                                    <span id="remaining-cost">(残り20)</span>
+                                </span>
+                            </h3>
+                            <div class="asset-actions">
+                                <button class="btn-clear-all" id="btn-clear-all">全解除</button>
+                            </div>
+                        </div>
                         <div class="skill-asset-slots" id="skill-asset-slots">
-                            <div class="asset-slot empty">+</div>
-                            <div class="asset-slot empty">+</div>
-                            <div class="asset-slot empty">+</div>
-                            <div class="asset-slot empty">+</div>
-                            <div class="asset-slot empty">+</div>
+                            <div class="asset-slot empty" data-slot="0">+</div>
+                            <div class="asset-slot empty" data-slot="1">+</div>
+                            <div class="asset-slot empty" data-slot="2">+</div>
+                            <div class="asset-slot empty" data-slot="3">+</div>
+                            <div class="asset-slot empty" data-slot="4">+</div>
                         </div>
                         <div class="asset-presets">
                             <span class="preset-label">プリセット:</span>
@@ -187,11 +198,19 @@
                             <button class="preset-btn" data-preset="4">4</button>
                             <button class="preset-btn" data-preset="5">5</button>
                         </div>
+                        <p class="cost-warning" id="cost-warning">※コストが20になるように調整してください</p>
                     </div>
                     
                     <!-- 所持スキル一覧 -->
                     <div class="skill-inventory-section">
-                        <h3 class="section-subtitle">所持スキル</h3>
+                        <div class="inventory-header">
+                            <h3 class="section-subtitle">所持スキル</h3>
+                            <div class="sort-buttons">
+                                <button class="sort-btn active" data-sort="rarity">レア順</button>
+                                <button class="sort-btn" data-sort="cost">コスト順</button>
+                                <button class="sort-btn" data-sort="category">種類順</button>
+                            </div>
+                        </div>
                         <div class="skill-inventory" id="skill-inventory">
                             <!-- JSで生成 -->
                             <div class="empty-message">スキルがありません<br>ガチャで入手しよう!</div>
@@ -357,6 +376,21 @@
         </div>
     </div>
 
+    <!-- バトル前プリセット選択モーダル -->
+    <div id="preset-select-modal" class="modal">
+        <div class="modal-content preset-select">
+            <h2>スキルプリセット選択</h2>
+            <p class="preset-hint">使用するプリセットを選んでください</p>
+            <div class="preset-select-list" id="preset-select-list">
+                <!-- JSで生成 -->
+            </div>
+            <div class="preset-select-actions">
+                <button class="action-btn start" id="btn-preset-start">バトル開始</button>
+                <button class="action-btn cancel" id="btn-preset-cancel">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
     <!-- スキル詳細モーダル -->
     <div id="skill-detail-modal" class="modal">
         <div class="modal-content skill-detail">
@@ -369,9 +403,25 @@
                         <span class="skill-category" id="detail-skill-category">防御</span>
                         <span class="skill-cost" id="detail-skill-cost">コスト: 5</span>
                     </div>
+                    <div class="skill-level-display">
+                        <span class="level-label">強化レベル:</span>
+                        <span class="level-stars" id="detail-skill-level">☆☆☆☆☆</span>
+                    </div>
                 </div>
             </div>
             <p class="skill-description" id="detail-skill-desc">次の攻撃を無効化する</p>
+            
+            <!-- 強化セクション -->
+            <div class="upgrade-section" id="upgrade-section">
+                <div class="upgrade-info">
+                    <span class="upgrade-label">次の強化に必要:</span>
+                    <span class="upgrade-cost" id="upgrade-cost">同スキル×1</span>
+                </div>
+                <div class="upgrade-materials">
+                    <span id="upgrade-material-status">所持: 0枚</span>
+                </div>
+            </div>
+            
             <div class="skill-detail-actions">
                 <button class="action-btn equip" id="btn-equip-skill">装備</button>
                 <button class="action-btn upgrade" id="btn-upgrade-skill">強化</button>
