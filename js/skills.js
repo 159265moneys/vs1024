@@ -416,3 +416,31 @@ function getSkillActivationRate(skill, equippedSkillIds) {
 
 // 旧互換性のためのエイリアス（game.jsなどで使用）
 const SKILL_ACTIVATION_CHANCE = 0.05;  // 5%
+
+/**
+ * スキル情報を取得
+ * @param {string} skillId - スキルID
+ * @returns {Object|null} スキル情報
+ */
+function getSkillInfo(skillId) {
+    return SKILLS[skillId] || null;
+}
+
+/**
+ * 全スキルから重み付きランダムで1つ選択（装備なし版）
+ * @returns {Object} 選ばれたスキル
+ */
+function getRandomSkillFromAll() {
+    const allSkills = Object.values(SKILLS);
+    const totalWeight = allSkills.reduce((sum, skill) => sum + skill.weight, 0);
+    
+    let rand = Math.random() * totalWeight;
+    for (const skill of allSkills) {
+        rand -= skill.weight;
+        if (rand <= 0) {
+            return skill;
+        }
+    }
+    
+    return allSkills[allSkills.length - 1];
+}

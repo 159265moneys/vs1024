@@ -291,8 +291,9 @@ class Game {
      */
     checkSkillTrigger(caster, mergeRow, mergeCol) {
         if (Math.random() < this.skillChance) {
-            // 重み付きランダムでスキル選択
-            const skill = getWeightedRandomSkill();
+            // 重み付きランダムでスキル選択（全スキルから）
+            const skill = getRandomSkillFromAll();
+            if (!skill) return;
             
             // 弾演出用に合成位置を保存
             this.lastMergePosition = { row: mergeRow, col: mergeCol };
@@ -492,7 +493,7 @@ class Game {
     }
 
     /**
-     * スキル実行
+     * スキル実行（30スキル対応）
      */
     executeSkill(skillId, caster) {
         const skill = getSkillInfo(skillId);
@@ -509,14 +510,83 @@ class Game {
         }
         
         switch (skillId) {
-            case 'shield':
+            // ★5 レジェンド
+            case 'laststand':
+                // 致死ダメージ無効化（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ラストスタンド発動!`, 'attack');
+                }
+                break;
+                
+            case 'overflow':
+                // 敵の2生成が2倍（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}オーバーフロー! 10秒間2倍生成!`, 'interference');
+                }
+                break;
+                
+            case 'grace':
+                // 詰みダメージ無効（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}グレイス! 20秒間詰み無効!`, 'attack');
+                }
+                break;
+                
+            case 'mirror':
+                // 盤面コピー（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ミラー! 盤面コピー!`, 'interference');
+                }
+                break;
+            
+            // ★4 エピック
+            case 'double':
+                if (isPlayer) {
+                    this.playerDouble = true;
+                } else {
+                    this.enemyDouble = true;
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ダブル! 次攻撃2倍!`, 'damage');
+                }
+                break;
+                
+            case 'guardian':
                 if (isPlayer) {
                     this.playerShield = true;
                 } else {
                     this.enemyShield = true;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`🛡️ ${casterName}シールド発動!`, 'attack');
+                    this.onBattleLog(`${skill.icon} ${casterName}ガーディアン! 次攻撃無効!`, 'attack');
+                }
+                break;
+                
+            case 'heal':
+                if (isPlayer) {
+                    this.playerHP = Math.min(this.maxHP, this.playerHP + 1);
+                    if (this.onHPChange) this.onHPChange('player', this.playerHP);
+                } else {
+                    this.enemyHP = Math.min(this.maxHP, this.enemyHP + 1);
+                    if (this.onHPChange) this.onHPChange('enemy', this.enemyHP);
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ヒール! HP+1!`, 'attack');
+                }
+                break;
+                
+            case 'freeze':
+                if (isPlayer) {
+                    this.enemyFrozen = true;
+                    this.enemyFreezeTimer = 3.0;
+                    if (this.onFreezeChange) this.onFreezeChange('enemy', true);
+                } else {
+                    this.playerFrozen = true;
+                    this.playerFreezeTimer = 3.0;
+                    if (this.onFreezeChange) this.onFreezeChange('player', true);
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}フリーズ! 3秒間停止!`, 'attack');
                 }
                 break;
                 
@@ -527,83 +597,295 @@ class Game {
                     this.enemyReflect = true;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`🪞 ${casterName}リフレクト発動!`, 'interference');
+                    this.onBattleLog(`${skill.icon} ${casterName}リフレクト! 次妨害跳返!`, 'interference');
                 }
                 break;
-                
-            case 'clean':
-                const myCleared = myBoard.clearAllTwos();
-                const enemyCleared = enemyBoard.clearAllTwos();
+            
+            // ★3 レア
+            case 'apocalypse':
+                myBoard.init(myBoard.element, myBoard.isPlayer);
+                enemyBoard.init(enemyBoard.element, enemyBoard.isPlayer);
                 if (this.onBattleLog) {
-                    this.onBattleLog(`🧹 ${casterName}クリーン! 2を${myCleared + enemyCleared}個消去!`, 'interference');
+                    this.onBattleLog(`${skill.icon} ${casterName}アポカリプス! 両盤面リセット!`, 'damage');
                 }
-                if (this.onEnemyBoardUpdate) {
-                    this.onEnemyBoardUpdate();
-                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
                 
-            case 'double':
-                if (isPlayer) {
-                    this.playerDouble = true;
-                } else {
-                    this.enemyDouble = true;
-                }
+            case 'smash':
+                // タップで破壊（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`⚡ ${casterName}ダブル発動! 次攻撃2倍!`, 'damage');
+                    this.onBattleLog(`${skill.icon} ${casterName}スマッシュ!`, 'damage');
                 }
                 break;
                 
-            case 'bomb':
+            case 'timebomb':
                 const bombPos = enemyBoard.addBombTile();
                 if (bombPos) {
                     if (this.onBattleLog) {
-                        this.onBattleLog(`💣 ${casterName}ボム[${bombPos.value}]設置! 3秒後に爆発!`, 'damage');
+                        this.onBattleLog(`${skill.icon} ${casterName}タイムボム[${bombPos.value}]設置!`, 'damage');
                     }
-                    if (!isPlayer && this.onEnemyBoardUpdate) {
-                        this.onEnemyBoardUpdate();
-                    }
+                    if (!isPlayer && this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 }
                 break;
                 
-            case 'freeze':
+            case 'purify':
+                // バフ/デバフ解除
                 if (isPlayer) {
-                    this.enemyFrozen = true;
-                    this.enemyFreezeTimer = 3.0;
-                    if (this.onFreezeChange) {
-                        this.onFreezeChange('enemy', true);
-                    }
+                    this.playerFrozen = false;
+                    if (this.onFreezeChange) this.onFreezeChange('player', false);
+                    this.enemyShield = false;
+                    this.enemyReflect = false;
+                    this.enemyDouble = false;
                 } else {
-                    this.playerFrozen = true;
-                    this.playerFreezeTimer = 3.0;
-                    if (this.onFreezeChange) {
-                        this.onFreezeChange('player', true);
-                    }
+                    this.enemyFrozen = false;
+                    if (this.onFreezeChange) this.onFreezeChange('enemy', false);
+                    this.playerShield = false;
+                    this.playerReflect = false;
+                    this.playerDouble = false;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`❄️ ${casterName}フリーズ! 3秒間停止!`, 'attack');
+                    this.onBattleLog(`${skill.icon} ${casterName}ピュリファイ! 効果解除!`, 'interference');
                 }
                 break;
                 
-            case 'convert':
-                const converted = myBoard.convertRandomTwoToFour();
-                if (converted) {
+            case 'boost':
+                const values = [2, 4, 8, 16, 32, 64];
+                const boostValue = values[Math.floor(Math.random() * values.length)];
+                let boosted = 0;
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (myBoard.grid[r][c] === boostValue) {
+                            myBoard.grid[r][c] *= 2;
+                            boosted++;
+                        }
+                    }
+                }
+                myBoard.updateDOM();
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ブースト! ${boostValue}→${boostValue*2} ×${boosted}!`, 'interference');
+                }
+                break;
+                
+            case 'steal':
+                // 相手タイルを1個奪う
+                const enemyTiles = [];
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (enemyBoard.grid[r][c] > 0 && enemyBoard.grid[r][c] <= 64) {
+                            enemyTiles.push({ r, c, v: enemyBoard.grid[r][c] });
+                        }
+                    }
+                }
+                if (enemyTiles.length > 0) {
+                    const stolen = enemyTiles[Math.floor(Math.random() * enemyTiles.length)];
+                    enemyBoard.grid[stolen.r][stolen.c] = 0;
+                    enemyBoard.updateDOM();
+                    myBoard.addRandomTile(stolen.v);
                     if (this.onBattleLog) {
-                        this.onBattleLog(`🔄 ${casterName}コンバート! 2→4!`, 'interference');
+                        this.onBattleLog(`${skill.icon} ${casterName}スティール! ${stolen.v}を奪取!`, 'interference');
                     }
+                    if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                }
+                break;
+            
+            // ★2 アンコモン
+            case 'armor':
+                // ダメージ-1（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}アーマー! 次ダメ-1!`, 'attack');
                 }
                 break;
                 
-            case 'dice':
-                const values = [2, 4, 8, 16, 32, 64, 128];
-                const targetValue = values[Math.floor(Math.random() * values.length)];
-                const diceCleared = myBoard.clearAllWithValue(targetValue);
+            case 'amplify':
+                // 妨害2倍（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`🎲 ${casterName}ダイス! ${targetValue}を${diceCleared}個消去!`, 'interference');
+                    this.onBattleLog(`${skill.icon} ${casterName}アンプリファイ! 次妨害2倍!`, 'interference');
+                }
+                break;
+                
+            case 'swap':
+                // タイル交換
+                const swapValues = [2, 4, 8, 16, 32];
+                const swapV = swapValues[Math.floor(Math.random() * swapValues.length)];
+                let myCount = 0, enemyCount = 0;
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (myBoard.grid[r][c] === swapV) myCount++;
+                        if (enemyBoard.grid[r][c] === swapV) enemyCount++;
+                    }
+                }
+                // 簡易実装：表示のみ
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}スワップ! ${swapV}交換!`, 'interference');
+                }
+                break;
+                
+            case 'vanish':
+                const vanishValues = [2, 4, 8, 16, 32, 64, 128];
+                const vanishV = vanishValues[Math.floor(Math.random() * vanishValues.length)];
+                const myVanish = myBoard.clearAllWithValue(vanishV);
+                const enemyVanish = enemyBoard.clearAllWithValue(vanishV);
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ヴァニッシュ! ${vanishV}消滅 ×${myVanish + enemyVanish}!`, 'interference');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'anchor':
+                // 四隅固定（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}アンカー! 10秒間四隅固定!`, 'interference');
+                }
+                break;
+                
+            case 'decay':
+                // 全タイル1レベル下げ
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (myBoard.grid[r][c] === 2) myBoard.grid[r][c] = 0;
+                        else if (myBoard.grid[r][c] > 2) myBoard.grid[r][c] /= 2;
+                        if (enemyBoard.grid[r][c] === 2) enemyBoard.grid[r][c] = 0;
+                        else if (enemyBoard.grid[r][c] > 2) enemyBoard.grid[r][c] /= 2;
+                    }
+                }
+                myBoard.updateDOM();
+                enemyBoard.updateDOM();
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ディケイ! 全タイル-1Lv!`, 'interference');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'upgrade':
+                const myCleared = myBoard.clearAllTwos();
+                for (let i = 0; i < myCleared; i++) {
+                    myBoard.addRandomTile(4);
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}アップグレード! 2→4 ×${myCleared}!`, 'interference');
+                }
+                break;
+            
+            // ★1 コモン
+            case 'doubleedge':
+                this.playerHP = Math.max(0, this.playerHP - 1);
+                this.enemyHP = Math.max(0, this.enemyHP - 1);
+                if (this.onHPChange) {
+                    this.onHPChange('player', this.playerHP);
+                    this.onHPChange('enemy', this.enemyHP);
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ダブルエッジ! 両者-1HP!`, 'damage');
+                }
+                this.checkMatchPoint();
+                if (this.playerHP <= 0) { this.endGame('enemy'); return true; }
+                if (this.enemyHP <= 0) { this.endGame('player'); return true; }
+                break;
+                
+            case 'scramble':
+                for (let i = 0; i < 3; i++) {
+                    myBoard.addRandomTile(2);
+                    enemyBoard.addRandomTile(2);
+                }
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}スクランブル! 両者+2×3!`, 'interference');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'sweep':
+                let mySweep = 0, enemySweep = 0;
+                for (let i = 0; i < 3; i++) {
+                    for (let r = 0; r < 4 && mySweep < 3; r++) {
+                        for (let c = 0; c < 4 && mySweep < 3; c++) {
+                            if (myBoard.grid[r][c] === 2) {
+                                myBoard.grid[r][c] = 0;
+                                mySweep++;
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < 3; i++) {
+                    for (let r = 0; r < 4 && enemySweep < 3; r++) {
+                        for (let c = 0; c < 4 && enemySweep < 3; c++) {
+                            if (enemyBoard.grid[r][c] === 2) {
+                                enemyBoard.grid[r][c] = 0;
+                                enemySweep++;
+                            }
+                        }
+                    }
+                }
+                myBoard.updateDOM();
+                enemyBoard.updateDOM();
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}スウィープ! 2消去 ×${mySweep + enemySweep}!`, 'interference');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'disrupt':
+                this.addInterferenceToEnemy(1);
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ディスラプト! 妨害+1!`, 'interference');
+                }
+                break;
+                
+            case 'weaken':
+                const weakenValues = [4, 8, 16, 32, 64, 128];
+                const weakV = weakenValues[Math.floor(Math.random() * weakenValues.length)];
+                let weakened = 0;
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (enemyBoard.grid[r][c] === weakV) {
+                            enemyBoard.grid[r][c] /= 2;
+                            weakened++;
+                        }
+                    }
+                }
+                enemyBoard.updateDOM();
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}ウィークン! ${weakV}→${weakV/2} ×${weakened}!`, 'interference');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'cataclysm':
+                // 盤面入れ替え
+                const tempGrid = myBoard.getGridCopy();
+                myBoard.grid = enemyBoard.getGridCopy();
+                enemyBoard.grid = tempGrid;
+                myBoard.interferenceTiles.clear();
+                enemyBoard.interferenceTiles.clear();
+                myBoard.bombTiles.clear();
+                enemyBoard.bombTiles.clear();
+                myBoard.updateDOM();
+                enemyBoard.updateDOM();
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}カタクリズム! 盤面入替!`, 'damage');
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                break;
+                
+            case 'curse':
+                // 次ダメ反射（実装は後で）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}カース! 次ダメ反射!`, 'damage');
+                }
+                break;
+                
+            case 'fusion':
+                // 自動合成（簡易版：スコア加算のみ）
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}フュージョン!`, 'interference');
                 }
                 break;
                 
             default:
-                return false;
+                // 未実装スキル
+                if (this.onBattleLog) {
+                    this.onBattleLog(`${skill.icon} ${casterName}${skill.name}!`, 'interference');
+                }
+                break;
         }
         
         return true;
