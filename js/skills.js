@@ -13,9 +13,9 @@ const SKILLS = {
         name: 'ラストスタンド',
         nameEn: 'LastStand',
         icon: 'sprite/laststand.png',
-        cost: 8,      // ヤバさ5
+        cost: 10,     // ヤバさ5 - 超レア
         rarity: 5,
-        weight: 2,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'defense',
         description: '次に攻撃or詰みで2ダメージ以上くらって負ける時、無効化する'
     },
@@ -24,9 +24,9 @@ const SKILLS = {
         name: 'リザレクション',
         nameEn: 'Resurrection',
         icon: 'sprite/grace.png',
-        cost: 8,      // ヤバさ5
+        cost: 10,     // ヤバさ5 - 超レア
         rarity: 5,
-        weight: 2,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'defense',
         description: '死んだとき一度だけ蘇る。ただしタイル盤がリセットされる'
     },
@@ -57,9 +57,9 @@ const SKILLS = {
         name: 'アポカリプス',
         nameEn: 'Apocalypse',
         icon: 'sprite/apocalypse.png',
-        cost: 7,      // ヤバさ5
+        cost: 9,      // ヤバさ5 - 超レア
         rarity: 5,
-        weight: 3,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'effect',
         description: 'お互いの盤面をリセットする'
     },
@@ -72,9 +72,9 @@ const SKILLS = {
         name: 'ダブル',
         nameEn: 'Double',
         icon: 'sprite/double.png',
-        cost: 7,      // ヤバさ5
+        cost: 9,      // ヤバさ5 - 超レア
         rarity: 4,
-        weight: 3,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'attack',
         description: '次の攻撃ダメージを2倍にする'
     },
@@ -83,9 +83,9 @@ const SKILLS = {
         name: 'ガーディアン',
         nameEn: 'Guardian',
         icon: 'sprite/guardian.png',
-        cost: 7,      // ヤバさ5
+        cost: 9,      // ヤバさ5 - 超レア
         rarity: 4,
-        weight: 3,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'defense',
         description: '次の攻撃を無効化する'
     },
@@ -105,9 +105,9 @@ const SKILLS = {
         name: 'カタクリズム',
         nameEn: 'Cataclysm',
         icon: 'sprite/cataclysm.png',
-        cost: 7,      // ヤバさ5
+        cost: 9,      // ヤバさ5 - 超レア
         rarity: 4,
-        weight: 3,    // ヤバさ5
+        weight: 1,    // ヤバさ5 - 1ゲーム1回出るか出ないか
         category: 'effect',
         description: 'お互いの盤面を入れ替える'
     },
