@@ -1416,34 +1416,114 @@ body {
 }
 
 /* ========================================
-   ★4 - エピック（黄色動的グラデーション + 超速脈動）
+   ★4 - エピック（8分割縦縞が交互に上下動）
    ======================================== */
 .skill-frame-card.rarity-4 { 
     --frame-color: #f1c40f;
-    --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d, #ffeb3b, #f39c12);
+    /* 8分割縦縞グラデーション（境目ぼかし） */
+    --rarity-bg: linear-gradient(
+        90deg,
+        #b8860b 0%,      /* ダークゴールド */
+        #d4a000 6%,
+        #f1c40f 12.5%,   /* メインゴールド */
+        #d4a000 19%,
+        #b8860b 25%,     /* ダークゴールド */
+        #d4a000 31%,
+        #f1c40f 37.5%,   /* メインゴールド */
+        #d4a000 44%,
+        #b8860b 50%,     /* ダークゴールド */
+        #d4a000 56%,
+        #f1c40f 62.5%,   /* メインゴールド */
+        #d4a000 69%,
+        #b8860b 75%,     /* ダークゴールド */
+        #d4a000 81%,
+        #f1c40f 87.5%,   /* メインゴールド */
+        #d4a000 94%,
+        #b8860b 100%     /* ダークゴールド */
+    );
 }
-.skill-frame-card.rarity-4 .skill-name { color: #fff; }
+.skill-frame-card.rarity-4 .skill-name { color: #fff; text-shadow: 0 0 6px rgba(241, 196, 15, 0.8); }
+
+/* 攻撃・防御系の背景 - 縦縞上下動 */
 .skill-frame-card.rarity-4.cat-attack::before,
 .skill-frame-card.rarity-4.cat-defense::before {
-    background-size: 400% 400%;
-    animation: rarity4BgMove 2s ease infinite, rarity4Pulse 1s ease-in-out infinite;
+    background-size: 100% 200%;
+    animation: rarity4Wave 1.5s ease-in-out infinite, rarity4Pulse 1s ease-in-out infinite;
 }
+/* 効果系の背景 - 縦縞上下動 */
 .skill-frame-card.rarity-4.cat-effect::after {
-    background-size: 400% 400%;
-    animation: rarity4BgMove 2s ease infinite, rarity4Pulse 1s ease-in-out infinite;
+    background-size: 100% 200%;
+    animation: rarity4Wave 1.5s ease-in-out infinite, rarity4Pulse 1s ease-in-out infinite;
 }
 
-@keyframes rarity4BgMove {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 50% 100%; }
-    50% { background-position: 100% 50%; }
-    75% { background-position: 50% 0%; }
-    100% { background-position: 0% 50%; }
+/* 縦縞が波打つように上下 */
+@keyframes rarity4Wave {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 0% 100%; }
 }
 
 @keyframes rarity4Pulse {
     0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.35); }
+    50% { filter: brightness(1.3); }
+}
+
+/* ★4 第2層オーバーレイ（逆方向の縦縞、奇数列・偶数列が交互に動く効果） */
+.skill-frame-card.rarity-4 .frame-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 10%,
+        rgba(255, 215, 0, 0.3) 11%,
+        rgba(255, 215, 0, 0.3) 14%,
+        transparent 15%,
+        transparent 25%
+    );
+    animation: rarity4WaveReverse 1.5s ease-in-out infinite reverse;
+    pointer-events: none;
+    z-index: 4;
+    border-radius: inherit;
+    clip-path: inherit;
+}
+
+.skill-frame-card.rarity-4 .frame-inner::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 22%,
+        rgba(184, 134, 11, 0.25) 23%,
+        rgba(184, 134, 11, 0.25) 27%,
+        transparent 28%,
+        transparent 50%
+    );
+    animation: rarity4WaveAlt 1.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 4;
+    border-radius: inherit;
+    clip-path: inherit;
+}
+
+/* 逆方向の波動 */
+@keyframes rarity4WaveReverse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-50%); }
+}
+
+/* 交互の波動 */
+@keyframes rarity4WaveAlt {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(50%); }
 }
 
 /* ========================================
