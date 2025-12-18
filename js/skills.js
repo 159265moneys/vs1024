@@ -1,7 +1,7 @@
 /**
- * Skills - 全30スキル定義 v3.1
- * 合成時スキル発動、重み付き抽選
- * アイコン: PNGスプライト対応
+ * Skills - 全30スキル定義 v4.0
+ * カテゴリ別枠: attack(赤/円), defense(緑/ダイヤ), effect(青/六角形)
+ * レアリティ別背景演出
  */
 
 const SKILLS = {
@@ -16,6 +16,7 @@ const SKILLS = {
         cost: 8,
         rarity: 5,
         weight: 1,
+        category: 'defense',
         description: '次に攻撃or詰みで2ダメージ以上くらって負ける時、無効化する'
     },
     overflow: {
@@ -26,6 +27,7 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'attack',
         description: '敵は10秒間、タイル合成時に生成される2が2個になる'
     },
     grace: {
@@ -36,6 +38,7 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'defense',
         description: 'これから20秒間、詰んでもダメージを受けない'
     },
     mirror: {
@@ -46,6 +49,7 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'effect',
         description: 'スキル使用時の相手の盤面と全く同じにする'
     },
 
@@ -60,6 +64,7 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'attack',
         description: '次の攻撃ダメージを2倍にする'
     },
     guardian: {
@@ -70,6 +75,7 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'defense',
         description: '次の攻撃を無効化する'
     },
     heal: {
@@ -80,6 +86,7 @@ const SKILLS = {
         cost: 6,
         rarity: 4,
         weight: 3,
+        category: 'defense',
         description: 'HP1回復（最大HP上限まで）'
     },
     freeze: {
@@ -90,6 +97,7 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'effect',
         description: '相手の盤面を3秒間停止させる'
     },
     reflect: {
@@ -100,6 +108,7 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'defense',
         description: '次の相手のスキルor妨害タイルを跳ね返す'
     },
 
@@ -114,6 +123,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'effect',
         description: 'お互いの盤面をリセットする'
     },
     smash: {
@@ -124,6 +134,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '好きなタイルを1タップして破壊する'
     },
     timebomb: {
@@ -134,6 +145,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '敵盤面にボム(2~8)設置。5秒以内に消さないと3×3範囲削除'
     },
     purify: {
@@ -144,6 +156,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'defense',
         description: '自分の不利効果/相手の有利効果を全て削除する'
     },
     boost: {
@@ -154,6 +167,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'effect',
         description: '自分のランダムな数字のタイルを全て1段階上げる'
     },
     steal: {
@@ -164,6 +178,7 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '相手のタイルから1つランダムに自分の盤面に追加する'
     },
 
@@ -178,6 +193,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'defense',
         description: '次の攻撃ダメージを-1する'
     },
     amplify: {
@@ -188,6 +204,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'attack',
         description: '次の妨害タイルの効果が2倍になる'
     },
     swap: {
@@ -198,6 +215,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: 'お互いのランダムな数字のタイルをまるごと交換する'
     },
     vanish: {
@@ -208,6 +226,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: '2~128のランダムな数字のタイルを両者から全消しする'
     },
     anchor: {
@@ -218,6 +237,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'defense',
         description: '10秒間、自分の盤面の四隅が固定される'
     },
     decay: {
@@ -228,6 +248,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: 'お互いのタイル全てを1レベル下げる（2は消滅）'
     },
     upgrade: {
@@ -238,6 +259,7 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: '自分の2を全て4に変換する'
     },
 
@@ -252,6 +274,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: 'お互いに1ダメージを与える'
     },
     scramble: {
@@ -262,6 +285,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: 'お互いに2を3つランダム生成する'
     },
     sweep: {
@@ -272,6 +296,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: 'お互いの2を3つ消す'
     },
     disrupt: {
@@ -282,6 +307,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '相手に妨害タイルを1個生成する'
     },
     weaken: {
@@ -292,6 +318,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '相手のランダムな1種類のタイルを全て1レベル下げる'
     },
     cataclysm: {
@@ -302,6 +329,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: 'お互いの盤面を入れ替える'
     },
     curse: {
@@ -312,6 +340,7 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '次にダメージを受けた時、同じダメージを相手にも与える'
     },
     fusion: {
@@ -322,25 +351,27 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: '自分の盤面で1回で合成可能なタイルを全て合成する'
     }
+};
+
+// カテゴリ定義
+const SKILL_CATEGORIES = {
+    attack:  { name: '攻撃', color: '#ff3366', shape: 'circle' },
+    defense: { name: '防御', color: '#00ff88', shape: 'diamond' },
+    effect:  { name: '効果', color: '#00aaff', shape: 'hexagon' }
 };
 
 // ========================================
 // スキルユーティリティ関数
 // ========================================
 
-/**
- * 装備中のスキルから重み付きでランダムに1つ選択
- * @param {Array} equippedSkillIds - 装備中のスキルID配列
- * @returns {Object|null} 選ばれたスキル、または装備なしならnull
- */
 function getWeightedRandomSkill(equippedSkillIds) {
     if (!equippedSkillIds || equippedSkillIds.length === 0) {
         return null;
     }
     
-    // 有効なスキルのみ抽出
     const validSkills = equippedSkillIds
         .filter(id => id && SKILLS[id])
         .map(id => SKILLS[id]);
@@ -349,10 +380,8 @@ function getWeightedRandomSkill(equippedSkillIds) {
         return null;
     }
     
-    // 重み合計を計算
     const totalWeight = validSkills.reduce((sum, skill) => sum + skill.weight, 0);
     
-    // 重み付き抽選
     let rand = Math.random() * totalWeight;
     for (const skill of validSkills) {
         rand -= skill.weight;
@@ -361,43 +390,21 @@ function getWeightedRandomSkill(equippedSkillIds) {
         }
     }
     
-    // フォールバック
     return validSkills[validSkills.length - 1];
 }
 
-/**
- * 全スキルからレアリティでフィルタ
- * @param {number} rarity - レアリティ（1-5）
- * @returns {Array} スキル配列
- */
 function getSkillsByRarity(rarity) {
     return Object.values(SKILLS).filter(s => s.rarity === rarity);
 }
 
-/**
- * 全スキルからコストでフィルタ
- * @param {number} cost - コスト
- * @returns {Array} スキル配列
- */
 function getSkillsByCost(cost) {
     return Object.values(SKILLS).filter(s => s.cost === cost);
 }
 
-/**
- * スキルのレアリティ文字列を取得
- * @param {number} rarity - レアリティ（1-5）
- * @returns {string} 星文字列
- */
 function getRarityStars(rarity) {
     return '★'.repeat(rarity);
 }
 
-/**
- * スキルの発動確率を計算（装備スキルベース）
- * @param {Object} skill - スキルオブジェクト
- * @param {Array} equippedSkillIds - 装備中のスキルID配列
- * @returns {number} 発動確率（0-1）
- */
 function getSkillActivationRate(skill, equippedSkillIds) {
     if (!equippedSkillIds || equippedSkillIds.length === 0) {
         return 0;
@@ -411,26 +418,15 @@ function getSkillActivationRate(skill, equippedSkillIds) {
     
     if (totalWeight === 0) return 0;
     
-    // 基礎発動率5% × スキルの重み比率
     return 0.05 * (skill.weight / totalWeight);
 }
 
-// 旧互換性のためのエイリアス（game.jsなどで使用）
-const SKILL_ACTIVATION_CHANCE = 0.05;  // 5%
+const SKILL_ACTIVATION_CHANCE = 0.05;
 
-/**
- * スキル情報を取得
- * @param {string} skillId - スキルID
- * @returns {Object|null} スキル情報
- */
 function getSkillInfo(skillId) {
     return SKILLS[skillId] || null;
 }
 
-/**
- * 全スキルから重み付きランダムで1つ選択（装備なし版）
- * @returns {Object} 選ばれたスキル
- */
 function getRandomSkillFromAll() {
     const allSkills = Object.values(SKILLS);
     const totalWeight = allSkills.reduce((sum, skill) => sum + skill.weight, 0);

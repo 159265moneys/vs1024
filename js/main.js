@@ -113,11 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skill) return;
             
             const card = document.createElement('div');
-            card.className = `skill-card rarity-${skill.rarity}`;
+            card.className = `skill-card rarity-${skill.rarity} cat-${skill.category}`;
             card.dataset.skillId = skillId;
             card.innerHTML = `
-                <img class="skill-icon" src="${skill.icon}" alt="${skill.name}">
-                <span class="skill-stars">${'★'.repeat(skill.rarity)}</span>
+                <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
+                    <div class="frame-bg"></div>
+                    <img src="${skill.icon}" alt="${skill.name}">
+                </div>
+                <span class="skill-name">${skill.name}</span>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
             `;
             
@@ -389,9 +392,20 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach(result => {
             const item = document.createElement('div');
             item.className = `gacha-result-item rarity-${result.rarity}`;
-            const iconHtml = result.type === 'skill' 
-                ? `<img src="${result.item.icon}" alt="${result.item.name}">`
-                : '🎨';
+            
+            let iconHtml;
+            if (result.type === 'skill') {
+                const skill = result.item;
+                iconHtml = `
+                    <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
+                        <div class="frame-bg"></div>
+                        <img src="${skill.icon}" alt="${skill.name}">
+                    </div>
+                `;
+            } else {
+                iconHtml = '<div class="tile-gacha-icon">🎨</div>';
+            }
+            
             item.innerHTML = `
                 <div class="item-icon">${iconHtml}</div>
                 <div class="item-name">${result.item.name}</div>
@@ -414,11 +428,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const skill = SKILLS[skillId];
         if (!skill) return;
         
-        document.getElementById('detail-skill-icon').innerHTML = `<img src="${skill.icon}" alt="${skill.name}">`;
+        // フル版フレーム付きアイコン
+        document.getElementById('detail-skill-icon').innerHTML = `
+            <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
+                <div class="frame-bg"></div>
+                <img src="${skill.icon}" alt="${skill.name}">
+            </div>
+        `;
         document.getElementById('detail-skill-name').textContent = skill.name;
         document.getElementById('detail-skill-rarity').textContent = '★'.repeat(skill.rarity);
         document.getElementById('detail-skill-cost').textContent = `コスト: ${skill.cost}`;
         document.getElementById('detail-skill-desc').textContent = skill.description;
+        
+        // カテゴリ表示
+        const catInfo = SKILL_CATEGORIES[skill.category];
+        const catDisplay = document.getElementById('detail-skill-category');
+        if (catDisplay) {
+            catDisplay.textContent = catInfo ? catInfo.name : '';
+            catDisplay.style.color = catInfo ? catInfo.color : '';
+        }
         
         // 売却価格
         const sellPrice = GachaSystem.sellPrices.skill[skill.rarity];

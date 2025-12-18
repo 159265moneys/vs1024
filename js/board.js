@@ -278,17 +278,24 @@ class Board {
             tile.dataset.bombTimer = this.bombTiles.get(key).timer.toFixed(1);
         }
         
-        // スキル付きタイル
+        // スキル付きタイル（バトル中簡略表示）
         if (this.skillTiles.has(key)) {
             const skillId = this.skillTiles.get(key);
             const skill = SKILLS[skillId];
             if (skill) {
                 tile.classList.add('has-skill');
-                const skillIcon = document.createElement('img');
-                skillIcon.className = 'tile-skill-icon';
-                skillIcon.src = skill.icon;
-                skillIcon.alt = skill.name;
-                tile.appendChild(skillIcon);
+                
+                // フレームコンテナ
+                const frame = document.createElement('div');
+                frame.className = `tile-skill-frame cat-${skill.category} rarity-${skill.rarity}`;
+                
+                // アイコン画像
+                const icon = document.createElement('img');
+                icon.src = skill.icon;
+                icon.alt = skill.name;
+                
+                frame.appendChild(icon);
+                tile.appendChild(frame);
             }
         }
         
