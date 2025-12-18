@@ -49,6 +49,12 @@ class Game {
         this.playerFrozen = false;
         this.playerFreezeTimer = 0;
         
+        // アンカー状態
+        this.playerAnchor = false;
+        this.playerAnchorTimer = 0;
+        this.enemyAnchor = false;
+        this.enemyAnchorTimer = 0;
+        
         // スキル発動確率
         this.skillChance = 0.05; // 5%
         
@@ -68,6 +74,7 @@ class Game {
         this.onBombExplode = null;
         this.onFreezeChange = null;
         this.onSkillBullet = null; // 弾演出コールバック
+        this.onBuffChange = null; // バフ状態変化コールバック
         
         this.lastTime = 0;
         this.animationId = null;
@@ -108,6 +115,10 @@ class Game {
         this.enemyFreezeTimer = 0;
         this.playerFrozen = false;
         this.playerFreezeTimer = 0;
+        this.playerAnchor = false;
+        this.playerAnchorTimer = 0;
+        this.enemyAnchor = false;
+        this.enemyAnchorTimer = 0;
         this.lastMergePosition = null;
         
         this.playerBoard.init(playerBoardEl, true);
@@ -1115,6 +1126,9 @@ class Game {
                 break;
         }
         
+        // バフ状態変化を通知
+        this.notifyBuffChange();
+        
         return true;
     }
 
@@ -1174,5 +1188,52 @@ class Game {
 
     resume() {
         this.isPaused = false;
+    }
+
+    /**
+     * プレイヤーのバフ状態を取得
+     */
+    getPlayerBuffs() {
+        const buffs = [];
+        if (this.playerShield) buffs.push({ id: 'guardian', type: 'buff' });
+        if (this.playerReflect) buffs.push({ id: 'reflect', type: 'buff' });
+        if (this.playerDouble) buffs.push({ id: 'double', type: 'buff' });
+        if (this.playerResurrection) buffs.push({ id: 'resurrection', type: 'buff' });
+        if (this.playerArmor) buffs.push({ id: 'armor', type: 'buff' });
+        if (this.playerAmplify) buffs.push({ id: 'amplify', type: 'buff' });
+        if (this.playerLaststand) buffs.push({ id: 'laststand', type: 'buff' });
+        if (this.playerCurse) buffs.push({ id: 'curse', type: 'buff' });
+        if (this.playerOverflow) buffs.push({ id: 'overflow', type: 'debuff', timer: this.playerOverflowTimer });
+        if (this.playerFrozen) buffs.push({ id: 'freeze', type: 'debuff', timer: this.playerFreezeTimer });
+        if (this.playerAnchor) buffs.push({ id: 'anchor', type: 'buff', timer: this.playerAnchorTimer });
+        return buffs;
+    }
+
+    /**
+     * 敵のバフ状態を取得
+     */
+    getEnemyBuffs() {
+        const buffs = [];
+        if (this.enemyShield) buffs.push({ id: 'guardian', type: 'buff' });
+        if (this.enemyReflect) buffs.push({ id: 'reflect', type: 'buff' });
+        if (this.enemyDouble) buffs.push({ id: 'double', type: 'buff' });
+        if (this.enemyResurrection) buffs.push({ id: 'resurrection', type: 'buff' });
+        if (this.enemyArmor) buffs.push({ id: 'armor', type: 'buff' });
+        if (this.enemyAmplify) buffs.push({ id: 'amplify', type: 'buff' });
+        if (this.enemyLaststand) buffs.push({ id: 'laststand', type: 'buff' });
+        if (this.enemyCurse) buffs.push({ id: 'curse', type: 'buff' });
+        if (this.enemyOverflow) buffs.push({ id: 'overflow', type: 'debuff', timer: this.enemyOverflowTimer });
+        if (this.enemyFrozen) buffs.push({ id: 'freeze', type: 'debuff', timer: this.enemyFreezeTimer });
+        if (this.enemyAnchor) buffs.push({ id: 'anchor', type: 'buff', timer: this.enemyAnchorTimer });
+        return buffs;
+    }
+
+    /**
+     * バフ変化を通知
+     */
+    notifyBuffChange() {
+        if (this.onBuffChange) {
+            this.onBuffChange(this.getPlayerBuffs(), this.getEnemyBuffs());
+        }
     }
 }

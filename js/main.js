@@ -584,6 +584,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     }
     
+    /**
+     * バフアイコンを更新
+     */
+    function updateBuffIcons(containerId, buffs) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        buffs.forEach(buff => {
+            const skill = SKILLS[buff.id];
+            if (!skill) return;
+            
+            const icon = document.createElement('div');
+            icon.className = `buff-icon ${buff.type}`;
+            icon.title = skill.name;
+            
+            const img = document.createElement('img');
+            img.src = skill.icon;
+            img.alt = skill.name;
+            icon.appendChild(img);
+            
+            // 時間制限付きの場合はタイマー表示
+            if (buff.timer !== undefined && buff.timer > 0) {
+                const timer = document.createElement('span');
+                timer.className = 'buff-timer';
+                timer.textContent = Math.ceil(buff.timer / 1000);
+                icon.appendChild(timer);
+            }
+            
+            container.appendChild(icon);
+        });
+    }
+    
     function showGachaResults(results) {
         const container = document.getElementById('gacha-results');
         container.innerHTML = '';
@@ -956,6 +990,11 @@ document.addEventListener('DOMContentLoaded', () => {
         game.onSkillBullet = (caster, row, col, icon) => {
             const sourceBoard = caster === 'player' ? game.playerBoard : game.enemyBoard;
             ui.showSkillBullet(caster, row, col, icon, sourceBoard);
+        };
+        
+        game.onBuffChange = (playerBuffs, enemyBuffs) => {
+            updateBuffIcons('player-buffs', playerBuffs);
+            updateBuffIcons('enemy-buffs', enemyBuffs);
         };
         
         game.onGameOver = (winner, stats) => {
