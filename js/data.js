@@ -12,8 +12,12 @@ const GameData = {
         totalDamage: 0,
         clearedStages: [],
         ownedSkills: {},    // { skillId: { count: n, level: 0 } }
-        ownedSkins: ['normal'],  // 所持スキン
-        equippedSkin: 'normal',
+        // タイルセット新仕様: 各スキンの各数字ごとに所持
+        // { skinId: { 2: count, 4: count, 8: count, ... } }
+        ownedTiles: { normal: { 2: 99, 4: 99, 8: 99, 16: 99, 32: 99, 64: 99, 128: 99, 256: 99, 512: 99, 1024: 99 } },
+        // 各数字ごとに装備スキンを設定
+        // { 2: skinId, 4: skinId, 8: skinId, ... }
+        equippedTiles: { 2: 'normal', 4: 'normal', 8: 'normal', 16: 'normal', 32: 'normal', 64: 'normal', 128: 'normal', 256: 'normal', 512: 'normal', 1024: 'normal' },
         skillPresets: [[], [], [], [], []],  // 5つのプリセット
         currentPreset: 0,
         settings: {
@@ -207,33 +211,83 @@ const GameData = {
     },
 
     // ========================================
-    // スキン
+    // タイル（新仕様: 各数字ごとに管理）
     // ========================================
 
-    getOwnedSkins() {
-        return this.data.ownedSkins;
+    getOwnedTiles() {
+        return this.data.ownedTiles;
     },
 
-    hasSkin(skinId) {
-        return this.data.ownedSkins.includes(skinId);
+    // 特定スキンの特定数字の所持数
+    getTileCount(skinId, value) {
+        if (!this.data.ownedTiles[skinId]) return 0;
+        return this.data.ownedTiles[skinId][value] || 0;
     },
 
-    addSkin(skinId) {
-        if (!this.data.ownedSkins.includes(skinId)) {
-            this.data.ownedSkins.push(skinId);
-            this.save();
+    // 特定スキンのタイルを所持しているか（任意の数字）
+    hasTileSkin(skinId) {
+        if (!this.data.ownedTiles[skinId]) return false;
+        return Object.values(this.data.ownedTiles[skinId]).some(count => count > 0);
+    },
+
+    // タイル追加（ガチャで獲得）
+    addTile(skinId, value = 2) {
+        if (!this.data.ownedTiles[skinId]) {
+            this.data.ownedTiles[skinId] = {};
         }
+        this.data.ownedTiles[skinId][value] = (this.data.ownedTiles[skinId][value] || 0) + 1;
+        this.save();
     },
 
-    getEquippedSkin() {
-        return this.data.equippedSkin;
+    // タイル消費（合成で使用）
+    removeTile(skinId, value, count = 1) {
+        if (!this.data.ownedTiles[skinId]) return false;
+        if ((this.data.ownedTiles[skinId][value] || 0) < count) return false;
+        this.data.ownedTiles[skinId][value] -= count;
+        this.save();
+        return true;
     },
 
-    equipSkin(skinId) {
-        if (this.data.ownedSkins.includes(skinId)) {
-            this.data.equippedSkin = skinId;
-            this.save();
+    // タイル合成（2個消費して上位1個獲得）
+    mergeTiles(skinId, value) {
+        const nextValue = value * 2;
+        if (nextValue > 1024) return false;  // 1024が最大
+        if ((this.data.ownedTiles[skinId]?.[value] || 0) < 2) return false;
+        
+        this.data.ownedTiles[skinId][value] -= 2;
+        this.data.ownedTiles[skinId][nextValue] = (this.data.ownedTiles[skinId][nextValue] || 0) + 1;
+        this.save();
+        return true;
+    },
+
+    // 装備タイル取得
+    getEquippedTiles() {
+        return this.data.equippedTiles;
+    },
+
+    // 特定数字の装備スキン取得
+    getEquippedTileSkin(value) {
+        return this.data.equippedTiles[value] || 'normal';
+    },
+
+    // タイル装備（数字ごと）
+    equipTile(value, skinId) {
+        // その数字のタイルを持っているか確認
+        if (skinId !== 'normal' && (this.data.ownedTiles[skinId]?.[value] || 0) <= 0) {
+            return false;
         }
+        this.data.equippedTiles[value] = skinId;
+        this.save();
+        return true;
+    },
+
+    // 特定スキンが持っている数字一覧
+    getOwnedValuesForSkin(skinId) {
+        if (!this.data.ownedTiles[skinId]) return [];
+        return Object.entries(this.data.ownedTiles[skinId])
+            .filter(([v, count]) => count > 0)
+            .map(([v]) => parseInt(v))
+            .sort((a, b) => a - b);
     },
 
     // ========================================
@@ -383,7 +437,7 @@ const GachaSystem = {
     },
 
     /**
-     * タイルガチャを回す
+     * タイルガチャを回す（「2」のみ排出）
      * @param {number} count - 回数（1 or 11）
      * @returns {Array} 結果配列
      */
@@ -396,13 +450,18 @@ const GachaSystem = {
             
             if (skinsOfRarity.length > 0) {
                 const skin = skinsOfRarity[Math.floor(Math.random() * skinsOfRarity.length)];
+                const isNew = !GameData.hasTileSkin(skin.id);
+                
+                // 「2」のみ追加
+                GameData.addTile(skin.id, 2);
+                
                 results.push({
-                    type: 'skin',
+                    type: 'tile',
                     item: skin,
+                    value: 2,  // 常に2
                     rarity: rarity,
-                    isNew: !GameData.hasSkin(skin.id)
+                    isNew: isNew
                 });
-                GameData.addSkin(skin.id);
             }
         }
         

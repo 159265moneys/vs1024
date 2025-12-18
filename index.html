@@ -206,26 +206,18 @@
                     <h2 class="tab-title">コレクション</h2>
                     
                     <div class="current-skin-section">
-                        <h3 class="section-subtitle">使用中のスキン</h3>
-                        <div class="current-skin-preview" id="current-skin-preview">
-                            <div class="preview-tile" data-value="2">2</div>
-                            <div class="preview-tile" data-value="4">4</div>
-                            <div class="preview-tile" data-value="8">8</div>
-                            <div class="preview-tile" data-value="16">16</div>
-                            <div class="preview-tile" data-value="32">32</div>
-                            <div class="preview-tile" data-value="64">64</div>
-                            <div class="preview-tile" data-value="128">128</div>
-                            <div class="preview-tile" data-value="256">256</div>
-                            <div class="preview-tile" data-value="512">512</div>
-                            <div class="preview-tile" data-value="1024">1024</div>
+                        <h3 class="section-subtitle">装備中のタイル</h3>
+                        <div class="equipped-tiles-grid" id="equipped-tiles-grid">
+                            <!-- JSで生成 -->
                         </div>
                     </div>
                     
-                    <div class="skin-collection-section">
-                        <h3 class="section-subtitle">所持タイルセット</h3>
-                        <div class="skin-collection" id="skin-collection">
+                    <div class="tile-collection-section">
+                        <h3 class="section-subtitle">所持タイル</h3>
+                        <p class="collection-hint">タップで装備 / 同じもの2個で合成</p>
+                        <div class="tile-collection" id="tile-collection">
                             <!-- JSで生成 -->
-                            <div class="empty-message">タイルセットがありません<br>ガチャで入手しよう!</div>
+                            <div class="empty-message">タイルがありません<br>ガチャで入手しよう!</div>
                         </div>
                     </div>
                 </div>

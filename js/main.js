@@ -126,42 +126,150 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    function updateSkinCollection() {
-        const container = document.getElementById('skin-collection');
-        const ownedSkins = GameData.getOwnedSkins();
-        const equippedSkin = GameData.getEquippedSkin();
+    function updateTileCollection() {
+        // 装備中タイル表示
+        const equippedGrid = document.getElementById('equipped-tiles-grid');
+        const equipped = GameData.getEquippedTiles();
+        const tileValues = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
         
-        if (ownedSkins.length === 0) {
-            container.innerHTML = '<div class="empty-message">タイルセットがありません<br>ガチャで入手しよう!</div>';
+        equippedGrid.innerHTML = '';
+        tileValues.forEach(value => {
+            const skinId = equipped[value] || 'normal';
+            const skin = TILE_SKINS[skinId];
+            const tile = document.createElement('div');
+            tile.className = 'equipped-tile-item';
+            tile.innerHTML = `
+                <div class="eq-tile-value">${value}</div>
+                <div class="eq-tile-skin">${skin?.name || 'ノーマル'}</div>
+            `;
+            equippedGrid.appendChild(tile);
+        });
+        
+        // 所持タイル表示
+        const container = document.getElementById('tile-collection');
+        const ownedTiles = GameData.getOwnedTiles();
+        
+        // 所持しているスキンをチェック
+        const hasAnyTiles = Object.entries(ownedTiles).some(([skinId, values]) => 
+            Object.values(values).some(count => count > 0)
+        );
+        
+        if (!hasAnyTiles) {
+            container.innerHTML = '<div class="empty-message">タイルがありません<br>ガチャで入手しよう!</div>';
             return;
         }
         
         container.innerHTML = '';
         
-        ownedSkins.forEach(skinId => {
+        // スキンごとにグループ表示
+        Object.entries(ownedTiles).forEach(([skinId, values]) => {
             const skin = TILE_SKINS[skinId];
             if (!skin) return;
             
-            const card = document.createElement('div');
-            card.className = 'skin-card' + (skinId === equippedSkin ? ' equipped' : '');
-            card.dataset.skinId = skinId;
-            card.innerHTML = `
-                <div class="skin-name">${skin.name}</div>
-                <div class="skin-preview-small">
-                    <div class="mini-tile" style="background: var(--tile-2)">2</div>
-                    <div class="mini-tile" style="background: var(--tile-8)">8</div>
-                    <div class="mini-tile" style="background: var(--tile-128)">128</div>
-                </div>
-            `;
+            const ownedValues = Object.entries(values).filter(([v, count]) => count > 0);
+            if (ownedValues.length === 0) return;
             
-            card.addEventListener('click', () => {
-                GameData.equipSkin(skinId);
-                updateSkinCollection();
+            const skinGroup = document.createElement('div');
+            skinGroup.className = 'skin-group';
+            skinGroup.innerHTML = `<div class="skin-group-header">${skin.name} ${'★'.repeat(skin.rarity)}</div>`;
+            
+            const tilesGrid = document.createElement('div');
+            tilesGrid.className = 'tiles-grid';
+            
+            ownedValues.forEach(([value, count]) => {
+                const tileCard = document.createElement('div');
+                tileCard.className = 'tile-card';
+                tileCard.dataset.skinId = skinId;
+                tileCard.dataset.value = value;
+                
+                const isEquipped = equipped[value] === skinId;
+                if (isEquipped) tileCard.classList.add('equipped');
+                
+                tileCard.innerHTML = `
+                    <div class="tc-value">${value}</div>
+                    <div class="tc-count">×${count}</div>
+                    ${count >= 2 && parseInt(value) < 1024 ? '<div class="tc-merge">合成可</div>' : ''}
+                    ${isEquipped ? '<div class="tc-equipped">装備中</div>' : ''}
+                `;
+                
+                tileCard.addEventListener('click', () => openTileDetail(skinId, parseInt(value), count));
+                tilesGrid.appendChild(tileCard);
             });
             
-            container.appendChild(card);
+            skinGroup.appendChild(tilesGrid);
+            container.appendChild(skinGroup);
         });
     }
+    
+    // タイル詳細（装備/合成選択）
+    function openTileDetail(skinId, value, count) {
+        const skin = TILE_SKINS[skinId];
+        const isEquipped = GameData.getEquippedTileSkin(value) === skinId;
+        const canMerge = count >= 2 && value < 1024;
+        
+        const actions = [];
+        
+        if (!isEquipped) {
+            actions.push(`<button class="action-btn equip" onclick="equipTileAction('${skinId}', ${value})">装備する</button>`);
+        } else {
+            actions.push(`<button class="action-btn equip" disabled>装備中</button>`);
+        }
+        
+        if (canMerge) {
+            actions.push(`<button class="action-btn merge" onclick="mergeTileAction('${skinId}', ${value})">合成 (${value}×2 → ${value*2})</button>`);
+        }
+        
+        // 売却
+        const sellPrice = GachaSystem.sellPrices.tile[skin.rarity];
+        actions.push(`<button class="action-btn sell" onclick="sellTileAction('${skinId}', ${value})">売却 (${sellPrice} 💎)</button>`);
+        
+        // 簡易モーダル
+        const modal = document.createElement('div');
+        modal.className = 'quick-modal';
+        modal.innerHTML = `
+            <div class="quick-modal-content">
+                <h3>${skin.name} [${value}]</h3>
+                <p>所持数: ${count}</p>
+                <div class="quick-actions">${actions.join('')}</div>
+                <button class="modal-close-btn" onclick="this.closest('.quick-modal').remove()">閉じる</button>
+            </div>
+        `;
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+        document.body.appendChild(modal);
+    }
+    
+    // グローバル関数（モーダルから呼び出し）
+    window.equipTileAction = function(skinId, value) {
+        GameData.equipTile(value, skinId);
+        document.querySelector('.quick-modal')?.remove();
+        updateTileCollection();
+    };
+    
+    window.mergeTileAction = function(skinId, value) {
+        if (GameData.mergeTiles(skinId, value)) {
+            document.querySelector('.quick-modal')?.remove();
+            updateTileCollection();
+        } else {
+            alert('合成に失敗しました');
+        }
+    };
+    
+    window.sellTileAction = function(skinId, value) {
+        const skin = TILE_SKINS[skinId];
+        if (!skin) return;
+        
+        if (!confirm(`${skin.name}[${value}]を売却しますか？`)) return;
+        
+        const sellPrice = GachaSystem.sellPrices.tile[skin.rarity];
+        if (GameData.removeTile(skinId, value, 1)) {
+            GameData.addCrystal(sellPrice);
+            updateCurrencyDisplay();
+            document.querySelector('.quick-modal')?.remove();
+            updateTileCollection();
+        }
+    };
     
     function updateEquippedSkills() {
         const slots = document.querySelectorAll('.asset-slot');
@@ -213,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSkillInventory();
             updateEquippedSkills();
         } else if (tabName === 'collection') {
-            updateSkinCollection();
+            updateTileCollection();
         } else if (tabName === 'stage') {
             updateStageList();
         }
@@ -514,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentGachaType === 'skill') {
                 updateSkillInventory();
             } else {
-                updateSkinCollection();
+                updateTileCollection();
             }
         });
         
