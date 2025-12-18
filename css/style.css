@@ -1246,9 +1246,15 @@ body {
 }
 
 /* ========================================
-   カテゴリ別形状
-   背景色はレアリティカラーで塗りつぶし
+   カテゴリ別形状 + 枠色
+   枠色 = カテゴリ（攻撃=赤、防御=緑、効果=青）
+   背景 = レアリティ
    ======================================== */
+
+/* カテゴリ別枠色（--frame-colorを上書き） */
+.skill-frame-card.cat-attack { --frame-color: #ff3366 !important; }
+.skill-frame-card.cat-defense { --frame-color: #22c55e !important; }
+.skill-frame-card.cat-effect { --frame-color: #3b82f6 !important; }
 
 /* 🔴 攻撃系 - 円形（力強さ） */
 .skill-frame-card.cat-attack::before {
@@ -2784,18 +2790,10 @@ body {
     animation: rarity5BgMove 2s ease infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
 
-/* border色適用 */
-.skill-frame-full.cat-attack.rarity-1::before { border-color: var(--sk-rarity-1); }
-.skill-frame-full.cat-attack.rarity-2::before { border-color: var(--sk-rarity-2); }
-.skill-frame-full.cat-attack.rarity-3::before { border-color: var(--sk-rarity-3); }
-.skill-frame-full.cat-attack.rarity-4::before { border-color: var(--sk-rarity-4); }
-.skill-frame-full.cat-attack.rarity-5::before { border-color: var(--sk-rarity-5); }
-
-.skill-frame-full.cat-defense.rarity-1::before { border-color: var(--sk-rarity-1); }
-.skill-frame-full.cat-defense.rarity-2::before { border-color: var(--sk-rarity-2); }
-.skill-frame-full.cat-defense.rarity-3::before { border-color: var(--sk-rarity-3); }
-.skill-frame-full.cat-defense.rarity-4::before { border-color: var(--sk-rarity-4); }
-.skill-frame-full.cat-defense.rarity-5::before { border-color: var(--sk-rarity-5); }
+/* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
+.skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
+.skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
+.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
 
 @keyframes full4Float {
     0%, 100% { transform: translateY(0); }
