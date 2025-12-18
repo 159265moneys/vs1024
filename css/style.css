@@ -2053,7 +2053,8 @@ body {
 .game-layout {
     height: 100%;
     display: grid;
-    grid-template-rows: auto 28fr auto 62fr;
+    /* hud-area / enemy-area / battle-log / equipped-skills / player-area */
+    grid-template-rows: auto 28fr auto auto 62fr;
     gap: 4px;
 }
 
