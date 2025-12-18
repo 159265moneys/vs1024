@@ -113,12 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skill) return;
             
             const card = document.createElement('div');
-            card.className = `skill-card rarity-${skill.rarity} cat-${skill.category}`;
+            card.className = `skill-card rarity-${skill.rarity}`;
             card.dataset.skillId = skillId;
             card.innerHTML = `
-                <div class="skill-icon-frame cat-${skill.category} rarity-${skill.rarity}">
-                    <img class="skill-icon" src="${skill.icon}" alt="${skill.name}">
-                </div>
+                <img class="skill-icon" src="${skill.icon}" alt="${skill.name}">
                 <span class="skill-stars">${'★'.repeat(skill.rarity)}</span>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
             `;
@@ -282,18 +280,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillId = equipped[index];
             if (skillId && SKILLS[skillId]) {
                 const skill = SKILLS[skillId];
-                slot.innerHTML = `
-                    <div class="slot-icon-frame cat-${skill.category} rarity-${skill.rarity}">
-                        <img src="${skill.icon}" alt="${skill.name}">
-                    </div>
-                `;
+                slot.innerHTML = `<img src="${skill.icon}" alt="${skill.name}">`;
                 slot.classList.add('filled');
                 slot.classList.remove('empty');
-                slot.className = `asset-slot filled cat-${skill.category} rarity-${skill.rarity}`;
                 totalCost += skill.cost;
             } else {
                 slot.innerHTML = '+';
-                slot.className = 'asset-slot empty';
+                slot.classList.remove('filled');
+                slot.classList.add('empty');
             }
         });
         
@@ -395,17 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach(result => {
             const item = document.createElement('div');
             item.className = `gacha-result-item rarity-${result.rarity}`;
-            let iconHtml;
-            if (result.type === 'skill') {
-                const cat = result.item.category || 'effect';
-                iconHtml = `
-                    <div class="gacha-icon-frame cat-${cat} rarity-${result.rarity}">
-                        <img src="${result.item.icon}" alt="${result.item.name}">
-                    </div>
-                `;
-            } else {
-                iconHtml = '🎨';
-            }
+            const iconHtml = result.type === 'skill' 
+                ? `<img src="${result.item.icon}" alt="${result.item.name}">`
+                : '🎨';
             item.innerHTML = `
                 <div class="item-icon">${iconHtml}</div>
                 <div class="item-name">${result.item.name}</div>
@@ -428,12 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const skill = SKILLS[skillId];
         if (!skill) return;
         
-        document.getElementById('detail-skill-icon').innerHTML = `
-            <div class="detail-icon-frame cat-${skill.category} rarity-${skill.rarity}">
-                <img src="${skill.icon}" alt="${skill.name}">
-            </div>
-        `;
-        document.getElementById('detail-skill-icon').className = `detail-skill-icon cat-${skill.category}`;
+        document.getElementById('detail-skill-icon').innerHTML = `<img src="${skill.icon}" alt="${skill.name}">`;
         document.getElementById('detail-skill-name').textContent = skill.name;
         document.getElementById('detail-skill-rarity').textContent = '★'.repeat(skill.rarity);
         document.getElementById('detail-skill-cost').textContent = `コスト: ${skill.cost}`;
@@ -536,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game.onDamage = (target, amount) => ui.showDamage(target, amount);
         game.onInterferenceWarning = (count, timer) => ui.showInterferenceWarning(count, timer);
         game.onBoardReset = (target, clearedCount) => ui.showBoardReset(target, clearedCount);
-        game.onBattleLog = (message, type) => ui.showBattleLog(message, type);
+        game.onBattleLog = (message, type, icon) => ui.showBattleLog(message, type, icon);
         game.onMatchPoint = (playerHP, enemyHP) => ui.updateMatchPoint(playerHP, enemyHP);
         game.onFreezeChange = (target, frozen) => ui.setFrozen(target, frozen);
         game.onSkillBullet = (caster, row, col, icon) => {

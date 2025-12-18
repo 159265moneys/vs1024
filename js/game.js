@@ -898,7 +898,7 @@ class Game {
             default:
                 // 未実装スキル
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${casterName}${skill.name}!`, 'interference', skill.icon);
+                    this.onBattleLog(`${casterName}${skill.name}!`, 'interference');
                 }
                 break;
         }

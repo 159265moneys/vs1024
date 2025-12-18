@@ -1,8 +1,7 @@
 /**
- * Skills - 全30スキル定義 v3.2
+ * Skills - 全30スキル定義 v3.1
  * 合成時スキル発動、重み付き抽選
  * アイコン: PNGスプライト対応
- * カテゴリ: attack(攻撃/丸), defense(防御/四角), effect(効果/ティアドロップ)
  */
 
 const SKILLS = {
@@ -17,7 +16,6 @@ const SKILLS = {
         cost: 8,
         rarity: 5,
         weight: 1,
-        category: 'defense',
         description: '次に攻撃or詰みで2ダメージ以上くらって負ける時、無効化する'
     },
     overflow: {
@@ -28,7 +26,6 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
-        category: 'attack',
         description: '敵は10秒間、タイル合成時に生成される2が2個になる'
     },
     grace: {
@@ -39,7 +36,6 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
-        category: 'defense',
         description: 'これから20秒間、詰んでもダメージを受けない'
     },
     mirror: {
@@ -50,7 +46,6 @@ const SKILLS = {
         cost: 7,
         rarity: 5,
         weight: 2,
-        category: 'effect',
         description: 'スキル使用時の相手の盤面と全く同じにする'
     },
 
@@ -65,7 +60,6 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
-        category: 'attack',
         description: '次の攻撃ダメージを2倍にする'
     },
     guardian: {
@@ -76,7 +70,6 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
-        category: 'defense',
         description: '次の攻撃を無効化する'
     },
     heal: {
@@ -87,7 +80,6 @@ const SKILLS = {
         cost: 6,
         rarity: 4,
         weight: 3,
-        category: 'defense',
         description: 'HP1回復（最大HP上限まで）'
     },
     freeze: {
@@ -98,7 +90,6 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
-        category: 'effect',
         description: '相手の盤面を3秒間停止させる'
     },
     reflect: {
@@ -109,7 +100,6 @@ const SKILLS = {
         cost: 5,
         rarity: 4,
         weight: 4,
-        category: 'defense',
         description: '次の相手のスキルor妨害タイルを跳ね返す'
     },
 
@@ -124,7 +114,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'effect',
         description: 'お互いの盤面をリセットする'
     },
     smash: {
@@ -135,7 +124,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'attack',
         description: '好きなタイルを1タップして破壊する'
     },
     timebomb: {
@@ -146,7 +134,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'attack',
         description: '敵盤面にボム(2~8)設置。5秒以内に消さないと3×3範囲削除'
     },
     purify: {
@@ -157,7 +144,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'defense',
         description: '自分の不利効果/相手の有利効果を全て削除する'
     },
     boost: {
@@ -168,7 +154,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'effect',
         description: '自分のランダムな数字のタイルを全て1段階上げる'
     },
     steal: {
@@ -179,7 +164,6 @@ const SKILLS = {
         cost: 4,
         rarity: 3,
         weight: 5,
-        category: 'attack',
         description: '相手のタイルから1つランダムに自分の盤面に追加する'
     },
 
@@ -194,7 +178,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'defense',
         description: '次の攻撃ダメージを-1する'
     },
     amplify: {
@@ -205,7 +188,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'attack',
         description: '次の妨害タイルの効果が2倍になる'
     },
     swap: {
@@ -216,7 +198,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'effect',
         description: 'お互いのランダムな数字のタイルをまるごと交換する'
     },
     vanish: {
@@ -227,7 +208,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'effect',
         description: '2~128のランダムな数字のタイルを両者から全消しする'
     },
     anchor: {
@@ -238,7 +218,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'defense',
         description: '10秒間、自分の盤面の四隅が固定される'
     },
     decay: {
@@ -249,7 +228,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'effect',
         description: 'お互いのタイル全てを1レベル下げる（2は消滅）'
     },
     upgrade: {
@@ -260,7 +238,6 @@ const SKILLS = {
         cost: 3,
         rarity: 2,
         weight: 6,
-        category: 'effect',
         description: '自分の2を全て4に変換する'
     },
 
@@ -275,7 +252,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'attack',
         description: 'お互いに1ダメージを与える'
     },
     scramble: {
@@ -286,7 +262,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'attack',
         description: 'お互いに2を3つランダム生成する'
     },
     sweep: {
@@ -297,7 +272,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'effect',
         description: 'お互いの2を3つ消す'
     },
     disrupt: {
@@ -308,7 +282,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'attack',
         description: '相手に妨害タイルを1個生成する'
     },
     weaken: {
@@ -319,7 +292,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'attack',
         description: '相手のランダムな1種類のタイルを全て1レベル下げる'
     },
     cataclysm: {
@@ -330,7 +302,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'effect',
         description: 'お互いの盤面を入れ替える'
     },
     curse: {
@@ -341,7 +312,6 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'attack',
         description: '次にダメージを受けた時、同じダメージを相手にも与える'
     },
     fusion: {
@@ -352,16 +322,8 @@ const SKILLS = {
         cost: 2,
         rarity: 1,
         weight: 7,
-        category: 'effect',
         description: '自分の盤面で1回で合成可能なタイルを全て合成する'
     }
-};
-
-// カテゴリ名マッピング
-const SKILL_CATEGORIES = {
-    attack: { name: '攻撃', shape: 'circle' },
-    defense: { name: '防御', shape: 'square' },
-    effect: { name: '効果', shape: 'teardrop' }
 };
 
 // ========================================

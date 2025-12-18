@@ -197,7 +197,12 @@ class UI {
         // 弾を作成
         const bullet = document.createElement('div');
         bullet.className = 'skill-bullet ' + (isPlayer ? 'player-bullet' : 'enemy-bullet');
-        bullet.textContent = icon;
+        // iconがパス(sprite/xxx.png)なら画像表示
+        if (icon && icon.includes('/')) {
+            bullet.innerHTML = `<img src="${icon}" alt="">`;
+        } else {
+            bullet.textContent = icon || '⚡';
+        }
         bullet.style.left = `${startX}px`;
         bullet.style.top = `${startY}px`;
         bullet.style.setProperty('--end-x', `${endX - startX}px`);
