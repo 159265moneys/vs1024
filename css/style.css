@@ -2139,8 +2139,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 12px;
-    margin: 4px 10px;
+    width: min(88vw, 340px);  /* プレイヤーボードと同じ幅 */
+    margin: 4px auto;
+    padding: 8px 12px;
     background: transparent;
     border: 2px solid var(--accent-cyan);
     border-radius: 8px;
@@ -2152,18 +2153,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 32px;
-    min-height: 32px;
-    max-height: 32px;
+    gap: 10px;
+    height: 80px;
+    min-height: 80px;
+    max-height: 80px;
     padding: 0 10px;
     flex-shrink: 0;
 }
 
 .equipped-skill-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2172,8 +2173,8 @@ body {
 }
 
 .equipped-skill-icon img {
-    width: 18px;
-    height: 18px;
+    width: 45px;
+    height: 45px;
     object-fit: contain;
     position: relative;
     z-index: 2;

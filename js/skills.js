@@ -441,3 +441,32 @@ function getRandomSkillFromAll() {
     
     return allSkills[allSkills.length - 1];
 }
+
+/**
+ * 装備スキルからランダムに1つ選ぶ（重み付き）
+ * @returns {Object|null} スキルオブジェクト、装備なしならnull
+ */
+function getRandomSkillFromEquipped() {
+    const equippedIds = GameData.getEquippedSkills();
+    if (!equippedIds || equippedIds.length === 0) return null;
+    
+    // 装備スキルのみ抽出
+    const equippedSkills = equippedIds
+        .map(id => SKILLS[id])
+        .filter(skill => skill != null);
+    
+    if (equippedSkills.length === 0) return null;
+    
+    // 重み付き抽選
+    const totalWeight = equippedSkills.reduce((sum, skill) => sum + skill.weight, 0);
+    let rand = Math.random() * totalWeight;
+    
+    for (const skill of equippedSkills) {
+        rand -= skill.weight;
+        if (rand <= 0) {
+            return skill;
+        }
+    }
+    
+    return equippedSkills[equippedSkills.length - 1];
+}

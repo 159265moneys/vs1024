@@ -220,7 +220,8 @@ class Board {
         
         // スキル付与（妨害タイル以外、一定確率）
         if (!isInterference && Math.random() < this.skillAttachChance) {
-            const skill = getRandomSkillFromAll();
+            // プレイヤーは装備スキルから、敵は全スキルからランダム
+            const skill = this.isPlayer ? getRandomSkillFromEquipped() : getRandomSkillFromAll();
             if (skill) {
                 this.skillTiles.set(`${cell.row},${cell.col}`, skill.id);
             }
