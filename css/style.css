@@ -1379,32 +1379,31 @@ body {
 }
 .skill-frame-card.rarity-2 .skill-name { color: #fff; }
 
-/* ★2 脈動 + ソフトグロー */
+/* ★2 脈動 + 内側グロー */
 .skill-frame-card.rarity-2::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
 .skill-frame-card.rarity-2::after {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: inherit;
-    background: transparent;
-    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    background: radial-gradient(ellipse at center, rgba(46, 204, 113, 0.15) 0%, transparent 70%);
     animation: rarity2Glow 3s ease-in-out infinite;
     pointer-events: none;
-    z-index: -1;
+    z-index: 2;
 }
 
 @keyframes rarity2Pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; filter: brightness(1.1); }
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.15); }
 }
 
 @keyframes rarity2Glow {
-    0%, 100% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+    0%, 100% { opacity: 0.5; }
     50% { box-shadow: 0 0 20px rgba(46, 204, 113, 0.6); }
 }
 
@@ -1418,7 +1417,7 @@ body {
 }
 .skill-frame-card.rarity-3 .skill-name { color: #fff; }
 
-/* ★3 動的グラデ + 光のリング */
+/* ★3 動的グラデ + 光スキャン */
 .skill-frame-card.rarity-3::before {
     animation: rarity3BgMove 4s ease infinite;
 }
@@ -1426,22 +1425,34 @@ body {
 .skill-frame-card.rarity-3::after {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: inherit;
-    background: conic-gradient(from 0deg, transparent 0deg, rgba(52, 152, 219, 0.8) 60deg, transparent 120deg);
-    animation: rarity3Ring 3s linear infinite;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(52, 152, 219, 0.4) 45%,
+        rgba(100, 200, 255, 0.6) 50%,
+        rgba(52, 152, 219, 0.4) 55%,
+        transparent 100%
+    );
+    background-size: 300% 100%;
+    animation: rarity3Scan 2.5s ease-in-out infinite;
     pointer-events: none;
-    z-index: -1;
-    filter: blur(3px);
+    z-index: 2;
 }
 
 @keyframes rarity3BgMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+@keyframes rarity3Scan {
+    0% { background-position: 150% 0; }
+    100% { background-position: -50% 0; }
 }
 
 @keyframes rarity3Ring {
@@ -1456,28 +1467,38 @@ body {
     --frame-color: #f1c40f;
     --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d);
     background-size: 300% 300%;
-    overflow: visible;
 }
 .skill-frame-card.rarity-4::before {
     animation: rarity4BgMove 2.5s ease infinite, rarity4Pulse 1.2s ease-in-out infinite;
 }
 .skill-frame-card.rarity-4 .skill-name { color: #fff; }
 
-/* ★4 枠キラキラ */
+/* ★4 光沢シャイン（枠内に収める） */
 .skill-frame-card.rarity-4::after {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: inherit;
-    background: conic-gradient(from 0deg, #f1c40f, #fff, #f39c12, #fff, #f1c40f);
-    animation: rarity4Sparkle 3s linear infinite;
+    background: linear-gradient(
+        135deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.4) 45%,
+        rgba(255, 215, 0, 0.3) 50%,
+        rgba(255, 255, 255, 0.4) 55%,
+        transparent 70%
+    );
+    background-size: 200% 200%;
+    animation: rarity4Shine 2.5s ease-in-out infinite;
     pointer-events: none;
-    z-index: -1;
-    filter: blur(4px);
-    opacity: 0.7;
+    z-index: 2;
+}
+
+@keyframes rarity4Shine {
+    0% { background-position: 200% 200%; }
+    100% { background-position: -100% -100%; }
 }
 
 /* ★4 金粒子 */
@@ -1524,46 +1545,54 @@ body {
     --frame-color: #e74c3c;
     --rarity-bg: linear-gradient(45deg, #c0392b, #922b21, #e74c3c, #a93226);
     background-size: 300% 300%;
-    overflow: visible;
 }
 .skill-frame-card.rarity-5::before {
     animation: rarity5BgMove 1.5s ease infinite, rarity5Pulse 1s ease-in-out infinite;
 }
 .skill-frame-card.rarity-5 .skill-name { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-/* ★5 虹色エッジライン */
+/* ★5 虹色シャイン（枠内） */
 .skill-frame-card.rarity-5::after {
     content: '';
     position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: inherit;
-    background: conic-gradient(from 0deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff0088, #ff0000);
-    animation: rarity5Rainbow 2s linear infinite;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 0, 0, 0.2) 0%,
+        rgba(255, 136, 0, 0.2) 14%,
+        rgba(255, 255, 0, 0.2) 28%,
+        rgba(0, 255, 0, 0.2) 42%,
+        rgba(0, 255, 255, 0.2) 57%,
+        rgba(0, 136, 255, 0.2) 71%,
+        rgba(136, 0, 255, 0.2) 85%,
+        rgba(255, 0, 136, 0.2) 100%
+    );
+    background-size: 400% 400%;
+    animation: rarity5Rainbow 3s ease infinite;
     pointer-events: none;
-    z-index: -1;
-    filter: blur(5px);
-    opacity: 0.8;
+    z-index: 2;
 }
 
-/* ★5 オーラエフェクト */
+/* ★5 内側グロー */
 .skill-frame-card.rarity-5 .frame-inner::after {
     content: '';
     position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    border-radius: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
     background: radial-gradient(circle, rgba(231, 76, 60, 0.3) 0%, transparent 70%);
     animation: rarity5Aura 2s ease-in-out infinite;
     pointer-events: none;
     z-index: -2;
 }
 
-/* ★5 粒子エフェクト - 2倍の粒子 */
+/* ★5 粒子エフェクト（枠内に収める） */
 .skill-frame-card.rarity-5 .particles,
 .skill-frame-full.rarity-5 .particles {
     position: absolute;
@@ -1571,7 +1600,7 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 3;
-    overflow: visible;
+    overflow: hidden;
     border-radius: inherit;
 }
 
@@ -1581,24 +1610,24 @@ body {
 .skill-frame-full.rarity-5 .particles::after {
     content: '';
     position: absolute;
-    width: 150%;
-    height: 150%;
-    top: -25%;
-    left: -25%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     background-image: 
-        radial-gradient(4px 4px at 20% 30%, rgba(255, 100, 100, 1) 50%, transparent 100%),
-        radial-gradient(3px 3px at 80% 20%, rgba(255, 200, 100, 0.95) 50%, transparent 100%),
-        radial-gradient(3.5px 3.5px at 70% 80%, rgba(255, 90, 90, 1) 50%, transparent 100%),
-        radial-gradient(3px 3px at 30% 85%, rgba(255, 150, 100, 0.9) 50%, transparent 100%),
-        radial-gradient(4px 4px at 50% 15%, rgba(255, 130, 130, 0.95) 50%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 85% 55%, rgba(255, 180, 100, 0.85) 50%, transparent 100%),
-        radial-gradient(3px 3px at 15% 60%, rgba(255, 140, 140, 0.9) 50%, transparent 100%),
-        radial-gradient(3.5px 3.5px at 40% 40%, rgba(255, 220, 100, 0.9) 50%, transparent 100%),
+        radial-gradient(3px 3px at 20% 30%, rgba(255, 100, 100, 1) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 80% 20%, rgba(255, 200, 100, 0.95) 50%, transparent 100%),
+        radial-gradient(3px 3px at 70% 80%, rgba(255, 90, 90, 1) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 30% 85%, rgba(255, 150, 100, 0.9) 50%, transparent 100%),
+        radial-gradient(3px 3px at 50% 15%, rgba(255, 130, 130, 0.95) 50%, transparent 100%),
+        radial-gradient(2px 2px at 85% 55%, rgba(255, 180, 100, 0.85) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 15% 60%, rgba(255, 140, 140, 0.9) 50%, transparent 100%),
+        radial-gradient(3px 3px at 40% 40%, rgba(255, 220, 100, 0.9) 50%, transparent 100%),
         radial-gradient(2px 2px at 60% 60%, rgba(255, 100, 150, 0.85) 50%, transparent 100%),
-        radial-gradient(3px 3px at 25% 70%, rgba(255, 160, 100, 0.9) 50%, transparent 100%),
-        radial-gradient(4px 4px at 75% 35%, rgba(255, 120, 120, 0.95) 50%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 90% 75%, rgba(255, 200, 150, 0.8) 50%, transparent 100%),
-        radial-gradient(3px 3px at 10% 45%, rgba(255, 110, 110, 0.9) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 25% 70%, rgba(255, 160, 100, 0.9) 50%, transparent 100%),
+        radial-gradient(3px 3px at 75% 35%, rgba(255, 120, 120, 0.95) 50%, transparent 100%),
+        radial-gradient(2px 2px at 90% 75%, rgba(255, 200, 150, 0.8) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 10% 45%, rgba(255, 110, 110, 0.9) 50%, transparent 100%),
         radial-gradient(3.5px 3.5px at 55% 90%, rgba(255, 170, 100, 0.85) 50%, transparent 100%);
     animation: rarity5ParticlesSwirl 3s linear infinite;
 }
