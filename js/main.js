@@ -368,10 +368,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const costWarning = document.getElementById('cost-warning');
         const hasEquipped = equipped.filter(Boolean).length > 0;
         
-        if (totalCost !== 20 && hasEquipped) {
+        if ((totalCost < 19 || totalCost > 20) && hasEquipped) {
             costDisplay.style.color = 'var(--accent-red)';
             costWarning?.classList.add('visible');
-        } else if (totalCost === 20) {
+        } else if (totalCost >= 19 && totalCost <= 20) {
             costDisplay.style.color = 'var(--accent-green)';
             costWarning?.classList.remove('visible');
         } else {
@@ -860,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalCost = skills.reduce((sum, sid) => {
                 return sum + (SKILLS[sid]?.cost || 0);
             }, 0);
-            const isValid = totalCost === 20 || skills.filter(Boolean).length === 0; // 空かコスト20
+            const isValid = (totalCost >= 19 && totalCost <= 20) || skills.filter(Boolean).length === 0; // 空かコスト19-20
             
             const item = document.createElement('div');
             item.className = `preset-select-item ${i === selectedPresetForBattle ? 'selected' : ''} ${!isValid ? 'invalid' : ''}`;
@@ -899,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btn-preset-start');
         const skills = GameData.getSkillPreset(selectedPresetForBattle);
         const totalCost = skills.reduce((sum, sid) => sum + (SKILLS[sid]?.cost || 0), 0);
-        const isValid = totalCost === 20 || skills.filter(Boolean).length === 0;
+        const isValid = (totalCost >= 19 && totalCost <= 20) || skills.filter(Boolean).length === 0;
         
         btn.disabled = !isValid;
         if (!isValid) {
