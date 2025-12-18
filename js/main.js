@@ -794,7 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 未所持の場合は全ボタン無効化
         const equipBtn = document.getElementById('btn-equip-skill');
         const sellBtn = document.getElementById('btn-sell-skill');
-        const upgradeBtn = document.getElementById('btn-upgrade-skill');
+        // upgradeBtn は既に上で定義済み
         
         if (!isOwned) {
             equipBtn.disabled = true;
@@ -803,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sellBtn.textContent = '未所持';
             upgradeBtn.disabled = true;
             upgradeBtn.textContent = '未所持';
-            document.getElementById('upgrade-section').style.display = 'none';
+            upgradeSection.style.display = 'none';
         }
         
         showModal('skillDetail');
