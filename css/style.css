@@ -673,6 +673,11 @@ body {
     animation: assetGlow5 1.2s ease-in-out infinite;
 }
 
+/* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青）- レアリティの背景は維持 */
+.asset-skill-icon.cat-attack { border-color: #ff3366 !important; }
+.asset-skill-icon.cat-defense { border-color: #22c55e !important; }
+.asset-skill-icon.cat-effect { border-color: #3b82f6 !important; }
+
 @keyframes assetGlow4 {
     0%, 100% { box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
     50% { box-shadow: 0 0 10px rgba(241, 196, 15, 0.8), 0 0 15px rgba(243, 156, 18, 0.4); }
@@ -979,6 +984,11 @@ body {
     border: 1px solid #e74c3c;
     animation: presetGlow5 1.2s ease-in-out infinite;
 }
+
+/* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青）- レアリティの背景は維持 */
+.preset-skill-icon.cat-attack { border-color: #ff3366 !important; }
+.preset-skill-icon.cat-defense { border-color: #22c55e !important; }
+.preset-skill-icon.cat-effect { border-color: #3b82f6 !important; }
 
 @keyframes presetGlow4 {
     0%, 100% { box-shadow: 0 0 4px rgba(241, 196, 15, 0.5); }

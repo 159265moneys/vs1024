@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const skill = SKILLS[skillId];
                 // スロット内にミニフレーム付きアイコンを表示
                 slot.innerHTML = `
-                    <div class="asset-skill-icon rarity-${skill.rarity}">
+                    <div class="asset-skill-icon cat-${skill.category} rarity-${skill.rarity}">
                         <img src="${skill.icon}" alt="${skill.name}">
                     </div>
                 `;
@@ -903,7 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const skillIcons = skills.filter(Boolean).map(sid => {
                 const skill = SKILLS[sid];
-                return skill ? `<div class="preset-skill-icon rarity-${skill.rarity}"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
+                return skill ? `<div class="preset-skill-icon cat-${skill.category} rarity-${skill.rarity}"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
             }).join('');
             
             item.innerHTML = `
