@@ -22,23 +22,23 @@
     --z-modal: 500;           /* モーダル */
     --z-modal-top: 1000;      /* 最上位モーダル */
     
-    /* === 基本カラー === */
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --bg-card: #1a1a25;
-    --bg-card-hover: #252535;
-    --accent-cyan: #00f5ff;
-    --accent-pink: #ff00aa;
-    --accent-yellow: #ffd700;
-    --accent-green: #00ff88;
-    --accent-red: #ff3366;
-    --accent-purple: #aa55ff;
-    --text-primary: #ffffff;
-    --text-secondary: #8888aa;
+    /* === 基本カラー（ライトテーマ） === */
+    --bg-primary: #f0f2f5;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #e4e6eb;
+    --accent-cyan: #0095f6;
+    --accent-pink: #e91e8c;
+    --accent-yellow: #f5a623;
+    --accent-green: #00c853;
+    --accent-red: #ff3b5c;
+    --accent-purple: #8b5cf6;
+    --text-primary: #1a1a2e;
+    --text-secondary: #65676b;
     
     /* === タイルカラー（ゲーム専用） === */
-    --tile-2: #2a2a3a;
-    --tile-4: #3a3a4a;
+    --tile-2: #e8edf2;
+    --tile-4: #d4dbe3;
     --tile-8: #f2b179;
     --tile-16: #f59563;
     --tile-32: #f67c5f;
@@ -47,7 +47,7 @@
     --tile-256: #edc850;
     --tile-512: #edc53f;
     --tile-1024: #edc22e;
-    --tile-2048: #3c3a32;
+    --tile-2048: #edc22e;
     
     /* === レイアウト === */
     --tab-height: 60px;
@@ -216,12 +216,16 @@ body {
 }
 
 .tab-icon {
-    font-size: 1.3rem;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    opacity: 0.6;
+    transition: all 0.2s ease;
 }
 
-.tab-label {
-    font-size: 0.65rem;
-    font-weight: 700;
+.tab-btn.active .tab-icon {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 /* ========================================
@@ -777,7 +781,7 @@ body {
     width: 88px;
     height: 88px;
     border-radius: 50%;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     border: 2px solid var(--frame-color);
     z-index: 1;
     transition: all 0.3s ease;
@@ -790,7 +794,7 @@ body {
     width: 82px;
     height: 90px;
     border-radius: 16px;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     border: 2px solid var(--frame-color);
     z-index: 1;
     transition: all 0.3s ease;
@@ -813,7 +817,7 @@ body {
     position: absolute;
     width: 84px;
     height: 88px;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     clip-path: var(--sk-octagon);
     z-index: 2;
 }
@@ -1162,7 +1166,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1225,7 +1229,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1313,7 +1317,7 @@ body {
    ガチャ演出画面
    ======================================== */
 #gacha-animation-screen {
-    background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+    background: radial-gradient(ellipse at center, #e8f4fd 0%, #f0f2f5 100%);
 }
 
 .gacha-animation-container {
@@ -1371,7 +1375,7 @@ body {
    ガチャ結果画面
    ======================================== */
 #gacha-result-screen {
-    background: linear-gradient(180deg, #0a0a15 0%, #12121f 50%, #0a0a15 100%);
+    background: linear-gradient(180deg, #f8f9fa 0%, #e8edf2 50%, #f8f9fa 100%);
 }
 
 .gacha-result-container {
@@ -1399,7 +1403,7 @@ body {
     max-height: 40%;
     overflow-y: auto;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     margin-bottom: 15px;
 }
@@ -1983,7 +1987,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(100, 200, 255, 0.7);
     border-radius: 10px;
     display: none;
     align-items: center;
@@ -2160,14 +2164,14 @@ body {
 /* 🔴 攻撃系 - 円枠（バトル中） */
 .tile-skill-frame.cat-attack {
     border-radius: 50%;
-    background: rgba(15, 15, 20, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border: 1.5px solid var(--frame-color, var(--sk-rarity-1));
 }
 
 /* 🟢 防御系 - 角丸正方形（バトル中） */
 .tile-skill-frame.cat-defense {
     border-radius: 6px;
-    background: rgba(15, 15, 20, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border: 1.5px solid var(--frame-color, var(--sk-rarity-1));
 }
 
@@ -2187,7 +2191,7 @@ body {
     position: absolute;
     width: 90%;
     height: 90%;
-    background: rgba(15, 15, 20, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     clip-path: var(--sk-octagon);
     z-index: 2;
 }
@@ -2250,7 +2254,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     border: 2px solid var(--frame-color, var(--sk-rarity-1));
     z-index: 1;
 }
@@ -2262,7 +2266,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 16px;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     border: 2px solid var(--frame-color, var(--sk-rarity-1));
     z-index: 1;
 }
@@ -2283,7 +2287,7 @@ body {
     position: absolute;
     width: 94%;
     height: 94%;
-    background: linear-gradient(145deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.98));
     clip-path: var(--sk-octagon);
     z-index: 2;
 }
@@ -2444,7 +2448,7 @@ body {
    結果画面
    ======================================== */
 #result-screen {
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     align-items: center;
     justify-content: center;
 }
