@@ -679,18 +679,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentGachaResults = [];
         selectedGachaIndex = -1;
         showScreen('main');
-        // ガチャタブを表示
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        tabs.gacha.classList.add('active');
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-        document.querySelector('.tab-item[data-tab="gacha"]').classList.add('active');
         
-        // スキルガチャだったらスキル一覧更新
-        if (currentGachaType === 'skill') {
-            updateSkillInventory();
-        } else {
-            updateTileCollection();
-        }
+        // ガチャタブに戻る
+        switchTab('gacha');
+        
+        // スキルガチャだったらスキル一覧更新（スキルタブに切り替え時に更新される）
+        updateCurrencyDisplay();
     }
     
     // ========================================
@@ -903,7 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const skillIcons = skills.filter(Boolean).map(sid => {
                 const skill = SKILLS[sid];
-                return skill ? `<div class="preset-skill-icon"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
+                return skill ? `<div class="preset-skill-icon rarity-${skill.rarity}"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
             }).join('');
             
             item.innerHTML = `

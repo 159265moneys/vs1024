@@ -939,19 +939,54 @@ body {
 }
 
 .preset-skill-icon {
-    width: 30px;
-    height: 30px;
-    background: var(--bg-secondary);
+    width: 32px;
+    height: 32px;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .preset-skill-icon img {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* プリセットスキルアイコン - レアリティ別 */
+.preset-skill-icon.rarity-1 {
+    background: linear-gradient(145deg, #666, #555);
+    border: 1px solid #888;
+}
+.preset-skill-icon.rarity-2 {
+    background: linear-gradient(145deg, #27ae60, #1e8449);
+    border: 1px solid #2ecc71;
+}
+.preset-skill-icon.rarity-3 {
+    background: linear-gradient(145deg, #2980b9, #1a5276);
+    border: 1px solid #3498db;
+}
+.preset-skill-icon.rarity-4 {
+    background: linear-gradient(45deg, #f39c12, #d68910);
+    border: 1px solid #f1c40f;
+    animation: presetGlow4 1.5s ease-in-out infinite;
+}
+.preset-skill-icon.rarity-5 {
+    background: linear-gradient(45deg, #c0392b, #922b21);
+    border: 1px solid #e74c3c;
+    animation: presetGlow5 1.2s ease-in-out infinite;
+}
+
+@keyframes presetGlow4 {
+    0%, 100% { box-shadow: 0 0 4px rgba(241, 196, 15, 0.5); }
+    50% { box-shadow: 0 0 8px rgba(241, 196, 15, 0.8); }
+}
+@keyframes presetGlow5 {
+    0%, 100% { box-shadow: 0 0 4px rgba(231, 76, 60, 0.6); }
+    50% { box-shadow: 0 0 10px rgba(231, 76, 60, 0.9); }
 }
 
 .preset-empty-text {
@@ -1081,15 +1116,17 @@ body {
 /* スキルカードの強化レベルバッジ */
 .skill-level-badge {
     position: absolute;
-    bottom: 5px;
+    bottom: 2px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.5rem;
-    color: var(--accent-yellow);
-    background: rgba(0, 0, 0, 0.7);
-    padding: 1px 4px;
+    font-size: 0.45rem;
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 2px 4px;
     border-radius: 3px;
-    letter-spacing: 1px;
+    letter-spacing: 0px;
+    z-index: 25;
+    white-space: nowrap;
 }
 
 /* スキル所持数バッジ */
@@ -2164,16 +2201,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
+    padding: 8px 12px;
+    margin: 6px 10px;
+    background: linear-gradient(145deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 40, 0.95));
+    border: 2px solid var(--accent-cyan);
+    border-radius: 8px;
+    box-shadow: 
+        0 0 10px rgba(0, 200, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .battle-log {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--accent-yellow);
+    color: #ffffff;
     text-align: center;
-    text-shadow: 0 0 10px var(--accent-yellow);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
     animation: logPulse 0.3s ease;
     white-space: nowrap;
     overflow: hidden;
