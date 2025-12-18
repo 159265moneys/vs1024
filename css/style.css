@@ -1373,7 +1373,7 @@ body {
    ======================================== */
 .skill-frame-card.rarity-2 { 
     --frame-color: #2ecc71;
-    --rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
+    --rarity-bg: linear-gradient(145deg, #27ae60, #0d4d2a);
 }
 .skill-frame-card.rarity-2 .skill-name { color: #fff; }
 .skill-frame-card.rarity-2.cat-attack::before,
@@ -3007,19 +3007,35 @@ body {
 }
 
 /* レアリティ別（フル版） - カード版と同じスタイル */
+/* ★1 - コモン（微かな明滅） */
 .skill-frame-full.rarity-1 { 
     --frame-color: #888;
     --rarity-bg: linear-gradient(145deg, #666, #555);
 }
-
-.skill-frame-full.rarity-2 { 
-    --frame-color: #2ecc71;
-    --rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
+.skill-frame-full.rarity-1::before,
+.skill-frame-full.rarity-1.cat-effect::after {
+    animation: rarity1Pulse 4s ease-in-out infinite;
 }
 
+/* ★2 - アンコモン（緑の脈動）- 暗い緑に変更 */
+.skill-frame-full.rarity-2 { 
+    --frame-color: #2ecc71;
+    --rarity-bg: linear-gradient(145deg, #27ae60, #0d4d2a);
+}
+.skill-frame-full.rarity-2::before,
+.skill-frame-full.rarity-2.cat-effect::after {
+    animation: rarity2Pulse 3s ease-in-out infinite;
+}
+
+/* ★3 - レア（動くグラデーション） */
 .skill-frame-full.rarity-3 { 
     --frame-color: #3498db;
-    --rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
+    --rarity-bg: linear-gradient(45deg, #1a5276, #2980b9, #3498db, #2471a3);
+}
+.skill-frame-full.rarity-3::before,
+.skill-frame-full.rarity-3.cat-effect::after {
+    background-size: 300% 300%;
+    animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
 
 .skill-frame-full.rarity-4 { 
@@ -3037,7 +3053,8 @@ body {
         #ffff00 100%
     );
 }
-.skill-frame-full.rarity-4::before { 
+.skill-frame-full.rarity-4::before,
+.skill-frame-full.rarity-4.cat-effect::after { 
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
@@ -3109,7 +3126,7 @@ body {
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
 .skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
 .skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
-.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
+.skill-frame-full.cat-effect::before { border-color: #3b82f6 !important; }
 
 @keyframes full4Float {
     0%, 100% { transform: translateY(0); }
