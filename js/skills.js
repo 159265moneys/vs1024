@@ -1,6 +1,8 @@
 /**
- * Skills - 全30スキル定義 v3.0
- * 合成時5%ランダム発動、重み付き抽選
+ * Skills - 全30スキル定義 v3.2
+ * 合成時スキル発動、重み付き抽選
+ * アイコン: PNGスプライト対応
+ * カテゴリ: attack(攻撃/丸), defense(防御/四角), effect(効果/ティアドロップ)
  */
 
 const SKILLS = {
@@ -11,40 +13,44 @@ const SKILLS = {
         id: 'laststand',
         name: 'ラストスタンド',
         nameEn: 'LastStand',
-        icon: '🏴',
+        icon: 'sprite/laststand.png',
         cost: 8,
         rarity: 5,
         weight: 1,
+        category: 'defense',
         description: '次に攻撃or詰みで2ダメージ以上くらって負ける時、無効化する'
     },
     overflow: {
         id: 'overflow',
         name: 'オーバーフロー',
         nameEn: 'Overflow',
-        icon: '🌊',
+        icon: 'sprite/overflow.png',
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'attack',
         description: '敵は10秒間、タイル合成時に生成される2が2個になる'
     },
     grace: {
         id: 'grace',
         name: 'グレイス',
         nameEn: 'Grace',
-        icon: '🕊️',
+        icon: 'sprite/grace.png',
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'defense',
         description: 'これから20秒間、詰んでもダメージを受けない'
     },
     mirror: {
         id: 'mirror',
         name: 'ミラー',
         nameEn: 'Mirror',
-        icon: '🔮',
+        icon: 'sprite/mirror.png',
         cost: 7,
         rarity: 5,
         weight: 2,
+        category: 'effect',
         description: 'スキル使用時の相手の盤面と全く同じにする'
     },
 
@@ -55,50 +61,55 @@ const SKILLS = {
         id: 'double',
         name: 'ダブル',
         nameEn: 'Double',
-        icon: '⚔️',
+        icon: 'sprite/double.png',
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'attack',
         description: '次の攻撃ダメージを2倍にする'
     },
     guardian: {
         id: 'guardian',
         name: 'ガーディアン',
         nameEn: 'Guardian',
-        icon: '🛡️',
+        icon: 'sprite/guardian.png',
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'defense',
         description: '次の攻撃を無効化する'
     },
     heal: {
         id: 'heal',
         name: 'ヒール',
         nameEn: 'Heal',
-        icon: '💚',
+        icon: 'sprite/heal.png',
         cost: 6,
         rarity: 4,
         weight: 3,
+        category: 'defense',
         description: 'HP1回復（最大HP上限まで）'
     },
     freeze: {
         id: 'freeze',
         name: 'フリーズ',
         nameEn: 'Freeze',
-        icon: '❄️',
+        icon: 'sprite/freeze.png',
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'effect',
         description: '相手の盤面を3秒間停止させる'
     },
     reflect: {
         id: 'reflect',
         name: 'リフレクト',
         nameEn: 'Reflect',
-        icon: '🪞',
+        icon: 'sprite/reflect.png',
         cost: 5,
         rarity: 4,
         weight: 4,
+        category: 'defense',
         description: '次の相手のスキルor妨害タイルを跳ね返す'
     },
 
@@ -109,60 +120,66 @@ const SKILLS = {
         id: 'apocalypse',
         name: 'アポカリプス',
         nameEn: 'Apocalypse',
-        icon: '💀',
+        icon: 'sprite/apocalypse.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'effect',
         description: 'お互いの盤面をリセットする'
     },
     smash: {
         id: 'smash',
         name: 'スマッシュ',
         nameEn: 'Smash',
-        icon: '🔨',
+        icon: 'sprite/smash.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '好きなタイルを1タップして破壊する'
     },
     timebomb: {
         id: 'timebomb',
         name: 'タイムボム',
         nameEn: 'TimeBomb',
-        icon: '💣',
+        icon: 'sprite/timebomb.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '敵盤面にボム(2~8)設置。5秒以内に消さないと3×3範囲削除'
     },
     purify: {
         id: 'purify',
         name: 'ピュリファイ',
         nameEn: 'Purify',
-        icon: '✨',
+        icon: 'sprite/purify.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'defense',
         description: '自分の不利効果/相手の有利効果を全て削除する'
     },
     boost: {
         id: 'boost',
         name: 'ブースト',
         nameEn: 'Boost',
-        icon: '🚀',
+        icon: 'sprite/boost.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'effect',
         description: '自分のランダムな数字のタイルを全て1段階上げる'
     },
     steal: {
         id: 'steal',
         name: 'スティール',
         nameEn: 'Steal',
-        icon: '🤏',
+        icon: 'sprite/steal.png',
         cost: 4,
         rarity: 3,
         weight: 5,
+        category: 'attack',
         description: '相手のタイルから1つランダムに自分の盤面に追加する'
     },
 
@@ -173,70 +190,77 @@ const SKILLS = {
         id: 'armor',
         name: 'アーマー',
         nameEn: 'Armor',
-        icon: '🪖',
+        icon: 'sprite/armor.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'defense',
         description: '次の攻撃ダメージを-1する'
     },
     amplify: {
         id: 'amplify',
         name: 'アンプリファイ',
         nameEn: 'Amplify',
-        icon: '📢',
+        icon: 'sprite/amplify.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'attack',
         description: '次の妨害タイルの効果が2倍になる'
     },
     swap: {
         id: 'swap',
         name: 'スワップ',
         nameEn: 'Swap',
-        icon: '🔄',
+        icon: 'sprite/swap.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: 'お互いのランダムな数字のタイルをまるごと交換する'
     },
     vanish: {
         id: 'vanish',
         name: 'ヴァニッシュ',
         nameEn: 'Vanish',
-        icon: '👁️',
+        icon: 'sprite/vanish.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: '2~128のランダムな数字のタイルを両者から全消しする'
     },
     anchor: {
         id: 'anchor',
         name: 'アンカー',
         nameEn: 'Anchor',
-        icon: '⚓',
+        icon: 'sprite/anchor.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'defense',
         description: '10秒間、自分の盤面の四隅が固定される'
     },
     decay: {
         id: 'decay',
         name: 'ディケイ',
         nameEn: 'Decay',
-        icon: '🦠',
+        icon: 'sprite/decay.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: 'お互いのタイル全てを1レベル下げる（2は消滅）'
     },
     upgrade: {
         id: 'upgrade',
         name: 'アップグレード',
         nameEn: 'Upgrade',
-        icon: '⬆️',
+        icon: 'sprite/upgrade.png',
         cost: 3,
         rarity: 2,
         weight: 6,
+        category: 'effect',
         description: '自分の2を全て4に変換する'
     },
 
@@ -247,82 +271,97 @@ const SKILLS = {
         id: 'doubleedge',
         name: 'ダブルエッジ',
         nameEn: 'DoubleEdge',
-        icon: '🗡️',
+        icon: 'sprite/doubleedge.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: 'お互いに1ダメージを与える'
     },
     scramble: {
         id: 'scramble',
         name: 'スクランブル',
         nameEn: 'Scramble',
-        icon: '🔀',
+        icon: 'sprite/scramble.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: 'お互いに2を3つランダム生成する'
     },
     sweep: {
         id: 'sweep',
         name: 'スウィープ',
         nameEn: 'Sweep',
-        icon: '🧹',
+        icon: 'sprite/sweep.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: 'お互いの2を3つ消す'
     },
     disrupt: {
         id: 'disrupt',
         name: 'ディスラプト',
         nameEn: 'Disrupt',
-        icon: '⚡',
+        icon: 'sprite/disrupt.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '相手に妨害タイルを1個生成する'
     },
     weaken: {
         id: 'weaken',
         name: 'ウィークン',
         nameEn: 'Weaken',
-        icon: '💧',
+        icon: 'sprite/weaken.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '相手のランダムな1種類のタイルを全て1レベル下げる'
     },
     cataclysm: {
         id: 'cataclysm',
         name: 'カタクリズム',
         nameEn: 'Cataclysm',
-        icon: '🌋',
+        icon: 'sprite/cataclysm.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: 'お互いの盤面を入れ替える'
     },
     curse: {
         id: 'curse',
         name: 'カース',
         nameEn: 'Curse',
-        icon: '👻',
+        icon: 'sprite/curse.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'attack',
         description: '次にダメージを受けた時、同じダメージを相手にも与える'
     },
     fusion: {
         id: 'fusion',
         name: 'フュージョン',
         nameEn: 'Fusion',
-        icon: '💥',
+        icon: 'sprite/fusion.png',
         cost: 2,
         rarity: 1,
         weight: 7,
+        category: 'effect',
         description: '自分の盤面で1回で合成可能なタイルを全て合成する'
     }
+};
+
+// カテゴリ名マッピング
+const SKILL_CATEGORIES = {
+    attack: { name: '攻撃', shape: 'circle' },
+    defense: { name: '防御', shape: 'square' },
+    effect: { name: '効果', shape: 'teardrop' }
 };
 
 // ========================================

@@ -516,28 +516,28 @@ class Game {
             case 'laststand':
                 // 致死ダメージ無効化（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ラストスタンド発動!`, 'attack');
+                    this.onBattleLog(`${casterName}ラストスタンド発動!`, 'attack', skill.icon);
                 }
                 break;
                 
             case 'overflow':
                 // 敵の2生成が2倍（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}オーバーフロー! 10秒間2倍生成!`, 'interference');
+                    this.onBattleLog(`${casterName}オーバーフロー! 10秒間2倍生成!`, 'interference', skill.icon);
                 }
                 break;
                 
             case 'grace':
                 // 詰みダメージ無効（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}グレイス! 20秒間詰み無効!`, 'attack');
+                    this.onBattleLog(`${casterName}グレイス! 20秒間詰み無効!`, 'attack', skill.icon);
                 }
                 break;
                 
             case 'mirror':
                 // 盤面コピー（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ミラー! 盤面コピー!`, 'interference');
+                    this.onBattleLog(`${casterName}ミラー! 盤面コピー!`, 'interference', skill.icon);
                 }
                 break;
             
@@ -549,7 +549,7 @@ class Game {
                     this.enemyDouble = true;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ダブル! 次攻撃2倍!`, 'damage');
+                    this.onBattleLog(`${casterName}ダブル! 次攻撃2倍!`, 'damage', skill.icon);
                 }
                 break;
                 
@@ -560,7 +560,7 @@ class Game {
                     this.enemyShield = true;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ガーディアン! 次攻撃無効!`, 'attack');
+                    this.onBattleLog(`${casterName}ガーディアン! 次攻撃無効!`, 'attack', skill.icon);
                 }
                 break;
                 
@@ -573,7 +573,7 @@ class Game {
                     if (this.onHPChange) this.onHPChange('enemy', this.enemyHP);
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ヒール! HP+1!`, 'attack');
+                    this.onBattleLog(`${casterName}ヒール! HP+1!`, 'attack', skill.icon);
                 }
                 break;
                 
@@ -588,7 +588,7 @@ class Game {
                     if (this.onFreezeChange) this.onFreezeChange('player', true);
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}フリーズ! 3秒間停止!`, 'attack');
+                    this.onBattleLog(`${casterName}フリーズ! 3秒間停止!`, 'attack', skill.icon);
                 }
                 break;
                 
@@ -599,7 +599,7 @@ class Game {
                     this.enemyReflect = true;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}リフレクト! 次妨害跳返!`, 'interference');
+                    this.onBattleLog(`${casterName}リフレクト! 次妨害跳返!`, 'interference', skill.icon);
                 }
                 break;
             
@@ -608,7 +608,7 @@ class Game {
                 myBoard.init(myBoard.element, myBoard.isPlayer);
                 enemyBoard.init(enemyBoard.element, enemyBoard.isPlayer);
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アポカリプス! 両盤面リセット!`, 'damage');
+                    this.onBattleLog(`${casterName}アポカリプス! 両盤面リセット!`, 'damage', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -616,7 +616,7 @@ class Game {
             case 'smash':
                 // タップで破壊（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}スマッシュ!`, 'damage');
+                    this.onBattleLog(`${casterName}スマッシュ!`, 'damage', skill.icon);
                 }
                 break;
                 
@@ -624,7 +624,7 @@ class Game {
                 const bombPos = enemyBoard.addBombTile();
                 if (bombPos) {
                     if (this.onBattleLog) {
-                        this.onBattleLog(`${skill.icon} ${casterName}タイムボム[${bombPos.value}]設置!`, 'damage');
+                        this.onBattleLog(`${casterName}タイムボム[${bombPos.value}]設置!`, 'damage', skill.icon);
                     }
                     if (!isPlayer && this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 }
@@ -646,7 +646,7 @@ class Game {
                     this.playerDouble = false;
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ピュリファイ! 効果解除!`, 'interference');
+                    this.onBattleLog(`${casterName}ピュリファイ! 効果解除!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -664,7 +664,7 @@ class Game {
                 }
                 myBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ブースト! ${boostValue}→${boostValue*2} ×${boosted}!`, 'interference');
+                    this.onBattleLog(`${casterName}ブースト! ${boostValue}→${boostValue*2} ×${boosted}!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -684,7 +684,7 @@ class Game {
                     enemyBoard.updateDOM();
                     myBoard.addRandomTile(stolen.v);
                     if (this.onBattleLog) {
-                        this.onBattleLog(`${skill.icon} ${casterName}スティール! ${stolen.v}を奪取!`, 'interference');
+                        this.onBattleLog(`${casterName}スティール! ${stolen.v}を奪取!`, 'interference', skill.icon);
                     }
                     if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 }
@@ -694,14 +694,14 @@ class Game {
             case 'armor':
                 // ダメージ-1（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アーマー! 次ダメ-1!`, 'attack');
+                    this.onBattleLog(`${casterName}アーマー! 次ダメ-1!`, 'attack', skill.icon);
                 }
                 break;
                 
             case 'amplify':
                 // 妨害2倍（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アンプリファイ! 次妨害2倍!`, 'interference');
+                    this.onBattleLog(`${casterName}アンプリファイ! 次妨害2倍!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -718,7 +718,7 @@ class Game {
                 }
                 // 簡易実装：表示のみ
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}スワップ! ${swapV}交換!`, 'interference');
+                    this.onBattleLog(`${casterName}スワップ! ${swapV}交換!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -728,7 +728,7 @@ class Game {
                 const myVanish = myBoard.clearAllWithValue(vanishV);
                 const enemyVanish = enemyBoard.clearAllWithValue(vanishV);
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ヴァニッシュ! ${vanishV}消滅 ×${myVanish + enemyVanish}!`, 'interference');
+                    this.onBattleLog(`${casterName}ヴァニッシュ! ${vanishV}消滅 ×${myVanish + enemyVanish}!`, 'interference', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -736,7 +736,7 @@ class Game {
             case 'anchor':
                 // 四隅固定（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アンカー! 10秒間四隅固定!`, 'interference');
+                    this.onBattleLog(`${casterName}アンカー! 10秒間四隅固定!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -753,7 +753,7 @@ class Game {
                 myBoard.updateDOM();
                 enemyBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ディケイ! 全タイル-1Lv!`, 'interference');
+                    this.onBattleLog(`${casterName}ディケイ! 全タイル-1Lv!`, 'interference', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -772,7 +772,7 @@ class Game {
                 myBoard.interferenceTiles.clear();
                 myBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アップグレード! 2→4 ×${upgradeCount}!`, 'interference');
+                    this.onBattleLog(`${casterName}アップグレード! 2→4 ×${upgradeCount}!`, 'interference', skill.icon);
                 }
                 break;
             
@@ -785,7 +785,7 @@ class Game {
                     this.onHPChange('enemy', this.enemyHP);
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ダブルエッジ! 両者-1HP!`, 'damage');
+                    this.onBattleLog(`${casterName}ダブルエッジ! 両者-1HP!`, 'damage', skill.icon);
                 }
                 this.checkMatchPoint();
                 if (this.playerHP <= 0) { this.endGame('enemy'); return true; }
@@ -798,7 +798,7 @@ class Game {
                     enemyBoard.addRandomTile(2);
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}スクランブル! 両者+2×3!`, 'interference');
+                    this.onBattleLog(`${casterName}スクランブル! 両者+2×3!`, 'interference', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -828,7 +828,7 @@ class Game {
                 myBoard.updateDOM();
                 enemyBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}スウィープ! 2消去 ×${mySweep + enemySweep}!`, 'interference');
+                    this.onBattleLog(`${casterName}スウィープ! 2消去 ×${mySweep + enemySweep}!`, 'interference', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -841,7 +841,7 @@ class Game {
                     this.addInterferenceToPlayer(1);
                 }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ディスラプト! 妨害+1!`, 'interference');
+                    this.onBattleLog(`${casterName}ディスラプト! 妨害+1!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -859,7 +859,7 @@ class Game {
                 }
                 enemyBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}ウィークン! ${weakV}→${weakV/2} ×${weakened}!`, 'interference');
+                    this.onBattleLog(`${casterName}ウィークン! ${weakV}→${weakV/2} ×${weakened}!`, 'interference', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -876,7 +876,7 @@ class Game {
                 myBoard.updateDOM();
                 enemyBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}カタクリズム! 盤面入替!`, 'damage');
+                    this.onBattleLog(`${casterName}カタクリズム! 盤面入替!`, 'damage', skill.icon);
                 }
                 if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
                 break;
@@ -884,21 +884,21 @@ class Game {
             case 'curse':
                 // 次ダメ反射（実装は後で）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}カース! 次ダメ反射!`, 'damage');
+                    this.onBattleLog(`${casterName}カース! 次ダメ反射!`, 'damage', skill.icon);
                 }
                 break;
                 
             case 'fusion':
                 // 自動合成（簡易版：スコア加算のみ）
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}フュージョン!`, 'interference');
+                    this.onBattleLog(`${casterName}フュージョン!`, 'interference', skill.icon);
                 }
                 break;
                 
             default:
                 // 未実装スキル
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}${skill.name}!`, 'interference');
+                    this.onBattleLog(`${casterName}${skill.name}!`, 'interference', skill.icon);
                 }
                 break;
         }

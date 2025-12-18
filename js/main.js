@@ -113,10 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skill) return;
             
             const card = document.createElement('div');
-            card.className = `skill-card rarity-${skill.rarity}`;
+            card.className = `skill-card rarity-${skill.rarity} cat-${skill.category}`;
             card.dataset.skillId = skillId;
             card.innerHTML = `
-                <span class="skill-icon">${skill.icon}</span>
+                <div class="skill-icon-frame cat-${skill.category} rarity-${skill.rarity}">
+                    <img class="skill-icon" src="${skill.icon}" alt="${skill.name}">
+                </div>
                 <span class="skill-stars">${'★'.repeat(skill.rarity)}</span>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
             `;
@@ -280,14 +282,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillId = equipped[index];
             if (skillId && SKILLS[skillId]) {
                 const skill = SKILLS[skillId];
-                slot.textContent = skill.icon;
+                slot.innerHTML = `
+                    <div class="slot-icon-frame cat-${skill.category} rarity-${skill.rarity}">
+                        <img src="${skill.icon}" alt="${skill.name}">
+                    </div>
+                `;
                 slot.classList.add('filled');
                 slot.classList.remove('empty');
+                slot.className = `asset-slot filled cat-${skill.category} rarity-${skill.rarity}`;
                 totalCost += skill.cost;
             } else {
-                slot.textContent = '+';
-                slot.classList.remove('filled');
-                slot.classList.add('empty');
+                slot.innerHTML = '+';
+                slot.className = 'asset-slot empty';
             }
         });
         
@@ -389,8 +395,19 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach(result => {
             const item = document.createElement('div');
             item.className = `gacha-result-item rarity-${result.rarity}`;
+            let iconHtml;
+            if (result.type === 'skill') {
+                const cat = result.item.category || 'effect';
+                iconHtml = `
+                    <div class="gacha-icon-frame cat-${cat} rarity-${result.rarity}">
+                        <img src="${result.item.icon}" alt="${result.item.name}">
+                    </div>
+                `;
+            } else {
+                iconHtml = '🎨';
+            }
             item.innerHTML = `
-                <div class="item-icon">${result.type === 'skill' ? result.item.icon : '🎨'}</div>
+                <div class="item-icon">${iconHtml}</div>
                 <div class="item-name">${result.item.name}</div>
                 <div class="item-rarity">${'★'.repeat(result.rarity)}${result.isNew ? ' NEW!' : ''}</div>
             `;
@@ -411,7 +428,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const skill = SKILLS[skillId];
         if (!skill) return;
         
-        document.getElementById('detail-skill-icon').textContent = skill.icon;
+        document.getElementById('detail-skill-icon').innerHTML = `
+            <div class="detail-icon-frame cat-${skill.category} rarity-${skill.rarity}">
+                <img src="${skill.icon}" alt="${skill.name}">
+            </div>
+        `;
+        document.getElementById('detail-skill-icon').className = `detail-skill-icon cat-${skill.category}`;
         document.getElementById('detail-skill-name').textContent = skill.name;
         document.getElementById('detail-skill-rarity').textContent = '★'.repeat(skill.rarity);
         document.getElementById('detail-skill-cost').textContent = `コスト: ${skill.cost}`;

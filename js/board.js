@@ -284,10 +284,18 @@ class Board {
             const skill = SKILLS[skillId];
             if (skill) {
                 tile.classList.add('has-skill');
-                const skillIcon = document.createElement('span');
+                
+                // スキルアイコンコンテナ
+                const skillFrame = document.createElement('div');
+                skillFrame.className = `tile-skill-frame cat-${skill.category} rarity-${skill.rarity}`;
+                
+                const skillIcon = document.createElement('img');
                 skillIcon.className = 'tile-skill-icon';
-                skillIcon.textContent = skill.icon;
-                tile.appendChild(skillIcon);
+                skillIcon.src = skill.icon;
+                skillIcon.alt = skill.name;
+                
+                skillFrame.appendChild(skillIcon);
+                tile.appendChild(skillFrame);
             }
         }
         

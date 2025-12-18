@@ -657,6 +657,7 @@ body {
     border: 2px solid transparent;
     transition: all 0.2s ease;
     position: relative;
+    overflow: visible;
 }
 
 .skill-card:hover {
@@ -665,7 +666,9 @@ body {
 }
 
 .skill-card .skill-icon {
-    font-size: 1.8rem;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 .skill-card .skill-stars {
@@ -683,6 +686,7 @@ body {
     font-weight: 700;
     padding: 2px 5px;
     border-radius: 10px;
+    z-index: 5;
 }
 
 .skill-card.rarity-5 { border-color: var(--accent-yellow); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
@@ -690,6 +694,251 @@ body {
 .skill-card.rarity-3 { border-color: var(--accent-cyan); }
 .skill-card.rarity-2 { border-color: var(--accent-green); }
 .skill-card.rarity-1 { border-color: var(--text-secondary); }
+
+/* ========================================
+   スキルアイコン枠（共通）
+   ======================================== */
+.skill-icon-frame,
+.slot-icon-frame,
+.detail-icon-frame,
+.gacha-icon-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+}
+
+/* スキルカード用アイコン枠 */
+.skill-icon-frame {
+    width: 44px;
+    height: 44px;
+}
+.skill-icon-frame img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* 装備スロット用アイコン枠 */
+.slot-icon-frame {
+    width: 32px;
+    height: 32px;
+}
+.slot-icon-frame img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* 詳細画面用アイコン枠 */
+.detail-icon-frame {
+    width: 80px;
+    height: 80px;
+}
+.detail-icon-frame img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* ガチャ結果用アイコン枠 */
+.gacha-icon-frame {
+    width: 50px;
+    height: 50px;
+}
+.gacha-icon-frame img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* ========================================
+   UI用カテゴリ別枠形状
+   ======================================== */
+
+/* 攻撃系 - 丸 */
+.skill-icon-frame.cat-attack,
+.slot-icon-frame.cat-attack,
+.detail-icon-frame.cat-attack,
+.gacha-icon-frame.cat-attack {
+    border-radius: 50%;
+}
+.skill-icon-frame.cat-attack::before,
+.slot-icon-frame.cat-attack::before,
+.detail-icon-frame.cat-attack::before,
+.gacha-icon-frame.cat-attack::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    z-index: 1;
+}
+
+/* 防御系 - 四角 */
+.skill-icon-frame.cat-defense,
+.slot-icon-frame.cat-defense,
+.detail-icon-frame.cat-defense,
+.gacha-icon-frame.cat-defense {
+    border-radius: 6px;
+}
+.skill-icon-frame.cat-defense::before,
+.slot-icon-frame.cat-defense::before,
+.detail-icon-frame.cat-defense::before,
+.gacha-icon-frame.cat-defense::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    border: 3px solid currentColor;
+    z-index: 1;
+}
+
+/* 効果系 - ティアドロップ */
+.skill-icon-frame.cat-effect,
+.slot-icon-frame.cat-effect,
+.detail-icon-frame.cat-effect,
+.gacha-icon-frame.cat-effect {
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+}
+.skill-icon-frame.cat-effect::before,
+.slot-icon-frame.cat-effect::before,
+.detail-icon-frame.cat-effect::before,
+.gacha-icon-frame.cat-effect::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50% 50% 50% 0;
+    border: 3px solid currentColor;
+    z-index: 1;
+}
+.skill-icon-frame.cat-effect img,
+.slot-icon-frame.cat-effect img,
+.detail-icon-frame.cat-effect img,
+.gacha-icon-frame.cat-effect img {
+    transform: rotate(45deg);
+}
+
+/* ========================================
+   UI用レアリティ別光演出
+   ======================================== */
+
+/* ★1 コモン */
+.skill-icon-frame.rarity-1,
+.slot-icon-frame.rarity-1,
+.detail-icon-frame.rarity-1,
+.gacha-icon-frame.rarity-1 {
+    background: linear-gradient(135deg, #3a3a4a 0%, #2a2a3a 100%);
+    color: #666677;
+    box-shadow: 0 0 6px rgba(100, 100, 120, 0.4);
+}
+
+/* ★2 アンコモン */
+.skill-icon-frame.rarity-2,
+.slot-icon-frame.rarity-2,
+.detail-icon-frame.rarity-2,
+.gacha-icon-frame.rarity-2 {
+    background: linear-gradient(135deg, #1a4a2a 0%, #0a3a1a 100%);
+    color: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* ★3 レア */
+.skill-icon-frame.rarity-3,
+.slot-icon-frame.rarity-3,
+.detail-icon-frame.rarity-3,
+.gacha-icon-frame.rarity-3 {
+    background: linear-gradient(135deg, #1a3a5a 0%, #0a2a4a 100%);
+    color: #00aaff;
+    box-shadow: 0 0 12px rgba(0, 170, 255, 0.6);
+}
+
+/* ★4 エピック */
+.skill-icon-frame.rarity-4,
+.slot-icon-frame.rarity-4,
+.detail-icon-frame.rarity-4,
+.gacha-icon-frame.rarity-4 {
+    background: linear-gradient(135deg, #4a2a6a 0%, #3a1a5a 100%);
+    color: #aa55ff;
+    box-shadow: 0 0 15px rgba(170, 85, 255, 0.7),
+                0 0 25px rgba(170, 85, 255, 0.3);
+    animation: epicPulse 2s ease infinite;
+}
+
+/* ★5 レジェンド */
+.skill-icon-frame.rarity-5,
+.slot-icon-frame.rarity-5,
+.detail-icon-frame.rarity-5,
+.gacha-icon-frame.rarity-5 {
+    background: linear-gradient(135deg, #5a4a1a 0%, #4a3a0a 100%);
+    color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                0 0 35px rgba(255, 215, 0, 0.4),
+                0 0 50px rgba(255, 215, 0, 0.2);
+    animation: legendaryGlow 1.5s ease infinite alternate;
+}
+.skill-icon-frame.rarity-5::after,
+.slot-icon-frame.rarity-5::after,
+.detail-icon-frame.rarity-5::after,
+.gacha-icon-frame.rarity-5::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, 
+        transparent 0%, rgba(255,215,0,0.6) 15%, 
+        transparent 30%, rgba(255,255,255,0.4) 45%, 
+        transparent 60%, rgba(255,215,0,0.6) 75%, 
+        transparent 90%
+    );
+    animation: uiSpinGlow 3s linear infinite;
+    z-index: 0;
+}
+
+@keyframes epicPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(170, 85, 255, 0.7), 0 0 25px rgba(170, 85, 255, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(170, 85, 255, 0.9), 0 0 35px rgba(170, 85, 255, 0.5); }
+}
+
+@keyframes legendaryGlow {
+    0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 35px rgba(255, 215, 0, 0.4); }
+    100% { box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 215, 0, 0.6), 0 0 70px rgba(255, 215, 0, 0.3); }
+}
+
+@keyframes uiSpinGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ティアドロップの回転アニメーション補正 */
+.skill-icon-frame.cat-effect.rarity-5::after,
+.slot-icon-frame.cat-effect.rarity-5::after,
+.detail-icon-frame.cat-effect.rarity-5::after,
+.gacha-icon-frame.cat-effect.rarity-5::after {
+    animation: uiSpinGlowTeardrop 3s linear infinite;
+}
+@keyframes uiSpinGlowTeardrop {
+    from { transform: rotate(-45deg); }
+    to { transform: rotate(315deg); }
+}
+
+/* バトルログ用スキルアイコン */
+.log-skill-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
 
 .empty-message {
     grid-column: 1 / -1;
@@ -1486,26 +1735,198 @@ body {
     position: relative;
 }
 
-.tile-skill-icon {
+/* スキル枠コンテナ */
+.tile-skill-frame {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    font-size: 0.55em;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 50%;
-    width: 1.5em;
-    height: 1.5em;
+    top: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10;
-    box-shadow: 0 0 6px rgba(0, 245, 255, 0.9);
-    animation: skillGlow 1.5s ease infinite alternate;
+    overflow: visible;
 }
 
-@keyframes skillGlow {
-    0% { box-shadow: 0 0 4px rgba(0, 245, 255, 0.5); }
-    100% { box-shadow: 0 0 10px rgba(0, 245, 255, 1), 0 0 15px rgba(0, 245, 255, 0.5); }
+/* スキルアイコン画像 */
+.tile-skill-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+/* ========================================
+   カテゴリ別枠形状
+   ======================================== */
+
+/* 攻撃系 - 丸 */
+.tile-skill-frame.cat-attack {
+    border-radius: 50%;
+}
+.tile-skill-frame.cat-attack::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    z-index: 1;
+}
+
+/* 防御系 - 四角 */
+.tile-skill-frame.cat-defense {
+    border-radius: 4px;
+}
+.tile-skill-frame.cat-defense::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    border: 2px solid currentColor;
+    z-index: 1;
+}
+
+/* 効果系 - ティアドロップ */
+.tile-skill-frame.cat-effect {
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+}
+.tile-skill-frame.cat-effect::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50% 50% 50% 0;
+    border: 2px solid currentColor;
+    z-index: 1;
+}
+.tile-skill-frame.cat-effect .tile-skill-icon {
+    transform: rotate(45deg);
+}
+
+/* ========================================
+   レアリティ別光演出
+   ======================================== */
+
+/* ★1 コモン - 控えめなグレー */
+.tile-skill-frame.rarity-1 {
+    background: linear-gradient(135deg, #3a3a4a 0%, #2a2a3a 100%);
+    color: #666677;
+    box-shadow: 0 0 4px rgba(100, 100, 120, 0.5);
+}
+.tile-skill-frame.rarity-1::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+    animation: shimmer1 3s infinite;
+}
+
+/* ★2 アンコモン - 緑の光 */
+.tile-skill-frame.rarity-2 {
+    background: linear-gradient(135deg, #1a4a2a 0%, #0a3a1a 100%);
+    color: #00ff88;
+    box-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
+}
+.tile-skill-frame.rarity-2::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent 30%, rgba(0,255,136,0.3) 50%, transparent 70%);
+    animation: shimmer2 2.5s infinite;
+}
+
+/* ★3 レア - 青の光 */
+.tile-skill-frame.rarity-3 {
+    background: linear-gradient(135deg, #1a3a5a 0%, #0a2a4a 100%);
+    color: #00aaff;
+    box-shadow: 0 0 8px rgba(0, 170, 255, 0.7);
+}
+.tile-skill-frame.rarity-3::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent 20%, rgba(0,170,255,0.4) 50%, transparent 80%);
+    animation: shimmer3 2s infinite;
+}
+
+/* ★4 エピック - 紫の光 */
+.tile-skill-frame.rarity-4 {
+    background: linear-gradient(135deg, #4a2a6a 0%, #3a1a5a 100%);
+    color: #aa55ff;
+    box-shadow: 0 0 10px rgba(170, 85, 255, 0.8),
+                0 0 20px rgba(170, 85, 255, 0.4);
+}
+.tile-skill-frame.rarity-4::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, transparent, rgba(170,85,255,0.5), transparent, rgba(170,85,255,0.5), transparent);
+    animation: spinGlow 3s linear infinite;
+}
+
+/* ★5 レジェンド - 金色のキラキラ */
+.tile-skill-frame.rarity-5 {
+    background: linear-gradient(135deg, #5a4a1a 0%, #4a3a0a 100%);
+    color: #ffd700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.9),
+                0 0 24px rgba(255, 215, 0, 0.5),
+                0 0 36px rgba(255, 215, 0, 0.3);
+}
+.tile-skill-frame.rarity-5::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, 
+        transparent 0%, 
+        rgba(255,215,0,0.8) 10%, 
+        transparent 20%, 
+        rgba(255,255,255,0.6) 30%, 
+        transparent 40%, 
+        rgba(255,215,0,0.8) 50%, 
+        transparent 60%, 
+        rgba(255,255,255,0.6) 70%, 
+        transparent 80%, 
+        rgba(255,215,0,0.8) 90%, 
+        transparent 100%
+    );
+    animation: spinGlow 2s linear infinite;
+}
+.tile-skill-frame.rarity-5::before {
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.9) inset;
+}
+
+/* キラキラアニメーション */
+@keyframes shimmer1 {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+@keyframes shimmer2 {
+    0%, 100% { opacity: 0.4; transform: translateX(-100%); }
+    50% { opacity: 0.8; transform: translateX(100%); }
+}
+@keyframes shimmer3 {
+    0%, 100% { opacity: 0.5; transform: translateX(-100%); }
+    50% { opacity: 1; transform: translateX(100%); }
+}
+@keyframes spinGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* エフェクトのspinGlow用に回転補正 */
+.tile-skill-frame.cat-effect::after {
+    animation: spinGlowTeardrop 3s linear infinite;
+}
+@keyframes spinGlowTeardrop {
+    from { transform: rotate(-45deg); }
+    to { transform: rotate(315deg); }
 }
 
 .player-area .tile.attack-target::after {

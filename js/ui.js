@@ -114,7 +114,7 @@ class UI {
         }, 1000);
     }
 
-    showBattleLog(message, type = '') {
+    showBattleLog(message, type = '', iconPath = null) {
         const log = this.elements.battleLog;
         if (!log) return;
         
@@ -127,7 +127,12 @@ class UI {
             log.classList.add(type);
         }
         
-        log.textContent = message;
+        // アイコンパスがあれば画像表示
+        if (iconPath) {
+            log.innerHTML = `<img src="${iconPath}" alt="" class="log-skill-icon">${message}`;
+        } else {
+            log.textContent = message;
+        }
     }
 
     updateMatchPoint(playerHP, enemyHP) {
