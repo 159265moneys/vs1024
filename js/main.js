@@ -590,30 +590,40 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedGachaIndex = -1;
         
         results.forEach((result, index) => {
-            const card = document.createElement('div');
-            card.className = `gacha-result-card rarity-${result.rarity}`;
-            card.dataset.index = index;
-            
-            let iconHtml;
             if (result.type === 'skill') {
+                // スキル - スキル画面と同じskill-frame-cardを使用
                 const skill = result.item;
-                iconHtml = `<img src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">`;
+                const card = document.createElement('div');
+                card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity} gacha-item`;
+                card.dataset.index = index;
+                
+                card.innerHTML = `
+                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                    <div class="frame-inner">
+                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                        <span class="skill-name">${skill.name}</span>
+                    </div>
+                    ${result.isNew ? '<span class="new-badge">NEW!</span>' : ''}
+                `;
+                
+                card.addEventListener('click', () => selectGachaItem(index));
+                container.appendChild(card);
             } else {
-                iconHtml = '🎨';
+                // タイル
+                const card = document.createElement('div');
+                card.className = `gacha-result-card rarity-${result.rarity}`;
+                card.dataset.index = index;
+                
+                card.innerHTML = `
+                    <div class="card-icon">🎨</div>
+                    <div class="card-name">${result.item.name}</div>
+                    <div class="card-rarity">${'★'.repeat(result.rarity)}${result.isNew ? ' NEW!' : ''}</div>
+                `;
+                
+                card.addEventListener('click', () => selectGachaItem(index));
+                container.appendChild(card);
             }
-            
-            card.innerHTML = `
-                <div class="card-icon">${iconHtml}</div>
-                <div class="card-name">${result.item.name}</div>
-                <div class="card-rarity">${'★'.repeat(result.rarity)}${result.isNew ? ' NEW!' : ''}</div>
-            `;
-            
-            card.addEventListener('click', () => selectGachaItem(index));
-            container.appendChild(card);
         });
-        
-        // 詳細エリアをリセット（最初は非表示）
-        document.getElementById('gacha-item-detail').innerHTML = '<div class="detail-placeholder">タップで詳細表示</div>';
         
         // 結果画面表示
         showScreen('gacha-result');
@@ -625,53 +635,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = currentGachaResults;
         if (index < 0 || index >= results.length) return;
         
-        selectedGachaIndex = index;
         const result = results[index];
         
-        // 選択状態更新
-        document.querySelectorAll('.gacha-result-card').forEach((card, i) => {
-            card.classList.toggle('selected', i === index);
-        });
-        
-        // 詳細表示
-        const detailArea = document.getElementById('gacha-item-detail');
-        
         if (result.type === 'skill') {
-            const skill = result.item;
-            const catInfo = SKILL_CATEGORIES[skill.category];
-            detailArea.innerHTML = `
-                <div class="gacha-skill-detail">
-                    <div class="detail-header">
-                        <div class="detail-icon">
-                            <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                                <img src="${skill.icon}" alt="${skill.name}">
-                                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
-                            </div>
-                        </div>
-                        <div class="detail-info">
-                            <h3>${skill.name}</h3>
-                            <div class="detail-meta">
-                                <span style="color:var(--accent-yellow);">${'★'.repeat(skill.rarity)}</span>
-                                <span style="color:${catInfo ? catInfo.color : '#fff'};">${catInfo ? catInfo.name : ''}</span>
-                                <span style="color:var(--accent-cyan);">コスト: ${skill.cost}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detail-desc">${skill.description}</div>
-                </div>
-            `;
+            // スキル画面と同じ詳細モーダルを表示
+            openSkillDetail(result.item.id);
         } else {
-            // タイル
-            const tile = result.item;
-            detailArea.innerHTML = `
-                <div class="gacha-tile-detail">
-                    <div class="tile-preview" style="background:var(--tile-2);">2</div>
-                    <div class="tile-info">
-                        <h3>${tile.name}</h3>
-                        <p>${'★'.repeat(result.rarity)} タイルスキン</p>
-                    </div>
-                </div>
-            `;
+            // タイルの詳細（簡易表示）
+            alert(`${result.item.name}\n${'★'.repeat(result.rarity)} タイルスキン`);
         }
     }
     
