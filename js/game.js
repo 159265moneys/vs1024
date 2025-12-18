@@ -757,12 +757,20 @@ class Game {
                 break;
                 
             case 'upgrade':
-                const myCleared = myBoard.clearAllTwos();
-                for (let i = 0; i < myCleared; i++) {
-                    myBoard.addRandomTile(4);
+                // 2を全て4に変換（位置を保持）
+                let upgradeCount = 0;
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (myBoard.grid[r][c] === 2) {
+                            myBoard.grid[r][c] = 4;
+                            upgradeCount++;
+                        }
+                    }
                 }
+                myBoard.interferenceTiles.clear();
+                myBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${skill.icon} ${casterName}アップグレード! 2→4 ×${myCleared}!`, 'interference');
+                    this.onBattleLog(`${skill.icon} ${casterName}アップグレード! 2→4 ×${upgradeCount}!`, 'interference');
                 }
                 break;
             
@@ -824,7 +832,12 @@ class Game {
                 break;
                 
             case 'disrupt':
-                this.addInterferenceToEnemy(1);
+                // 相手に妨害タイル1個
+                if (isPlayer) {
+                    this.addInterferenceToEnemy(1);
+                } else {
+                    this.addInterferenceToPlayer(1);
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${skill.icon} ${casterName}ディスラプト! 妨害+1!`, 'interference');
                 }
