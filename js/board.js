@@ -12,8 +12,12 @@ class Board {
         this.isPlayer = true;
         this.interferenceTiles = new Set();
         this.bombTiles = new Map(); // ボムタイル: key="row,col", value={timer, row, col}
+        this.skillTiles = new Map(); // スキル付きタイル: key="row,col", value=skillId
         
         this.onAttackableTap = null;
+        
+        // スキル付与確率（生成時）
+        this.skillAttachChance = 0.15; // 15%でスキル付き
     }
 
     init(element, isPlayer = true) {
@@ -24,6 +28,7 @@ class Board {
         this.tiles = [];
         this.interferenceTiles = new Set();
         this.bombTiles = new Map();
+        this.skillTiles = new Map();
         
         this.element.innerHTML = '';
         for (let i = 0; i < this.size * this.size; i++) {
@@ -213,6 +218,14 @@ class Board {
             this.interferenceTiles.add(`${cell.row},${cell.col}`);
         }
         
+        // スキル付与（妨害タイル以外、一定確率）
+        if (!isInterference && Math.random() < this.skillAttachChance) {
+            const skill = getRandomSkillFromAll();
+            if (skill) {
+                this.skillTiles.set(`${cell.row},${cell.col}`, skill.id);
+            }
+        }
+        
         this.createTileElement(cell.row, cell.col, tileValue, true);
         
         return true;
@@ -265,6 +278,19 @@ class Board {
             tile.dataset.bombTimer = this.bombTiles.get(key).timer.toFixed(1);
         }
         
+        // スキル付きタイル
+        if (this.skillTiles.has(key)) {
+            const skillId = this.skillTiles.get(key);
+            const skill = SKILLS[skillId];
+            if (skill) {
+                tile.classList.add('has-skill');
+                const skillIcon = document.createElement('span');
+                skillIcon.className = 'tile-skill-icon';
+                skillIcon.textContent = skill.icon;
+                tile.appendChild(skillIcon);
+            }
+        }
+        
         const pos = this.getTilePosition(row, col);
         tile.style.left = `${pos.left}px`;
         tile.style.top = `${pos.top}px`;
@@ -304,6 +330,7 @@ class Board {
         const mergedTiles = [];
         const newTiles = [];
         const mergePositions = []; // 合成位置を記録
+        const triggeredSkills = []; // 発動したスキル
         
         const vectors = {
             up: { row: -1, col: 0 },
@@ -318,6 +345,7 @@ class Board {
         
         const newInterferenceTiles = new Set();
         const newBombTiles = new Map();
+        const newSkillTiles = new Map();
         
         traversals.row.forEach(row => {
             traversals.col.forEach(col => {
@@ -327,6 +355,7 @@ class Board {
                 const oldKey = `${row},${col}`;
                 const wasInterference = this.interferenceTiles.has(oldKey);
                 const wasBomb = this.bombTiles.get(oldKey);
+                const wasSkill = this.skillTiles.get(oldKey);
                 
                 let newRow = row;
                 let newCol = col;
@@ -355,19 +384,33 @@ class Board {
                     moved = true;
                     
                     if (this.grid[newRow][newCol] === value) {
+                        // 合成！
                         const newValue = value * 2;
                         this.grid[newRow][newCol] = newValue;
                         this.grid[row][col] = 0;
                         merged[newRow][newCol] = true;
                         this.score += newValue;
                         mergedTiles.push(newValue);
-                        mergePositions.push({ row: newRow, col: newCol }); // 合成位置を記録
+                        mergePositions.push({ row: newRow, col: newCol });
+                        
+                        // 合成先のタイルにスキルがあったか確認
+                        const targetKey = `${newRow},${newCol}`;
+                        const targetSkill = this.skillTiles.get(targetKey);
+                        
+                        // どちらかのタイルにスキルがあれば発動
+                        if (wasSkill) {
+                            triggeredSkills.push({ skillId: wasSkill, row: newRow, col: newCol });
+                        }
+                        if (targetSkill && targetSkill !== wasSkill) {
+                            triggeredSkills.push({ skillId: targetSkill, row: newRow, col: newCol });
+                        }
                         
                         if (newValue === 256) {
                             newTiles.push(256);
                         }
-                        // 合体したらボムも妨害フラグも消える
+                        // 合体したらボムも妨害フラグもスキルも消える
                     } else {
+                        // 移動のみ
                         this.grid[newRow][newCol] = value;
                         this.grid[row][col] = 0;
                         
@@ -380,16 +423,23 @@ class Board {
                         if (wasBomb && value === bombValue) {
                             newBombTiles.set(newKey, { ...wasBomb, row: newRow, col: newCol });
                         }
+                        // スキルも移動
+                        if (wasSkill) {
+                            newSkillTiles.set(newKey, wasSkill);
+                        }
                     }
                 } else {
+                    // 移動なし
                     const newKey = `${row},${col}`;
                     if (wasInterference && value === 2) {
                         newInterferenceTiles.add(newKey);
                     }
-                    // ボムは元の値と一致する場合のみ維持
                     const bombValue = wasBomb ? (wasBomb.value || 2) : null;
                     if (wasBomb && value === bombValue) {
                         newBombTiles.set(newKey, wasBomb);
+                    }
+                    if (wasSkill) {
+                        newSkillTiles.set(newKey, wasSkill);
                     }
                 }
             });
@@ -397,12 +447,13 @@ class Board {
         
         this.interferenceTiles = newInterferenceTiles;
         this.bombTiles = newBombTiles;
+        this.skillTiles = newSkillTiles;
         
         if (moved) {
             this.updateDOM(merged);
         }
         
-        return { moved, mergedTiles, newTiles, mergePositions };
+        return { moved, mergedTiles, newTiles, mergePositions, triggeredSkills };
     }
 
     buildTraversals(vector) {

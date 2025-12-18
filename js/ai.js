@@ -66,10 +66,12 @@ class AI {
                 this.game.enemyBoard.addRandomTile();
                 this.game.enemyScore = this.game.enemyBoard.score;
                 
-                // 合成があったらスキル発動チェック
-                if (result.mergedTiles && result.mergedTiles.length > 0 && result.mergePositions && result.mergePositions.length > 0) {
-                    const pos = result.mergePositions[0];
-                    this.game.checkCPUSkillTrigger(pos.row, pos.col);
+                // タイルに付いているスキルを発動
+                if (result.triggeredSkills && result.triggeredSkills.length > 0) {
+                    for (const triggered of result.triggeredSkills) {
+                        this.game.lastMergePosition = { row: triggered.row, col: triggered.col };
+                        this.game.executeSkill(triggered.skillId, 'enemy');
+                    }
                 }
                 
                 if (result.newTiles && result.newTiles.includes(256)) {

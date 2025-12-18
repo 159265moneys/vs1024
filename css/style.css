@@ -1481,6 +1481,33 @@ body {
 
 .tile.attack-target { cursor: pointer; }
 
+/* スキル付きタイル */
+.tile.has-skill {
+    position: relative;
+}
+
+.tile-skill-icon {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 0.55em;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 0 6px rgba(0, 245, 255, 0.9);
+    animation: skillGlow 1.5s ease infinite alternate;
+}
+
+@keyframes skillGlow {
+    0% { box-shadow: 0 0 4px rgba(0, 245, 255, 0.5); }
+    100% { box-shadow: 0 0 10px rgba(0, 245, 255, 1), 0 0 15px rgba(0, 245, 255, 0.5); }
+}
+
 .player-area .tile.attack-target::after {
     content: '⚔️';
     position: absolute;

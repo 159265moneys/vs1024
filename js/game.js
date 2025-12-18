@@ -315,10 +315,12 @@ class Game {
                 this.onScoreChange('player', this.playerScore);
             }
             
-            // 合成があったらスキル発動チェック（最初の合成位置を使用）
-            if (result.mergedTiles.length > 0 && result.mergePositions && result.mergePositions.length > 0) {
-                const pos = result.mergePositions[0];
-                this.checkSkillTrigger('player', pos.row, pos.col);
+            // タイルに付いているスキルを発動
+            if (result.triggeredSkills && result.triggeredSkills.length > 0) {
+                for (const triggered of result.triggeredSkills) {
+                    this.lastMergePosition = { row: triggered.row, col: triggered.col };
+                    this.executeSkill(triggered.skillId, 'player');
+                }
             }
             
             if (result.newTiles.includes(256)) {
