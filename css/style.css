@@ -1528,31 +1528,19 @@ body {
 
 /* ========================================
    ★5 - レジェンド（渦巻く魔法陣の炎）
-   conic-gradient + 回転で渦巻き表現
+   @propertyでconic-gradientの角度だけ回転（枠は固定）
    ======================================== */
+
+/* CSS変数のアニメーション定義 */
+@property --r5-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
 .skill-frame-card.rarity-5 { 
     --frame-color: #e74c3c;
-    /* 渦巻き用の円錐グラデーション（8分割、境目ぼかし） */
-    --rarity-bg: conic-gradient(
-        from 0deg,
-        #2d0000 0deg,      /* 漆黒の赤 */
-        #8b0000 22deg,     /* ダークレッド */
-        #dc143c 45deg,     /* クリムゾン */
-        #ff0000 67deg,     /* 純粋な赤 */
-        #ff4500 90deg,     /* オレンジレッド */
-        #dc143c 112deg,    /* クリムゾン */
-        #8b0000 135deg,    /* ダークレッド */
-        #2d0000 157deg,    /* 漆黒の赤 */
-        #4a0000 180deg,    /* 深淵の赤 */
-        #b22222 202deg,    /* ファイアブリック */
-        #ff0000 225deg,    /* 純粋な赤 */
-        #ff6347 247deg,    /* トマト */
-        #ff4500 270deg,    /* オレンジレッド */
-        #ff0000 292deg,    /* 純粋な赤 */
-        #b22222 315deg,    /* ファイアブリック */
-        #4a0000 337deg,    /* 深淵の赤 */
-        #2d0000 360deg     /* 漆黒の赤 */
-    );
+    --r5-angle: 0deg;
 }
 .skill-frame-card.rarity-5 .skill-name { 
     color: #fff; 
@@ -1560,13 +1548,54 @@ body {
     animation: nameFlicker 0.1s ease-in-out infinite alternate;
 }
 
-/* 攻撃・防御系の背景 - 渦巻き回転 */
+/* 攻撃・防御系の背景 - 渦巻き（枠は固定、グラデ角度だけ回転） */
 .skill-frame-card.rarity-5.cat-attack::before,
 .skill-frame-card.rarity-5.cat-defense::before {
+    background: conic-gradient(
+        from var(--r5-angle),
+        #2d0000 0deg,
+        #8b0000 22deg,
+        #dc143c 45deg,
+        #ff0000 67deg,
+        #ff4500 90deg,
+        #dc143c 112deg,
+        #8b0000 135deg,
+        #2d0000 157deg,
+        #4a0000 180deg,
+        #b22222 202deg,
+        #ff0000 225deg,
+        #ff6347 247deg,
+        #ff4500 270deg,
+        #ff0000 292deg,
+        #b22222 315deg,
+        #4a0000 337deg,
+        #2d0000 360deg
+    );
     animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
-/* 効果系の背景 - 渦巻き回転 */
+
+/* 効果系の背景 - 渦巻き（枠は固定、グラデ角度だけ回転） */
 .skill-frame-card.rarity-5.cat-effect::after {
+    background: conic-gradient(
+        from var(--r5-angle),
+        #2d0000 0deg,
+        #8b0000 22deg,
+        #dc143c 45deg,
+        #ff0000 67deg,
+        #ff4500 90deg,
+        #dc143c 112deg,
+        #8b0000 135deg,
+        #2d0000 157deg,
+        #4a0000 180deg,
+        #b22222 202deg,
+        #ff0000 225deg,
+        #ff6347 247deg,
+        #ff4500 270deg,
+        #ff0000 292deg,
+        #b22222 315deg,
+        #4a0000 337deg,
+        #2d0000 360deg
+    );
     animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
 
@@ -1576,13 +1605,10 @@ body {
     100% { opacity: 0.85; }
 }
 
-/* 渦巻き回転（中心軸で回転） */
+/* 渦巻き回転（CSS変数の角度だけ回転、枠は固定！） */
 @keyframes rarity5Swirl {
-    from { 
-        transform: rotate(0deg) scale(1.3);
-    }
     to { 
-        transform: rotate(360deg) scale(1.3);
+        --r5-angle: 360deg;
     }
 }
 
