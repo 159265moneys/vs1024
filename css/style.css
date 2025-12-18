@@ -1465,7 +1465,7 @@ body {
     50% { filter: brightness(1.4) saturate(1.5); }
 }
 
-/* ★4 火の粉エフェクト（黄色・オレンジ系） */
+/* ★4 キラキラ光点（シマー）- 枠内で点滅 */
 .skill-frame-card.rarity-4 .frame-inner::before {
     content: '';
     position: absolute;
@@ -1474,33 +1474,34 @@ body {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(3px 3px at 20% 85%, #ffd700 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 40% 75%, #f39c12 0%, transparent 100%),
-        radial-gradient(3px 3px at 60% 90%, #ffd700 0%, transparent 100%),
-        radial-gradient(2px 2px at 80% 80%, #ffaa00 0%, transparent 100%),
-        radial-gradient(3px 3px at 30% 95%, #f1c40f 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 70% 70%, #ffd700 0%, transparent 100%),
-        radial-gradient(2px 2px at 15% 75%, #ffff00 0%, transparent 100%),
-        radial-gradient(3px 3px at 85% 85%, #f39c12 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 50% 98%, #ffd700 0%, transparent 100%),
-        radial-gradient(2px 2px at 25% 65%, #f1c40f 0%, transparent 100%);
-    animation: rarity4Sparks 1.5s ease-out infinite;
+        radial-gradient(4px 4px at 25% 20%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 70% 35%, #ffd700 0%, transparent 70%),
+        radial-gradient(4px 4px at 45% 60%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 15% 75%, #ffd700 0%, transparent 70%),
+        radial-gradient(4px 4px at 80% 70%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%),
+        radial-gradient(4px 4px at 30% 45%, #ffaa00 0%, transparent 70%),
+        radial-gradient(3px 3px at 85% 25%, #fff 0%, transparent 70%);
+    animation: rarity4Shimmer 2s ease-in-out infinite;
     pointer-events: none;
     z-index: 4;
+    border-radius: inherit;
+    clip-path: inherit;
 }
 
-/* 火の粉が下から上に舞い上がる */
-@keyframes rarity4Sparks {
-    0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
+/* キラキラ点滅（枠内で固定、移動なし） */
+@keyframes rarity4Shimmer {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    25% {
+        opacity: 0.9;
     }
     50% {
-        opacity: 0.8;
+        opacity: 0.5;
     }
-    100% {
-        transform: translateY(-40px) scale(0.3);
-        opacity: 0;
+    75% {
+        opacity: 1;
     }
 }
 
@@ -2469,8 +2470,8 @@ body {
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
 }
 .equipped-skill-icon.rarity-4 {
-    background: linear-gradient(145deg, #fbbf24, #f59e0b);
-    box-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
+    background: linear-gradient(0deg, #b8860b, #f1c40f, #ffd700);
+    box-shadow: 0 0 12px rgba(241, 196, 15, 0.7);
     animation: rarity4Pulse 1.5s ease-in-out infinite;
 }
 .equipped-skill-icon.rarity-5 {
@@ -2615,7 +2616,7 @@ body {
 .buff-icon.rarity-1 { background: rgba(156, 163, 175, 0.4); }
 .buff-icon.rarity-2 { background: rgba(52, 211, 153, 0.4); box-shadow: 0 0 4px rgba(52, 211, 153, 0.5); }
 .buff-icon.rarity-3 { background: rgba(59, 130, 246, 0.4); box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
-.buff-icon.rarity-4 { background: rgba(251, 191, 36, 0.4); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6); }
+.buff-icon.rarity-4 { background: rgba(241, 196, 15, 0.5); box-shadow: 0 0 8px rgba(241, 196, 15, 0.7); }
 .buff-icon.rarity-5 { background: rgba(236, 72, 153, 0.4); box-shadow: 0 0 8px rgba(236, 72, 153, 0.7); }
 
 /* バフ/デバフ区別（アイコン自体は同じ、効果の有利不利で判断） */
@@ -3023,20 +3024,86 @@ body {
 
 .skill-frame-full.rarity-4 { 
     --frame-color: #f1c40f;
-    --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d);
-    background-size: 300% 300%;
+    /* 燃え上がる黄金の炎グラデーション（8色） */
+    --rarity-bg: linear-gradient(
+        0deg,
+        #5c4a00 0%,
+        #8b6914 15%,
+        #b8860b 30%,
+        #daa520 45%,
+        #f39c12 60%,
+        #f1c40f 75%,
+        #ffd700 90%,
+        #ffff00 100%
+    );
 }
 .skill-frame-full.rarity-4::before { 
-    animation: rarity4BgMove 3s ease infinite, rarity4Pulse 1.5s ease-in-out infinite;
+    background-size: 100% 400%;
+    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
+}
+
+/* ★4 シマーエフェクト（スキル詳細用） */
+.skill-frame-full.rarity-4::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(4px 4px at 25% 20%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 70% 35%, #ffd700 0%, transparent 70%),
+        radial-gradient(4px 4px at 45% 60%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 15% 75%, #ffd700 0%, transparent 70%),
+        radial-gradient(4px 4px at 80% 70%, #fff 0%, transparent 70%),
+        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%);
+    animation: rarity4Shimmer 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
 }
 
 .skill-frame-full.rarity-5 { 
     --frame-color: #e74c3c;
-    --rarity-bg: linear-gradient(45deg, #c0392b, #922b21, #e74c3c, #a93226);
-    background-size: 300% 300%;
+    /* 渦巻く炎グラデーション */
+    --rarity-bg: conic-gradient(
+        from var(--r5-angle, 0deg),
+        #8b0000,
+        #c0392b,
+        #e74c3c,
+        #ff4500,
+        #ff6b00,
+        #e74c3c,
+        #c0392b,
+        #8b0000
+    );
 }
 .skill-frame-full.rarity-5::before { 
-    animation: rarity5BgMove 2s ease infinite, rarity5Pulse 1.2s ease-in-out infinite;
+    animation: r5Rotate 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
+}
+/* ★5 粒子エフェクト（スキル詳細用） */
+.skill-frame-full.rarity-5::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(3px 3px at 20% 30%, #fff 0%, transparent 70%),
+        radial-gradient(2px 2px at 50% 50%, #ff6b00 0%, transparent 70%),
+        radial-gradient(3px 3px at 80% 40%, #fff 0%, transparent 70%),
+        radial-gradient(2px 2px at 30% 70%, #ff4500 0%, transparent 70%),
+        radial-gradient(3px 3px at 70% 80%, #fff 0%, transparent 70%),
+        radial-gradient(2px 2px at 40% 20%, #ffd700 0%, transparent 70%);
+    animation: rarity5Particles 1.5s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
+}
+@keyframes rarity5Particles {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; }
 }
 
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
