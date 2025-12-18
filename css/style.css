@@ -1592,46 +1592,6 @@ body {
     50% { filter: brightness(1.5) saturate(1.5); }
 }
 
-/* ★5 枠の外側の炎エフェクト（枠より下のレイヤー） */
-.skill-frame-card.rarity-5 {
-    position: relative;
-}
-.skill-frame-card.rarity-5::after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        rgba(255, 50, 0, 0.6) 20deg,
-        rgba(255, 100, 0, 0.8) 40deg,
-        transparent 60deg,
-        rgba(255, 0, 0, 0.7) 100deg,
-        rgba(255, 80, 0, 0.6) 120deg,
-        transparent 140deg,
-        rgba(220, 20, 60, 0.7) 180deg,
-        rgba(255, 69, 0, 0.8) 200deg,
-        transparent 220deg,
-        rgba(255, 0, 0, 0.6) 260deg,
-        rgba(178, 34, 34, 0.7) 280deg,
-        transparent 300deg,
-        rgba(255, 50, 0, 0.8) 340deg,
-        transparent 360deg
-    );
-    border-radius: inherit;
-    z-index: -1;
-    animation: outerFlame 2s linear infinite;
-    filter: blur(4px);
-}
-
-@keyframes outerFlame {
-    from { transform: rotate(0deg) scale(1.05); }
-    to { transform: rotate(360deg) scale(1.05); }
-}
-
 /* ★5 火の粉エフェクト - 明るい粒子と暗い粒子 */
 .skill-frame-card.rarity-5 .particles,
 .skill-frame-full.rarity-5 .particles {
@@ -1703,83 +1663,7 @@ body {
     to { transform: rotate(360deg); opacity: 0.7; }
 }
 
-/* ★5 渦巻きオーバーレイ第2層（逆回転でより複雑に） */
-.skill-frame-card.rarity-5 .frame-inner::before {
-    content: '';
-    position: absolute;
-    top: -15%;
-    left: -15%;
-    width: 130%;
-    height: 130%;
-    background: conic-gradient(
-        from 180deg,
-        transparent 0deg,
-        rgba(255, 0, 0, 0.3) 30deg,
-        transparent 60deg,
-        rgba(255, 69, 0, 0.25) 90deg,
-        transparent 120deg,
-        rgba(220, 20, 60, 0.3) 150deg,
-        transparent 180deg,
-        rgba(255, 50, 0, 0.25) 210deg,
-        transparent 240deg,
-        rgba(255, 0, 0, 0.3) 270deg,
-        transparent 300deg,
-        rgba(178, 34, 34, 0.25) 330deg,
-        transparent 360deg
-    );
-    animation: rarity5SwirlReverse 4s linear infinite, pulseFade 1s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 4;
-    border-radius: inherit;
-    clip-path: inherit;
-    mix-blend-mode: screen;
-}
-
-/* ★5 中心の光（魔法陣の核） */
-.skill-frame-card.rarity-5 .frame-inner::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60%;
-    height: 60%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(
-        circle,
-        rgba(255, 100, 50, 0.5) 0%,
-        rgba(255, 50, 0, 0.3) 30%,
-        rgba(139, 0, 0, 0.2) 60%,
-        transparent 80%
-    );
-    animation: corePulse 0.6s ease-in-out infinite alternate;
-    pointer-events: none;
-    z-index: 5;
-    border-radius: 50%;
-}
-
-/* 逆方向の渦巻き */
-@keyframes rarity5SwirlReverse {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
-}
-
 /* オーバーレイの明滅 */
-@keyframes pulseFade {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-}
-
-/* 中心核の脈動 */
-@keyframes corePulse {
-    0% { 
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.4;
-    }
-    100% { 
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0.8;
-    }
-}
 
 @keyframes rarity5BgMove {
     0% { background-position: 0% 50%; }
