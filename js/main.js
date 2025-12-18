@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${data.count > 1 ? `<span class="skill-count">×${data.count}</span>` : ''}
                 ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                ${isEquipped ? '<span class="equipped-badge">装備中</span>' : ''}
             `;
             
             card.addEventListener('click', () => openSkillDetail(skillId));

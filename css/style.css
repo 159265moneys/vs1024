@@ -785,20 +785,22 @@ body {
     pointer-events: none;
 }
 
+/* 装備中バッジは別要素で実装（::afterとの競合回避） */
 .skill-frame-card.equipped-indicator {
     position: relative;
 }
 
-.skill-frame-card.equipped-indicator::after {
-    content: '装備中';
+.equipped-badge {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 3px;
+    right: 3px;
     padding: 2px 5px;
     font-size: 0.5rem;
     background: var(--accent-green);
     color: white;
     border-radius: 3px;
+    z-index: 20;
+    pointer-events: none;
 }
 
 /* ========================================
