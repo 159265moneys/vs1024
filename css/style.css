@@ -2140,21 +2140,17 @@ body {
     justify-content: center;
     padding: 8px 12px;
     margin: 6px 10px;
-    background: linear-gradient(145deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 40, 0.95));
+    background: transparent;
     border: 2px solid var(--accent-cyan);
     border-radius: 8px;
-    box-shadow: 
-        0 0 10px rgba(0, 200, 255, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .battle-log {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary);
     text-align: center;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
     animation: logPulse 0.3s ease;
     white-space: nowrap;
     overflow: hidden;
@@ -2305,14 +2301,21 @@ body {
 }
 
 .game-board {
-    background: var(--bg-card);
+    background: #bbada0;
     border-radius: 10px;
-    padding: 6px;
+    padding: 8px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    gap: 5px;
+    gap: 6px;
     position: relative;
+    overflow: hidden;
+}
+
+/* 16マス背景セル */
+.tile-cell {
+    background: rgba(238, 228, 218, 0.35);
+    border-radius: 5px;
 }
 
 .board-overlay {
@@ -2341,11 +2344,6 @@ body {
 @keyframes overlayPop {
     0% { opacity: 0; transform: scale(0.9); }
     100% { opacity: 1; transform: scale(1); }
-}
-
-.tile-cell {
-    background: var(--bg-secondary);
-    border-radius: 5px;
 }
 
 /* ========================================
@@ -2466,7 +2464,7 @@ body {
 
 /* バトル中のタイル上スキルアイコン（簡略版） */
 .tile.has-skill {
-    position: relative;
+    overflow: visible;
 }
 
 /* ========================================
@@ -2475,24 +2473,23 @@ body {
    ======================================== */
 .tile-skill-frame {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 24px;
-    height: 24px;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: var(--z-tile-skill);
-    /* 独自のスタッキングコンテキスト */
-    isolation: isolate;
+    z-index: 100;
+    pointer-events: none;
 }
 
 .tile-skill-frame img {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     object-fit: contain;
     position: relative;
-    z-index: var(--z-tile-skill-inner);
+    z-index: 5;
 }
 
 /* 🔴 攻撃系 - 円枠（バトル中） */

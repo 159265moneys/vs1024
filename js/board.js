@@ -541,6 +541,17 @@ class Board {
         return this.grid.map(row => [...row]);
     }
 
+    resetBoard() {
+        this.grid = Array(this.size).fill(null).map(() => Array(this.size).fill(0));
+        this.score = 0;
+        this.interferenceTiles.clear();
+        this.bombTiles.clear();
+        this.skillTiles.clear();
+        this.updateDOM();
+        this.addRandomTile();
+        this.addRandomTile();
+    }
+
     countTilesWithValue(value) {
         let count = 0;
         for (let row = 0; row < this.size; row++) {

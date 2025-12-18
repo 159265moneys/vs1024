@@ -24,10 +24,24 @@ class Game {
         this.playerReflect = false;
         this.playerDouble = false;
         this.playerResurrection = false;
+        this.playerArmor = false;
+        this.playerAmplify = false;
+        this.playerLaststand = false;
+        this.playerCurse = false;
         this.enemyShield = false;
         this.enemyReflect = false;
         this.enemyDouble = false;
         this.enemyResurrection = false;
+        this.enemyArmor = false;
+        this.enemyAmplify = false;
+        this.enemyLaststand = false;
+        this.enemyCurse = false;
+        
+        // オーバーフロー状態
+        this.playerOverflow = false;
+        this.playerOverflowTimer = 0;
+        this.enemyOverflow = false;
+        this.enemyOverflowTimer = 0;
         
         // フリーズ状態
         this.enemyFrozen = false;
@@ -74,10 +88,22 @@ class Game {
         this.playerReflect = false;
         this.playerDouble = false;
         this.playerResurrection = false;
+        this.playerArmor = false;
+        this.playerAmplify = false;
+        this.playerLaststand = false;
+        this.playerCurse = false;
         this.enemyShield = false;
         this.enemyReflect = false;
         this.enemyDouble = false;
         this.enemyResurrection = false;
+        this.enemyArmor = false;
+        this.enemyAmplify = false;
+        this.enemyLaststand = false;
+        this.enemyCurse = false;
+        this.playerOverflow = false;
+        this.playerOverflowTimer = 0;
+        this.enemyOverflow = false;
+        this.enemyOverflowTimer = 0;
         this.enemyFrozen = false;
         this.enemyFreezeTimer = 0;
         this.playerFrozen = false;
@@ -150,6 +176,20 @@ class Game {
                 if (this.onFreezeChange) {
                     this.onFreezeChange('player', false);
                 }
+            }
+        }
+        
+        // オーバーフロータイマー
+        if (this.enemyOverflow) {
+            this.enemyOverflowTimer -= deltaTime;
+            if (this.enemyOverflowTimer <= 0) {
+                this.enemyOverflow = false;
+            }
+        }
+        if (this.playerOverflow) {
+            this.playerOverflowTimer -= deltaTime;
+            if (this.playerOverflowTimer <= 0) {
+                this.playerOverflow = false;
             }
         }
     }
@@ -313,6 +353,10 @@ class Game {
         
         if (result.moved) {
             this.playerBoard.addRandomTile();
+            // オーバーフロー: 2つ目のタイルも追加
+            if (this.playerOverflow) {
+                this.playerBoard.addRandomTile();
+            }
             
             this.playerScore = this.playerBoard.score;
             if (this.onScoreChange) {
@@ -380,6 +424,7 @@ class Game {
                     this.onBattleLog('🛡️ CPU シールド! 攻撃無効!', 'attack');
                 }
             } else {
+                // ダブル
                 if (this.playerDouble) {
                     damage *= 2;
                     this.playerDouble = false;
@@ -387,9 +432,36 @@ class Game {
                         this.onBattleLog(`⚡ ダブル発動! ${damage} DAMAGE!`, 'damage');
                     }
                 }
+                // アーマー
+                if (this.enemyArmor) {
+                    damage = Math.max(0, damage - 1);
+                    this.enemyArmor = false;
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`🛡️ CPUアーマー! ダメ-1!`, 'attack');
+                    }
+                }
+                
+                // ラストスタンド判定
+                if (this.enemyLaststand && this.enemyHP - damage <= 0 && damage >= 2) {
+                    this.enemyLaststand = false;
+                    damage = 0;
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`⭐ CPUラストスタンド! 致死無効!`, 'attack');
+                    }
+                }
                 
                 this.enemyHP = Math.max(0, this.enemyHP - damage);
                 this.damageDealt += damage;
+                
+                // カース：ダメージ反射
+                if (this.enemyCurse && damage > 0) {
+                    this.enemyCurse = false;
+                    this.playerHP = Math.max(0, this.playerHP - damage);
+                    if (this.onHPChange) this.onHPChange('player', this.playerHP);
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`💀 CPUカース! ${damage}ダメ反射!`, 'damage');
+                    }
+                }
                 
                 if (this.onDamage) {
                     this.onDamage('enemy', damage);
@@ -400,6 +472,15 @@ class Game {
                 }
                 
                 this.checkMatchPoint();
+            }
+        }
+        
+        // アンプリファイ
+        if (interference > 0 && this.playerAmplify) {
+            interference *= 2;
+            this.playerAmplify = false;
+            if (this.onBattleLog) {
+                this.onBattleLog(`📢 アンプリファイ! 妨害2倍!`, 'interference');
             }
         }
         
@@ -452,12 +533,41 @@ class Game {
                     this.onBattleLog('🛡️ シールド発動! 攻撃無効!', 'attack');
                 }
             } else {
+                // ダブル
                 if (this.enemyDouble) {
                     damage *= 2;
                     this.enemyDouble = false;
                 }
+                // アーマー
+                if (this.playerArmor) {
+                    damage = Math.max(0, damage - 1);
+                    this.playerArmor = false;
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`🛡️ アーマー! ダメ-1!`, 'attack');
+                    }
+                }
+                
+                // ラストスタンド判定
+                if (this.playerLaststand && this.playerHP - damage <= 0 && damage >= 2) {
+                    this.playerLaststand = false;
+                    damage = 0;
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`⭐ ラストスタンド! 致死無効!`, 'attack');
+                    }
+                }
                 
                 this.playerHP = Math.max(0, this.playerHP - damage);
+                
+                // カース：ダメージ反射
+                if (this.playerCurse && damage > 0) {
+                    this.playerCurse = false;
+                    this.enemyHP = Math.max(0, this.enemyHP - damage);
+                    this.damageDealt += damage;
+                    if (this.onHPChange) this.onHPChange('enemy', this.enemyHP);
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`💀 カース! ${damage}ダメ反射!`, 'damage');
+                    }
+                }
                 
                 if (this.onDamage) {
                     this.onDamage('player', damage);
@@ -469,6 +579,12 @@ class Game {
                 
                 this.checkMatchPoint();
             }
+        }
+        
+        // アンプリファイ
+        if (interference > 0 && this.enemyAmplify) {
+            interference *= 2;
+            this.enemyAmplify = false;
         }
         
         if (interference > 0) {
@@ -518,14 +634,26 @@ class Game {
         switch (skillId) {
             // ★5 レジェンド
             case 'laststand':
-                // 致死ダメージ無効化（実装は後で）
+                // 致死ダメージ無効化フラグを設定
+                if (isPlayer) {
+                    this.playerLaststand = true;
+                } else {
+                    this.enemyLaststand = true;
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}ラストスタンド発動!`, 'attack', skill.icon);
                 }
                 break;
                 
             case 'overflow':
-                // 敵の2生成が2倍（実装は後で）
+                // 10秒間敵の2生成が2個になる
+                if (isPlayer) {
+                    this.enemyOverflow = true;
+                    this.enemyOverflowTimer = 10.0;
+                } else {
+                    this.playerOverflow = true;
+                    this.playerOverflowTimer = 10.0;
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}オーバーフロー! 10秒間2倍生成!`, 'interference', skill.icon);
                 }
@@ -544,7 +672,9 @@ class Game {
                 break;
                 
             case 'mirror':
-                // 盤面コピー（実装は後で）
+                // 敵盤面を自分にコピー
+                myBoard.grid = enemyBoard.getGridCopy();
+                myBoard.updateDOM();
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}ミラー! 盤面コピー!`, 'interference', skill.icon);
                 }
@@ -623,10 +753,25 @@ class Game {
                 break;
                 
             case 'smash':
-                // タップで破壊（実装は後で）
-                if (this.onBattleLog) {
-                    this.onBattleLog(`${casterName}スマッシュ!`, 'damage', skill.icon);
+                // ランダムに敵タイル1個破壊
+                const smashTiles = [];
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (enemyBoard.grid[r][c] > 0) {
+                            smashTiles.push({ row: r, col: c, val: enemyBoard.grid[r][c] });
+                        }
+                    }
                 }
+                if (smashTiles.length > 0) {
+                    const target = smashTiles[Math.floor(Math.random() * smashTiles.length)];
+                    enemyBoard.grid[target.row][target.col] = 0;
+                    enemyBoard.updateDOM();
+                    if (this.onBattleLog) {
+                        this.onBattleLog(`${casterName}スマッシュ! ${target.val}を破壊!`, 'damage', skill.icon);
+                    }
+                }
+                if (this.onEnemyBoardUpdate) this.onEnemyBoardUpdate();
+                this.checkAndHandleStuck(isPlayer ? 'enemy' : 'player');
                 break;
                 
             case 'timebomb':
@@ -701,14 +846,24 @@ class Game {
             
             // ★2 アンコモン
             case 'armor':
-                // ダメージ-1（実装は後で）
+                // 次ダメージ-1
+                if (isPlayer) {
+                    this.playerArmor = true;
+                } else {
+                    this.enemyArmor = true;
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}アーマー! 次ダメ-1!`, 'attack', skill.icon);
                 }
                 break;
                 
             case 'amplify':
-                // 妨害2倍（実装は後で）
+                // 次妨害2倍
+                if (isPlayer) {
+                    this.playerAmplify = true;
+                } else {
+                    this.enemyAmplify = true;
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}アンプリファイ! 次妨害2倍!`, 'interference', skill.icon);
                 }
@@ -743,9 +898,24 @@ class Game {
                 break;
                 
             case 'anchor':
-                // 四隅固定（実装は後で）
+                // 四隅のタイルを最大値にして固定（強化版）
+                const corners = [[0,0], [0,3], [3,0], [3,3]];
+                let maxTile = 0;
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        maxTile = Math.max(maxTile, myBoard.grid[r][c]);
+                    }
+                }
+                if (maxTile > 0) {
+                    corners.forEach(([r, c]) => {
+                        if (myBoard.grid[r][c] === 0) {
+                            myBoard.grid[r][c] = 2;
+                        }
+                    });
+                    myBoard.updateDOM();
+                }
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${casterName}アンカー! 10秒間四隅固定!`, 'interference', skill.icon);
+                    this.onBattleLog(`${casterName}アンカー! 四隅強化!`, 'interference', skill.icon);
                 }
                 break;
                 
@@ -891,16 +1061,49 @@ class Game {
                 break;
                 
             case 'curse':
-                // 次ダメ反射（実装は後で）
+                // 次ダメージ反射
+                if (isPlayer) {
+                    this.playerCurse = true;
+                } else {
+                    this.enemyCurse = true;
+                }
                 if (this.onBattleLog) {
                     this.onBattleLog(`${casterName}カース! 次ダメ反射!`, 'damage', skill.icon);
                 }
                 break;
                 
             case 'fusion':
-                // 自動合成（簡易版：スコア加算のみ）
+                // 自動で合成可能なタイルを1つ合成
+                let fused = false;
+                outerFusion:
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 3; c++) {
+                        if (myBoard.grid[r][c] > 0 && myBoard.grid[r][c] === myBoard.grid[r][c+1]) {
+                            myBoard.grid[r][c] *= 2;
+                            myBoard.grid[r][c+1] = 0;
+                            myBoard.score += myBoard.grid[r][c];
+                            fused = true;
+                            break outerFusion;
+                        }
+                    }
+                }
+                if (!fused) {
+                    for (let c = 0; c < 4; c++) {
+                        for (let r = 0; r < 3; r++) {
+                            if (myBoard.grid[r][c] > 0 && myBoard.grid[r][c] === myBoard.grid[r+1][c]) {
+                                myBoard.grid[r][c] *= 2;
+                                myBoard.grid[r+1][c] = 0;
+                                myBoard.score += myBoard.grid[r][c];
+                                fused = true;
+                                break;
+                            }
+                        }
+                        if (fused) break;
+                    }
+                }
+                myBoard.updateDOM();
                 if (this.onBattleLog) {
-                    this.onBattleLog(`${casterName}フュージョン!`, 'interference', skill.icon);
+                    this.onBattleLog(`${casterName}フュージョン! ${fused ? '合成成功!' : ''}`, 'interference', skill.icon);
                 }
                 break;
                 

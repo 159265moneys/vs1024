@@ -71,6 +71,10 @@ class AI {
             
             if (result.moved) {
                 this.game.enemyBoard.addRandomTile();
+                // オーバーフロー: 2つ目のタイルも追加
+                if (this.game.enemyOverflow) {
+                    this.game.enemyBoard.addRandomTile();
+                }
                 this.game.enemyScore = this.game.enemyBoard.score;
                 
                 // タイルに付いているスキルを発動
