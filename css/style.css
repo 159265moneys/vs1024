@@ -627,6 +627,62 @@ body {
     object-fit: contain;
 }
 
+/* アセットスロット内のスキルアイコン（レアリティ別） */
+.asset-skill-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.asset-skill-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+.asset-skill-icon.rarity-1 {
+    background: linear-gradient(145deg, #666, #555);
+    border: 1px solid #888;
+}
+
+.asset-skill-icon.rarity-2 {
+    background: linear-gradient(145deg, #27ae60, #1e8449);
+    border: 1px solid #2ecc71;
+}
+
+.asset-skill-icon.rarity-3 {
+    background: linear-gradient(145deg, #2980b9, #1a5276);
+    border: 1px solid #3498db;
+}
+
+.asset-skill-icon.rarity-4 {
+    background: linear-gradient(45deg, #f39c12, #d68910);
+    border: 1px solid #f1c40f;
+    animation: assetGlow4 1.5s ease-in-out infinite;
+}
+
+.asset-skill-icon.rarity-5 {
+    background: linear-gradient(45deg, #c0392b, #922b21);
+    border: 1px solid #e74c3c;
+    animation: assetGlow5 1.2s ease-in-out infinite;
+}
+
+@keyframes assetGlow4 {
+    0%, 100% { box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
+    50% { box-shadow: 0 0 10px rgba(241, 196, 15, 0.8), 0 0 15px rgba(243, 156, 18, 0.4); }
+}
+
+@keyframes assetGlow5 {
+    0%, 100% { box-shadow: 0 0 5px rgba(231, 76, 60, 0.6); }
+    50% { box-shadow: 0 0 12px rgba(231, 76, 60, 0.9), 0 0 18px rgba(192, 57, 43, 0.5); }
+}
+
 .asset-slot:hover {
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
@@ -1124,8 +1180,8 @@ body {
     line-height: 1.15;
     max-width: 72px;
     word-break: break-all;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
     transition: all 0.3s ease;
+    /* 影なし */
 }
 
 .skill-frame-card .skill-count {
@@ -1196,201 +1252,126 @@ body {
 }
 
 /* ========================================
-   ★1 - コモン（グレー背景）
+   ★1 - コモン（グレー背景・静的）
    ======================================== */
 .skill-frame-card.rarity-1 { 
-    --frame-color: var(--sk-rarity-1); 
-    --rarity-bg: linear-gradient(145deg, #b8b8b8, #a0a0a0);
+    --frame-color: #888;
+    --rarity-bg: linear-gradient(145deg, #666, #555);
 }
-.skill-frame-card.cat-attack.rarity-1::before { border-color: var(--sk-rarity-1); }
+.skill-frame-card.rarity-1 .skill-name { color: #ccc; }
 
 /* ========================================
-   ★2 - アンコモン（エメラルドグリーン背景）
+   ★2 - アンコモン（緑グラデーション・静的）
    ======================================== */
 .skill-frame-card.rarity-2 { 
-    --frame-color: var(--sk-rarity-2); 
-    --rarity-bg: linear-gradient(145deg, #3dd9a0, #28b882);
+    --frame-color: #2ecc71;
+    --rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
 }
-.skill-frame-card.cat-attack.rarity-2::before { 
-    border-color: var(--sk-rarity-2); 
-    box-shadow: 0 0 15px var(--sk-rarity-2-glow);
-}
-.skill-frame-card.rarity-2::before { 
-    box-shadow: 0 0 15px var(--sk-rarity-2-glow);
-}
-.skill-frame-card.rarity-2 .skill-icon-img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); 
-}
-.skill-frame-card.rarity-2 .skill-name { 
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7); 
-}
+.skill-frame-card.rarity-2 .skill-name { color: #fff; }
 
 /* ========================================
-   ★3 - レア（サファイアブルー背景）
+   ★3 - レア（青グラデーション・静的）
    ======================================== */
 .skill-frame-card.rarity-3 { 
-    --frame-color: var(--sk-rarity-3); 
-    --rarity-bg: linear-gradient(145deg, #6bb5ff, #4a9ae8);
+    --frame-color: #3498db;
+    --rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
 }
-.skill-frame-card.cat-attack.rarity-3::before { 
-    border-color: var(--sk-rarity-3); 
-    box-shadow: 0 0 20px var(--sk-rarity-3-glow);
-}
-.skill-frame-card.rarity-3::before { 
-    box-shadow: 0 0 20px var(--sk-rarity-3-glow);
-}
-.skill-frame-card.rarity-3 .skill-icon-img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); 
-}
-.skill-frame-card.rarity-3 .skill-name { 
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7); 
-}
+.skill-frame-card.rarity-3 .skill-name { color: #fff; }
 
 /* ========================================
-   ★4 - エピック（黄金オレンジ背景 + 光るエフェクト）
+   ★4 - エピック（黄色動的グラデーション + 鼓動する光）
    ======================================== */
 .skill-frame-card.rarity-4 { 
-    --frame-color: var(--sk-rarity-4);
-    --rarity-bg: linear-gradient(145deg, #ffc940, #f5a623);
-    animation: epic4Float 3s ease-in-out infinite;
+    --frame-color: #f1c40f;
+    --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d);
+    background-size: 300% 300%;
 }
-.skill-frame-card.cat-attack.rarity-4::before { 
-    border-color: var(--sk-rarity-4); 
-    box-shadow: 0 0 25px var(--sk-rarity-4-glow), 0 0 50px rgba(251, 191, 36, 0.5);
-    animation: epic4BorderGlow 2s ease-in-out infinite alternate;
+.skill-frame-card.rarity-4::before {
+    animation: rarity4BgMove 3s ease infinite, rarity4Pulse 1.5s ease-in-out infinite;
 }
-.skill-frame-card.rarity-4::before { 
-    box-shadow: 0 0 25px var(--sk-rarity-4-glow), 0 0 50px rgba(251, 191, 36, 0.5);
-    animation: epic4BorderGlow 2s ease-in-out infinite alternate;
-}
-.skill-frame-card.rarity-4 .skill-icon-img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.9));
-    animation: epic4IconPulse 2s ease-in-out infinite alternate;
-}
-.skill-frame-card.rarity-4 .skill-name { 
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7); 
+.skill-frame-card.rarity-4 .skill-name { color: #fff; }
+
+@keyframes rarity4BgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-@keyframes epic4Float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
-}
-
-@keyframes epic4BorderGlow {
-    0% { box-shadow: 0 0 15px var(--sk-rarity-4-glow), 0 0 30px rgba(251, 191, 36, 0.3); }
-    100% { box-shadow: 0 0 25px var(--sk-rarity-4-glow), 0 0 50px rgba(245, 158, 11, 0.6), 0 0 70px rgba(251, 191, 36, 0.2); }
-}
-
-@keyframes epic4IconPulse {
-    0% { filter: drop-shadow(0 0 8px var(--sk-rarity-4)) drop-shadow(0 0 15px var(--sk-rarity-4-accent)); }
-    100% { filter: drop-shadow(0 0 15px var(--sk-rarity-4)) drop-shadow(0 0 30px var(--sk-rarity-4-accent)); }
+@keyframes rarity4Pulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(241, 196, 15, 0.5), 0 0 30px rgba(243, 156, 18, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(241, 196, 15, 0.8), 0 0 50px rgba(243, 156, 18, 0.5), 0 0 70px rgba(241, 196, 15, 0.3); }
 }
 
 /* ========================================
-   ★5 - レジェンド（ピンク〜マゼンタ背景 + 粒子）
+   ★5 - レジェンド（赤動的グラデーション + 粒子 + 鼓動する光）
    ======================================== */
 .skill-frame-card.rarity-5 { 
-    --frame-color: var(--sk-rarity-5);
-    --rarity-bg: linear-gradient(145deg, #ff6eb4, #ec4899);
-    animation: legend5Float 2.5s ease-in-out infinite;
+    --frame-color: #e74c3c;
+    --rarity-bg: linear-gradient(45deg, #c0392b, #922b21, #e74c3c, #a93226);
+    background-size: 300% 300%;
 }
-.skill-frame-card.cat-attack.rarity-5::before { 
-    border-color: var(--sk-rarity-5); 
-    box-shadow: 
-        0 0 30px var(--sk-rarity-5-glow), 
-        0 0 60px rgba(244, 114, 182, 0.6),
-        0 0 90px rgba(236, 72, 153, 0.4);
-    animation: legend5BorderGlow 1.5s ease-in-out infinite alternate;
+.skill-frame-card.rarity-5::before {
+    animation: rarity5BgMove 2s ease infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
-.skill-frame-card.rarity-5::before { 
-    box-shadow: 
-        0 0 30px var(--sk-rarity-5-glow), 
-        0 0 60px rgba(244, 114, 182, 0.6),
-        0 0 90px rgba(236, 72, 153, 0.4);
-    animation: legend5BorderGlow 1.5s ease-in-out infinite alternate;
-}
-.skill-frame-card.rarity-5 .skill-icon-img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.9));
-    animation: legend5IconPulse 1.5s ease-in-out infinite alternate;
-}
-.skill-frame-card.rarity-5 .skill-name { 
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7); 
-    animation: legend5TextGlow 1.5s ease-in-out infinite alternate;
-}
+.skill-frame-card.rarity-5 .skill-name { color: #fff; }
 
-/* ★5 粒子エフェクト */
-.skill-frame-card.rarity-5 .particles {
+/* ★5 粒子エフェクト - 明るい赤い粒子が渦巻く */
+.skill-frame-card.rarity-5 .particles,
+.skill-frame-full.rarity-5 .particles {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    z-index: 0;
+    z-index: 3;
+    overflow: hidden;
+    border-radius: inherit;
 }
 
 .skill-frame-card.rarity-5 .particles::before,
-.skill-frame-card.rarity-5 .particles::after {
+.skill-frame-card.rarity-5 .particles::after,
+.skill-frame-full.rarity-5 .particles::before,
+.skill-frame-full.rarity-5 .particles::after {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(3px 3px at 15% 25%, rgba(255, 182, 193, 1) 50%, transparent 100%),
-        radial-gradient(2px 2px at 85% 15%, rgba(255, 192, 203, 0.9) 50%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 75% 85%, rgba(255, 174, 185, 0.95) 50%, transparent 100%),
-        radial-gradient(2px 2px at 25% 80%, rgba(255, 182, 193, 0.85) 50%, transparent 100%),
-        radial-gradient(3px 3px at 50% 10%, rgba(255, 200, 210, 0.9) 50%, transparent 100%),
-        radial-gradient(2px 2px at 90% 50%, rgba(255, 192, 203, 0.8) 50%, transparent 100%);
-    animation: legend5Particles 4s ease-in-out infinite;
+        radial-gradient(4px 4px at 20% 30%, rgba(255, 100, 100, 1) 50%, transparent 100%),
+        radial-gradient(3px 3px at 80% 20%, rgba(255, 120, 120, 0.95) 50%, transparent 100%),
+        radial-gradient(3.5px 3.5px at 70% 80%, rgba(255, 90, 90, 1) 50%, transparent 100%),
+        radial-gradient(3px 3px at 30% 85%, rgba(255, 110, 110, 0.9) 50%, transparent 100%),
+        radial-gradient(4px 4px at 50% 15%, rgba(255, 130, 130, 0.95) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 85% 55%, rgba(255, 100, 100, 0.85) 50%, transparent 100%),
+        radial-gradient(3px 3px at 15% 60%, rgba(255, 140, 140, 0.9) 50%, transparent 100%);
+    animation: rarity5ParticlesSwirl 4s linear infinite;
 }
 
-.skill-frame-card.rarity-5 .particles::after {
+.skill-frame-card.rarity-5 .particles::after,
+.skill-frame-full.rarity-5 .particles::after {
     animation-delay: -2s;
-    transform: rotate(60deg);
+    animation-direction: reverse;
 }
 
-@keyframes legend5Float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.01); }
+@keyframes rarity5BgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-@keyframes legend5BorderGlow {
-    0% { 
-        box-shadow: 
-            0 0 20px var(--sk-rarity-5-glow), 
-            0 0 40px rgba(244, 114, 182, 0.4),
-            0 0 60px rgba(236, 72, 153, 0.2); 
-    }
-    100% { 
-        box-shadow: 
-            0 0 35px var(--sk-rarity-5-glow), 
-            0 0 70px rgba(244, 114, 182, 0.6),
-            0 0 100px rgba(236, 72, 153, 0.4); 
-    }
+@keyframes rarity5Pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.6), 0 0 40px rgba(192, 57, 43, 0.4); }
+    50% { box-shadow: 0 0 35px rgba(231, 76, 60, 0.9), 0 0 60px rgba(192, 57, 43, 0.6), 0 0 80px rgba(231, 76, 60, 0.3); }
 }
 
-@keyframes legend5IconPulse {
-    0% { 
-        filter: 
-            drop-shadow(0 0 10px var(--sk-rarity-5)) 
-            drop-shadow(0 0 20px var(--sk-rarity-5-accent)); 
-    }
-    100% { 
-        filter: 
-            drop-shadow(0 0 18px var(--sk-rarity-5)) 
-            drop-shadow(0 0 35px var(--sk-rarity-5-accent))
-            drop-shadow(0 0 50px rgba(244, 114, 182, 0.6)); 
-    }
+@keyframes rarity5ParticlesSwirl {
+    0% { transform: rotate(0deg) scale(1); opacity: 0.7; }
+    25% { opacity: 1; }
+    50% { transform: rotate(180deg) scale(1.05); opacity: 0.8; }
+    75% { opacity: 1; }
+    100% { transform: rotate(360deg) scale(1); opacity: 0.7; }
 }
 
-@keyframes legend5TextGlow {
-    0% { text-shadow: 0 0 15px var(--sk-rarity-5-glow), 0 0 30px rgba(236, 72, 153, 0.6), 0 1px 3px rgba(0,0,0,0.9); }
-    100% { text-shadow: 0 0 22px var(--sk-rarity-5-glow), 0 0 45px rgba(236, 72, 153, 0.9), 0 1px 3px rgba(0,0,0,0.9); }
-}
-
+/* 旧アニメーション削除用の空定義 */
 @keyframes legend5Particles {
     0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
     25% { transform: translateY(-5px) rotate(3deg); opacity: 1; }
@@ -2536,15 +2517,15 @@ body {
 /* 🔴 攻撃系 - 円枠（バトル中） */
 .tile-skill-frame.cat-attack {
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1.5px solid var(--frame-color, var(--sk-rarity-1));
+    background: var(--tile-rarity-bg, #666);
+    border: 1.5px solid var(--frame-color, #888);
 }
 
 /* 🟢 防御系 - 角丸正方形（バトル中） */
 .tile-skill-frame.cat-defense {
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1.5px solid var(--frame-color, var(--sk-rarity-1));
+    background: var(--tile-rarity-bg, #666);
+    border: 1.5px solid var(--frame-color, #888);
 }
 
 /* 🔵 効果系 - 八角形（バトル中） */
@@ -2553,7 +2534,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: var(--frame-color, var(--sk-rarity-1));
+    background: var(--frame-color, #888);
     clip-path: var(--sk-octagon);
     z-index: 1;
 }
@@ -2563,38 +2544,55 @@ body {
     position: absolute;
     width: 90%;
     height: 90%;
-    background: rgba(255, 255, 255, 0.98);
+    background: var(--tile-rarity-bg, #666);
     clip-path: var(--sk-octagon);
     z-index: 2;
 }
 
-/* レアリティ別（バトル中） */
-.tile-skill-frame.rarity-1 { --frame-color: var(--sk-rarity-1); }
-.tile-skill-frame.rarity-2 { --frame-color: var(--sk-rarity-2); box-shadow: 0 0 6px var(--sk-rarity-2-glow); }
-.tile-skill-frame.rarity-3 { --frame-color: var(--sk-rarity-3); box-shadow: 0 0 8px var(--sk-rarity-3-glow); }
-.tile-skill-frame.rarity-4 { --frame-color: var(--sk-rarity-4); box-shadow: 0 0 10px var(--sk-rarity-4-glow); animation: tileGlow4 1s ease infinite alternate; }
-.tile-skill-frame.rarity-5 { --frame-color: var(--sk-rarity-5); box-shadow: 0 0 12px var(--sk-rarity-5-glow); animation: tileGlow5 0.8s ease infinite alternate; }
+/* レアリティ別（バトル中）- 新カラースキーム */
+.tile-skill-frame.rarity-1 { 
+    --frame-color: #888;
+    --tile-rarity-bg: linear-gradient(145deg, #666, #555);
+}
+.tile-skill-frame.rarity-2 { 
+    --frame-color: #2ecc71;
+    --tile-rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
+}
+.tile-skill-frame.rarity-3 { 
+    --frame-color: #3498db;
+    --tile-rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
+}
+.tile-skill-frame.rarity-4 { 
+    --frame-color: #f1c40f;
+    --tile-rarity-bg: linear-gradient(45deg, #f39c12, #d68910);
+    animation: tileGlow4 1.5s ease-in-out infinite;
+}
+.tile-skill-frame.rarity-5 { 
+    --frame-color: #e74c3c;
+    --tile-rarity-bg: linear-gradient(45deg, #c0392b, #922b21);
+    animation: tileGlow5 1.2s ease-in-out infinite;
+}
 
-.tile-skill-frame.cat-attack.rarity-1 { border-color: var(--sk-rarity-1); }
-.tile-skill-frame.cat-attack.rarity-2 { border-color: var(--sk-rarity-2); }
-.tile-skill-frame.cat-attack.rarity-3 { border-color: var(--sk-rarity-3); }
-.tile-skill-frame.cat-attack.rarity-4 { border-color: var(--sk-rarity-4); }
-.tile-skill-frame.cat-attack.rarity-5 { border-color: var(--sk-rarity-5); }
+.tile-skill-frame.cat-attack.rarity-1 { border-color: #888; }
+.tile-skill-frame.cat-attack.rarity-2 { border-color: #2ecc71; }
+.tile-skill-frame.cat-attack.rarity-3 { border-color: #3498db; }
+.tile-skill-frame.cat-attack.rarity-4 { border-color: #f1c40f; }
+.tile-skill-frame.cat-attack.rarity-5 { border-color: #e74c3c; }
 
-.tile-skill-frame.cat-defense.rarity-1 { border-color: var(--sk-rarity-1); }
-.tile-skill-frame.cat-defense.rarity-2 { border-color: var(--sk-rarity-2); }
-.tile-skill-frame.cat-defense.rarity-3 { border-color: var(--sk-rarity-3); }
-.tile-skill-frame.cat-defense.rarity-4 { border-color: var(--sk-rarity-4); }
-.tile-skill-frame.cat-defense.rarity-5 { border-color: var(--sk-rarity-5); }
+.tile-skill-frame.cat-defense.rarity-1 { border-color: #888; }
+.tile-skill-frame.cat-defense.rarity-2 { border-color: #2ecc71; }
+.tile-skill-frame.cat-defense.rarity-3 { border-color: #3498db; }
+.tile-skill-frame.cat-defense.rarity-4 { border-color: #f1c40f; }
+.tile-skill-frame.cat-defense.rarity-5 { border-color: #e74c3c; }
 
 @keyframes tileGlow4 {
-    0% { box-shadow: 0 0 6px var(--sk-rarity-4-glow); }
-    100% { box-shadow: 0 0 14px var(--sk-rarity-4-glow), 0 0 22px rgba(251, 191, 36, 0.4); }
+    0%, 100% { box-shadow: 0 0 6px rgba(241, 196, 15, 0.5); }
+    50% { box-shadow: 0 0 12px rgba(241, 196, 15, 0.8), 0 0 20px rgba(243, 156, 18, 0.4); }
 }
 
 @keyframes tileGlow5 {
-    0% { box-shadow: 0 0 8px var(--sk-rarity-5-glow); }
-    100% { box-shadow: 0 0 18px var(--sk-rarity-5-glow), 0 0 28px rgba(244, 114, 182, 0.5); }
+    0%, 100% { box-shadow: 0 0 8px rgba(231, 76, 60, 0.6); }
+    50% { box-shadow: 0 0 16px rgba(231, 76, 60, 0.9), 0 0 25px rgba(192, 57, 43, 0.5); }
 }
 
 /* ========================================
@@ -2664,55 +2662,38 @@ body {
     z-index: 2;
 }
 
-/* レアリティ別（フル版） */
+/* レアリティ別（フル版） - カード版と同じスタイル */
 .skill-frame-full.rarity-1 { 
-    --frame-color: var(--sk-rarity-1); 
-    --rarity-bg: linear-gradient(145deg, #b8b8b8, #a0a0a0);
+    --frame-color: #888;
+    --rarity-bg: linear-gradient(145deg, #666, #555);
 }
 
 .skill-frame-full.rarity-2 { 
-    --frame-color: var(--sk-rarity-2); 
-    --rarity-bg: linear-gradient(145deg, #3dd9a0, #28b882);
+    --frame-color: #2ecc71;
+    --rarity-bg: linear-gradient(145deg, #27ae60, #1e8449);
 }
-.skill-frame-full.rarity-2::before { box-shadow: 0 0 15px var(--sk-rarity-2-glow); }
-.skill-frame-full.rarity-2 img { filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); }
 
 .skill-frame-full.rarity-3 { 
-    --frame-color: var(--sk-rarity-3); 
-    --rarity-bg: linear-gradient(145deg, #6bb5ff, #4a9ae8);
+    --frame-color: #3498db;
+    --rarity-bg: linear-gradient(145deg, #2980b9, #1a5276);
 }
-.skill-frame-full.rarity-3::before { box-shadow: 0 0 20px var(--sk-rarity-3-glow); }
-.skill-frame-full.rarity-3 img { filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); }
 
 .skill-frame-full.rarity-4 { 
-    --frame-color: var(--sk-rarity-4);
-    --rarity-bg: linear-gradient(145deg, #ffc940, #f5a623);
-    animation: full4Float 3s ease-in-out infinite;
+    --frame-color: #f1c40f;
+    --rarity-bg: linear-gradient(45deg, #f39c12, #d68910, #f1c40f, #d4ac0d);
+    background-size: 300% 300%;
 }
 .skill-frame-full.rarity-4::before { 
-    box-shadow: 0 0 25px var(--sk-rarity-4-glow), 0 0 50px rgba(251, 191, 36, 0.5);
-    animation: full4Glow 2s ease-in-out infinite alternate;
-}
-.skill-frame-full.rarity-4 img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.9));
-    animation: full4Icon 2s ease-in-out infinite alternate;
+    animation: rarity4BgMove 3s ease infinite, rarity4Pulse 1.5s ease-in-out infinite;
 }
 
 .skill-frame-full.rarity-5 { 
-    --frame-color: var(--sk-rarity-5);
-    --rarity-bg: linear-gradient(145deg, #ff6eb4, #ec4899);
-    animation: full5Float 2.5s ease-in-out infinite;
+    --frame-color: #e74c3c;
+    --rarity-bg: linear-gradient(45deg, #c0392b, #922b21, #e74c3c, #a93226);
+    background-size: 300% 300%;
 }
 .skill-frame-full.rarity-5::before { 
-    box-shadow: 
-        0 0 30px var(--sk-rarity-5-glow), 
-        0 0 60px rgba(244, 114, 182, 0.6),
-        0 0 90px rgba(236, 72, 153, 0.4);
-    animation: full5Glow 1.5s ease-in-out infinite alternate;
-}
-.skill-frame-full.rarity-5 img { 
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.9));
-    animation: full5Icon 1.5s ease-in-out infinite alternate;
+    animation: rarity5BgMove 2s ease infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
 
 /* border色適用 */

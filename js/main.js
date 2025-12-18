@@ -335,7 +335,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillId = equipped[index];
             if (skillId && SKILLS[skillId]) {
                 const skill = SKILLS[skillId];
-                slot.innerHTML = `<img src="${skill.icon}" alt="${skill.name}">`;
+                // スロット内にミニフレーム付きアイコンを表示
+                slot.innerHTML = `
+                    <div class="asset-skill-icon rarity-${skill.rarity}">
+                        <img src="${skill.icon}" alt="${skill.name}">
+                    </div>
+                `;
                 slot.classList.add('filled');
                 slot.classList.remove('empty');
                 slot.dataset.skillId = skillId;
@@ -607,16 +612,13 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(card);
         });
         
-        // 詳細エリアをリセット
+        // 詳細エリアをリセット（最初は非表示）
         document.getElementById('gacha-item-detail').innerHTML = '<div class="detail-placeholder">タップで詳細表示</div>';
         
         // 結果画面表示
         showScreen('gacha-result');
         
-        // 最初のアイテムを自動選択
-        if (results.length > 0) {
-            setTimeout(() => selectGachaItem(0), 100);
-        }
+        // 自動選択はしない - ユーザーがタップするまで待つ
     }
     
     function selectGachaItem(index) {
