@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 const level = ownedData.level || 0;
-                const levelStars = '★'.repeat(level) + '☆'.repeat(5 - level);
+                const levelStars = '★'.repeat(level);  // 取得した星だけ表示
                 
                 card.innerHTML = `
                     ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
