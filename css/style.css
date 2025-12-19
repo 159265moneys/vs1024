@@ -3053,14 +3053,22 @@ body {
         #ffff00 100%
     );
 }
-.skill-frame-full.rarity-4::before,
-.skill-frame-full.rarity-4.cat-effect::after { 
+/* ★4 攻撃・防御系の背景アニメーション */
+.skill-frame-full.rarity-4.cat-attack::before,
+.skill-frame-full.rarity-4.cat-defense::before { 
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
+/* ★4 効果系の背景アニメーション（::afterが背景） */
+.skill-frame-full.rarity-4.cat-effect::after { 
+    background: var(--rarity-bg) !important;
+    background-size: 100% 400% !important;
+    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
+}
 
-/* ★4 シマーエフェクト（スキル詳細用） */
-.skill-frame-full.rarity-4::after {
+/* ★4 シマーエフェクト（スキル詳細用 - 攻撃・防御系のみ） */
+.skill-frame-full.rarity-4.cat-attack::after,
+.skill-frame-full.rarity-4.cat-defense::after {
     content: '';
     position: absolute;
     top: 0;
@@ -3082,6 +3090,7 @@ body {
 
 .skill-frame-full.rarity-5 { 
     --frame-color: #e74c3c;
+    --r5-angle: 0deg;
     /* 渦巻く炎グラデーション */
     --rarity-bg: conic-gradient(
         from var(--r5-angle, 0deg),
@@ -3096,7 +3105,7 @@ body {
     );
 }
 .skill-frame-full.rarity-5::before { 
-    animation: r5Rotate 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
+    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
 /* ★5 粒子エフェクト（スキル詳細用 - 攻撃・防御系） */
 .skill-frame-full.rarity-5.cat-attack::after,
@@ -3133,7 +3142,7 @@ body {
         #2d0000 315deg,
         #2d0000 360deg
     ) !important;
-    animation: r5Rotate 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
+    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 1.2s ease-in-out infinite;
 }
 @keyframes rarity5Particles {
     0% { opacity: 0.4; }
