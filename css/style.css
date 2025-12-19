@@ -2950,12 +2950,15 @@ body {
     justify-content: center;
     width: 75px;
     height: 75px;
+}
+
+/* ★5粒子用のoverflow設定（枠線を隠さないように粒子だけに適用） */
+.skill-frame-full.rarity-5 .particles {
     overflow: hidden;
 }
-/* カテゴリごとの形状（粒子のclip用） */
-.skill-frame-full.cat-attack { border-radius: 50%; }
-.skill-frame-full.cat-defense { border-radius: 16px; }
-.skill-frame-full.cat-effect { clip-path: var(--sk-octagon); }
+.skill-frame-full.cat-attack .particles { border-radius: 50%; }
+.skill-frame-full.cat-defense .particles { border-radius: 16px; }
+.skill-frame-full.cat-effect .particles { clip-path: var(--sk-octagon); }
 
 .skill-frame-full img {
     width: 42px;
