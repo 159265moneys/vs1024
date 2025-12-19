@@ -2950,7 +2950,12 @@ body {
     justify-content: center;
     width: 75px;
     height: 75px;
+    overflow: hidden;
 }
+/* カテゴリごとの形状（粒子のclip用） */
+.skill-frame-full.cat-attack { border-radius: 50%; }
+.skill-frame-full.cat-defense { border-radius: 16px; }
+.skill-frame-full.cat-effect { clip-path: var(--sk-octagon); }
 
 .skill-frame-full img {
     width: 42px;
