@@ -1078,16 +1078,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
-            const icon = document.createElement('div');
-            icon.className = `equipped-skill-icon cat-${skill.category} rarity-${skill.rarity}`;
-            icon.title = `${skill.name}: ${skill.description}`;
+            // skill-frame-cardと同じ構造で生成（バトル用サイズ）
+            const card = document.createElement('div');
+            card.className = `skill-frame-card battle-size cat-${skill.category} rarity-${skill.rarity}`;
+            card.title = `${skill.name}: ${skill.description}`;
             
-            const img = document.createElement('img');
-            img.src = skill.icon;
-            img.alt = skill.name;
+            card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                </div>
+            `;
             
-            icon.appendChild(img);
-            bar.appendChild(icon);
+            bar.appendChild(card);
         });
     }
     

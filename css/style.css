@@ -2419,12 +2419,47 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     height: 80px;
     min-height: 80px;
     max-height: 80px;
     padding: 0 10px;
     flex-shrink: 0;
+}
+
+/* バトル画面用skill-frame-cardサイズ */
+.skill-frame-card.battle-size {
+    width: 65px;
+    height: 70px;
+    flex-shrink: 0;
+}
+.skill-frame-card.battle-size .frame-inner {
+    width: 100%;
+    height: 100%;
+}
+.skill-frame-card.battle-size .skill-icon-img {
+    width: 32px;
+    height: 32px;
+}
+.skill-frame-card.battle-size .skill-name {
+    display: none; /* バトル画面では名前非表示 */
+}
+/* バトル用の各カテゴリ形状サイズ調整 */
+.skill-frame-card.battle-size.cat-attack::before {
+    width: 60px;
+    height: 60px;
+}
+.skill-frame-card.battle-size.cat-defense::before {
+    width: 56px;
+    height: 62px;
+}
+.skill-frame-card.battle-size.cat-effect::before {
+    width: 60px;
+    height: 63px;
+}
+.skill-frame-card.battle-size.cat-effect::after {
+    width: 56px;
+    height: 59px;
 }
 
 .equipped-skill-icon {
