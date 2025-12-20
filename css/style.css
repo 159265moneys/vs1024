@@ -734,11 +734,12 @@ body {
    ======================================== */
 
 /* メインスキル画面 */
-.skill-main-screen {
+.tab-inner.skill-main-screen {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding-bottom: 0 !important;
+    padding: 15px;
+    padding-bottom: 0;
 }
 
 .skill-fixed-header {
@@ -776,6 +777,7 @@ body {
 
 .skill-scroll-area {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
