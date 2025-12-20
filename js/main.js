@@ -113,33 +113,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const remainingCost = 20 - currentTotalCost;
         
-        // 全スキルをIDリストで取得（番号順 = 定義順）
-        let allSkillIds = Object.keys(SKILLS);
+        // 全スキルをIDリストで取得
+        const allSkillIds = Object.keys(SKILLS);
         
-        // ソート適用
+        // 所持スキルと未所持スキルを分離
+        const ownedIds = [];
+        const notOwnedIds = [];
+        
+        allSkillIds.forEach(skillId => {
+            const ownedData = ownedSkills[skillId];
+            if (ownedData && ownedData.count > 0) {
+                ownedIds.push(skillId);
+            } else {
+                notOwnedIds.push(skillId);
+            }
+        });
+        
+        // ソート関数
+        const sortFn = (aId, bId) => {
+            const a = SKILLS[aId];
+            const b = SKILLS[bId];
+            if (!a || !b) return 0;
+            
+            switch (currentSort) {
+                case 'rarity':
+                    return b.rarity - a.rarity || b.cost - a.cost;
+                case 'cost':
+                    return b.cost - a.cost || b.rarity - a.rarity;
+                case 'category':
+                    const catOrder = { attack: 0, defense: 1, effect: 2 };
+                    return (catOrder[a.category] - catOrder[b.category]) || (b.rarity - a.rarity);
+                default:
+                    return 0;  // デフォルトは定義順
+            }
+        };
+        
+        // 各グループ内でソート
         if (currentSort !== 'default') {
-            allSkillIds.sort((aId, bId) => {
-                const a = SKILLS[aId];
-                const b = SKILLS[bId];
-                if (!a || !b) return 0;
-                
-                switch (currentSort) {
-                    case 'rarity':
-                        return b.rarity - a.rarity || b.cost - a.cost;
-                    case 'cost':
-                        return b.cost - a.cost || b.rarity - a.rarity;
-                    case 'category':
-                        const catOrder = { attack: 0, defense: 1, effect: 2 };
-                        return (catOrder[a.category] - catOrder[b.category]) || (b.rarity - a.rarity);
-                    default:
-                        return 0;
-                }
-            });
+            ownedIds.sort(sortFn);
+            notOwnedIds.sort(sortFn);
         }
+        
+        // 所持→未所持の順で結合
+        const orderedIds = [...ownedIds, ...notOwnedIds];
         
         container.innerHTML = '';
         
-        allSkillIds.forEach(skillId => {
+        orderedIds.forEach(skillId => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
@@ -157,9 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isEquipped) {
                     card.classList.add('equipped-indicator');
                 }
-                if (!canEquip && !isEquipped) {
-                    card.classList.add('disabled');
-                }
+                // この画面ではコストオーバー暗転しない（プリセット編集画面のみ）
                 
                 const level = ownedData.level || 0;
                 const levelStars = '★'.repeat(level);  // 取得した星だけ表示
@@ -177,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 card.addEventListener('click', () => openSkillDetail(skillId));
             } else {
-                // 未所持の場合：色だけグレー（構造はそのまま）
+                // 未所持の場合：グレー表示（構造はそのまま）
                 card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity} not-owned`;
                 
                 card.innerHTML = `
@@ -189,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 
                 // 未所持でも詳細は見れる（ボタンは無効）
-                card.addEventListener('click', () => openSkillDetail(skillId, false));  // false = 未所持
+                card.addEventListener('click', () => openSkillDetail(skillId, false));
             }
             
             card.dataset.skillId = skillId;
@@ -715,10 +733,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentDetailSkillId = null;
     
-    function openSkillDetail(skillId, isOwned = true) {
+    function openSkillDetail(skillId, forceNotOwned = false) {
         currentDetailSkillId = skillId;
         const skill = SKILLS[skillId];
         if (!skill) return;
+        
+        // 実際の所持状態をGameDataから取得（バグ修正）
+        const ownedCount = GameData.getSkillCount(skillId);
+        const isOwned = !forceNotOwned && ownedCount > 0;
         
         const modal = document.getElementById('skill-detail-modal');
         
@@ -749,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
             catDisplay.style.color = catInfo ? catInfo.color : '';
         }
         
-        // 強化レベル表示
+        // 強化レベル表示（ピンクの★）
         const level = GameData.getSkillLevel(skillId);
         const levelStarsEl = document.getElementById('detail-skill-level');
         if (levelStarsEl) {
@@ -762,48 +784,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // 強化に必要なもの計算
-        const upgradeReq = getUpgradeRequirement(level, skill.rarity);
-        const ownedCount = GameData.getSkillCount(skillId);
-        const upgradeSection = document.getElementById('upgrade-section');
-        const upgradeCost = document.getElementById('upgrade-cost');
-        const upgradeMaterial = document.getElementById('upgrade-material-status');
-        const upgradeBtn = document.getElementById('btn-upgrade-skill');
-        
-        if (level >= 5) {
-            // 最大レベル
-            upgradeSection.style.display = 'none';
-            upgradeBtn.disabled = true;
-            upgradeBtn.textContent = '最大強化';
-        } else {
-            upgradeSection.style.display = 'block';
-            upgradeCost.textContent = upgradeReq.text;
-            
-            // 素材チェック
-            const canUpgrade = ownedCount >= upgradeReq.sameSkill + 1; // +1は本体
-            upgradeMaterial.textContent = `所持: ${ownedCount}枚`;
-            upgradeMaterial.className = 'upgrade-materials ' + (canUpgrade ? 'sufficient' : 'insufficient');
-            upgradeBtn.disabled = !canUpgrade;
-            upgradeBtn.textContent = canUpgrade ? '強化する' : '素材不足';
+        // 強化効果一覧を表示（★1〜★5の効果、未到達はグレー）
+        const upgradeEffectsEl = document.getElementById('upgrade-effects-list');
+        if (upgradeEffectsEl) {
+            upgradeEffectsEl.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const effectRow = document.createElement('div');
+                effectRow.className = `upgrade-effect-row ${i <= level ? 'reached' : 'not-reached'}`;
+                effectRow.innerHTML = `<span class="effect-level">★${i}:</span> <span class="effect-desc">コスト-1</span>`;
+                upgradeEffectsEl.appendChild(effectRow);
+            }
         }
         
         // 売却価格
         const sellPrice = GachaSystem.sellPrices.skill[skill.rarity];
-        document.getElementById('btn-sell-skill').textContent = `売却 (${sellPrice} SP)`;
-        
-        // 未所持の場合は全ボタン無効化
-        const equipBtn = document.getElementById('btn-equip-skill');
         const sellBtn = document.getElementById('btn-sell-skill');
-        // upgradeBtn は既に上で定義済み
+        if (sellBtn) {
+            sellBtn.textContent = `売却 (${sellPrice} SP)`;
+        }
         
-        if (!isOwned) {
-            equipBtn.disabled = true;
-            equipBtn.textContent = '未所持';
-            sellBtn.disabled = true;
-            sellBtn.textContent = '未所持';
-            upgradeBtn.disabled = true;
-            upgradeBtn.textContent = '未所持';
-            upgradeSection.style.display = 'none';
+        // 強化ボタン（押すとスキル強化画面へ遷移、そのスキルを自動セット）
+        const upgradeBtn = document.getElementById('btn-upgrade-skill');
+        if (upgradeBtn) {
+            if (level >= 5) {
+                upgradeBtn.disabled = true;
+                upgradeBtn.textContent = '最大強化';
+            } else if (isOwned) {
+                upgradeBtn.disabled = false;
+                upgradeBtn.textContent = '強化する';
+            } else {
+                upgradeBtn.disabled = true;
+                upgradeBtn.textContent = '未所持';
+            }
+        }
+        
+        // 売却ボタン
+        if (sellBtn) {
+            if (isOwned) {
+                sellBtn.disabled = false;
+            } else {
+                sellBtn.disabled = true;
+                sellBtn.textContent = '未所持';
+            }
         }
         
         showModal('skillDetail');

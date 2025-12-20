@@ -729,6 +729,302 @@ body {
     background: rgba(0, 245, 255, 0.1);
 }
 
+/* ========================================
+   スキル画面 - 新UI構造
+   ======================================== */
+
+/* メインスキル画面 */
+.skill-main-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.skill-fixed-header {
+    flex-shrink: 0;
+    padding-bottom: 10px;
+}
+
+.skill-main-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.skill-main-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.skill-main-btn.equip {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: white;
+}
+
+.skill-main-btn.upgrade {
+    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    color: white;
+}
+
+.skill-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+/* サブ画面共通 */
+.sub-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    background: var(--bg-primary);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-screen.hidden {
+    display: none;
+}
+
+.sub-screen-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--text-disabled);
+}
+
+.sub-screen-header.fixed-header {
+    flex-shrink: 0;
+}
+
+.sub-screen-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.sub-screen-header .back-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+/* プリセット選択画面 */
+.preset-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.preset-item {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.preset-item:hover {
+    border-color: var(--accent-cyan);
+}
+
+.preset-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.preset-item-name {
+    font-weight: 700;
+}
+
+.preset-item-cost {
+    color: var(--accent-cyan);
+}
+
+.preset-item-skills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.preset-skill-mini {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.preset-skill-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* プリセット編集画面 */
+.preset-edit-slots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: var(--bg-card);
+}
+
+.preset-edit-slot {
+    width: 55px;
+    height: 60px;
+    border: 2px dashed var(--text-secondary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.preset-edit-slot.filled {
+    border-style: solid;
+    border-color: var(--accent-cyan);
+}
+
+.preset-cost-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: var(--accent-cyan);
+}
+
+.save-preset-btn {
+    margin: 10px 15px;
+    padding: 12px;
+    background: var(--accent-cyan);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.preset-edit-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* スキル強化画面 */
+.upgrade-main-area {
+    padding: 20px;
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.upgrade-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.upgrade-skill-slot {
+    width: 80px;
+    height: 90px;
+    border: 2px dashed var(--text-secondary);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.upgrade-skill-slot.filled {
+    border-style: solid;
+    border-color: var(--accent-purple);
+}
+
+.slot-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+.upgrade-arrow {
+    font-size: 2rem;
+    color: var(--accent-purple);
+}
+
+.upgrade-materials-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.material-slot {
+    width: 45px;
+    height: 50px;
+    border: 2px dashed var(--text-secondary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+}
+
+.material-slot.filled {
+    border-style: solid;
+    border-color: var(--accent-green);
+}
+
+.upgrade-confirm-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent-purple);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.upgrade-confirm-btn:disabled {
+    background: var(--text-disabled);
+    cursor: not-allowed;
+}
+
+.upgrade-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* 各モードのスキル一覧 */
+.skill-inventory.preset-mode .skill-frame-card.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 .skill-inventory-section {
     margin-bottom: 20px;
 }
@@ -1085,42 +1381,56 @@ body {
     opacity: 0.5;
 }
 
-.upgrade-section {
+/* 強化効果一覧セクション */
+.upgrade-effects-section {
+    margin: 15px 0;
+    padding: 10px;
     background: var(--bg-card);
     border-radius: 10px;
-    padding: 12px;
-    margin: 15px 0;
 }
 
-.upgrade-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.upgrade-label {
+.upgrade-effects-title {
     font-size: 0.75rem;
     color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 10px;
 }
 
-.upgrade-cost {
+.upgrade-effects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.upgrade-effect-row {
+    display: flex;
+    gap: 8px;
     font-size: 0.8rem;
-    color: var(--accent-cyan);
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+.upgrade-effect-row.reached {
+    color: var(--text-primary);
+    background: rgba(255, 105, 180, 0.1);
+}
+
+.upgrade-effect-row.reached .effect-level {
+    color: #ff69b4;
+}
+
+.upgrade-effect-row.not-reached {
+    color: var(--text-disabled);
+    opacity: 0.5;
+}
+
+.effect-level {
     font-weight: 600;
+    min-width: 30px;
 }
 
-.upgrade-materials {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-}
-
-.upgrade-materials.sufficient {
-    color: var(--accent-green);
-}
-
-.upgrade-materials.insufficient {
-    color: var(--accent-red);
+.effect-desc {
+    flex: 1;
 }
 
 .action-btn.upgrade {
@@ -1139,28 +1449,23 @@ body {
 }
 
 /* スキルカードの強化レベルバッジ - 見やすく改善 */
+/* 強化レベル星バッジ（ピンク、背景なし） */
 .skill-level-badge {
     position: absolute;
-    bottom: -2px;
+    bottom: 2px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.85rem;
-    color: #ffd700;  /* ゴールド */
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.9));
-    padding: 2px 8px;
-    border-radius: 10px;
-    border: 1px solid #ffd700;
+    font-size: 0.7rem;
+    color: #ff69b4;  /* ピンク */
+    background: none;
+    padding: 0;
+    border: none;
     text-shadow: 
-        0 0 6px rgba(255, 215, 0, 1),
-        0 0 12px rgba(255, 215, 0, 0.8),
-        0 1px 2px rgba(0, 0, 0, 0.8);
-    letter-spacing: 2px;
+        0 0 4px rgba(255, 105, 180, 0.8),
+        0 1px 1px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
     z-index: 25;
     white-space: nowrap;
-    box-shadow: 
-        0 0 8px rgba(255, 215, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    animation: starShine 2s ease-in-out infinite;
 }
 
 @keyframes starShine {
@@ -2916,62 +3221,67 @@ body {
    タイル全面を覆う半透明オーバーレイ
    数字は見えるように調整
    ======================================== */
-.tile-skill-frame {
+/* タイル上スキルバッジ（右上に小さく表示） */
+.tile-skill-badge {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 2px;
+    right: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: var(--z-tile-skill);
     pointer-events: none;
-    border-radius: 5px;
-    border: 3px solid;
+    border: 2px solid;
 }
 
-.tile-skill-frame img {
-    width: 40%;
-    height: 40%;
+.tile-skill-badge img {
+    width: 14px;
+    height: 14px;
     object-fit: contain;
-    opacity: 0.7;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
 
-/* カテゴリ別オーバーレイ色（バトル中タイル上）攻撃=赤、防御=緑、効果=青 */
-.tile-skill-frame.cat-attack {
-    border-color: rgba(255, 51, 102, 0.8);
-    background: rgba(255, 51, 102, 0.15);
+/* カテゴリ別バッジ色（攻撃=赤、防御=緑、効果=青） */
+.tile-skill-badge.cat-attack {
+    border-color: #ff3366;
+    background: rgba(255, 51, 102, 0.9);
 }
-.tile-skill-frame.cat-defense {
-    border-color: rgba(34, 197, 94, 0.8);
-    background: rgba(34, 197, 94, 0.15);
+.tile-skill-badge.cat-defense {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.9);
 }
-.tile-skill-frame.cat-effect {
-    border-color: rgba(59, 130, 246, 0.8);
-    background: rgba(59, 130, 246, 0.15);
+.tile-skill-badge.cat-effect {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.9);
 }
 
-/* タイル上スキルアイコンのレアリティ光り */
-.tile-skill-frame.rarity-2 { box-shadow: inset 0 0 6px rgba(52, 211, 153, 0.4); }
-.tile-skill-frame.rarity-3 { box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.5); }
-.tile-skill-frame.rarity-4 { box-shadow: inset 0 0 10px rgba(251, 191, 36, 0.6); }
-.tile-skill-frame.rarity-5 { box-shadow: inset 0 0 12px rgba(236, 72, 153, 0.7); }
+/* レアリティ別光り */
+.tile-skill-badge.rarity-1 { }
+.tile-skill-badge.rarity-2 { 
+    box-shadow: 0 0 4px rgba(34, 197, 94, 0.8);
+}
+.tile-skill-badge.rarity-3 { 
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.8);
+}
+.tile-skill-badge.rarity-4 { 
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.9);
+    animation: badgeGlow4 1.5s ease-in-out infinite;
+}
+.tile-skill-badge.rarity-5 { 
+    box-shadow: 0 0 10px rgba(244, 114, 182, 0.9);
+    animation: badgeGlow5 1s ease-in-out infinite;
+}
 
-/* レアリティ別光り（バトル中オーバーレイ） */
-.tile-skill-frame.rarity-1 { }
-.tile-skill-frame.rarity-2 { 
-    box-shadow: inset 0 0 10px rgba(34, 197, 94, 0.3);
+@keyframes badgeGlow4 {
+    0%, 100% { box-shadow: 0 0 6px rgba(251, 191, 36, 0.7); }
+    50% { box-shadow: 0 0 12px rgba(251, 191, 36, 1); }
 }
-.tile-skill-frame.rarity-3 { 
-    box-shadow: inset 0 0 12px rgba(59, 130, 246, 0.4);
-}
-.tile-skill-frame.rarity-4 { 
-    box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.5);
-}
-.tile-skill-frame.rarity-5 { 
-    box-shadow: inset 0 0 20px rgba(244, 114, 182, 0.6);
+@keyframes badgeGlow5 {
+    0%, 100% { box-shadow: 0 0 8px rgba(244, 114, 182, 0.7); }
+    50% { box-shadow: 0 0 16px rgba(244, 114, 182, 1); }
 }
 
 /* ========================================
