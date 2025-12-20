@@ -2914,6 +2914,10 @@ body {
     height: 62px;
 }
 .skill-frame-card.battle-size.cat-effect::before {
+    width: 60px;
+    height: 63px;
+}
+.skill-frame-card.battle-size.cat-effect::after {
     width: 56px;
     height: 59px;
 }
@@ -3490,15 +3494,26 @@ body {
 }
 
 /* 🔵 効果系 - 八角形（フル版）- 丸・四角と同じ構造 */
+/* 🔵 効果系 - 八角形（フル版）- 2層構造で枠線表現 */
+/* 外側：枠線色の八角形 */
 .skill-frame-full.cat-effect::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     clip-path: var(--sk-octagon);
-    background: var(--rarity-bg, #999);
-    border: 2px solid var(--frame-color, var(--sk-rarity-1));
+    background: var(--frame-color, var(--sk-rarity-1));
     z-index: 1;
+}
+/* 内側：背景色の八角形（少し小さい） */
+.skill-frame-full.cat-effect::after {
+    content: '';
+    position: absolute;
+    width: 94%;
+    height: 94%;
+    clip-path: var(--sk-octagon);
+    background: var(--rarity-bg, #999);
+    z-index: 2;
 }
 
 
@@ -3511,6 +3526,9 @@ body {
 .skill-frame-full.rarity-1::before {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
+.skill-frame-full.rarity-1.cat-effect::after {
+    animation: rarity1Pulse 4s ease-in-out infinite;
+}
 
 /* ★2 - アンコモン（緑の脈動）- 暗い緑に変更 */
 .skill-frame-full.rarity-2 { 
@@ -3520,6 +3538,9 @@ body {
 .skill-frame-full.rarity-2::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
+.skill-frame-full.rarity-2.cat-effect::after {
+    animation: rarity2Pulse 3s ease-in-out infinite;
+}
 
 /* ★3 - レア（動くグラデーション） */
 .skill-frame-full.rarity-3 { 
@@ -3527,6 +3548,10 @@ body {
     --rarity-bg: linear-gradient(45deg, #1a5276, #2980b9, #3498db, #2471a3);
 }
 .skill-frame-full.rarity-3::before {
+    background-size: 300% 300%;
+    animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
+}
+.skill-frame-full.rarity-3.cat-effect::after {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
@@ -3654,7 +3679,8 @@ body {
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
 .skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
 .skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
-.skill-frame-full.cat-effect::before { border-color: #3b82f6 !important; }
+/* 効果系は2層構造なので::beforeがbackground（枠色） */
+.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
 
 @keyframes full4Float {
     0%, 100% { transform: translateY(0); }
