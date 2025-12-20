@@ -143,45 +143,126 @@ const GameData = {
     },
 
     // ========================================
-    // スキル
+    // スキル（レベル別管理）
     // ========================================
 
     getOwnedSkills() {
         return this.data.ownedSkills;
     },
 
-    hasSkill(skillId) {
-        return this.data.ownedSkills[skillId] && this.data.ownedSkills[skillId].count > 0;
-    },
-
-    getSkillCount(skillId) {
-        return this.data.ownedSkills[skillId]?.count || 0;
-    },
-
-    getSkillLevel(skillId) {
-        return this.data.ownedSkills[skillId]?.level || 0;
-    },
-
-    addSkill(skillId) {
-        if (!this.data.ownedSkills[skillId]) {
-            this.data.ownedSkills[skillId] = { count: 0, level: 0 };
+    // 旧形式から新形式への移行
+    migrateSkillData(skillData) {
+        if (!skillData) return { levels: {} };
+        if (skillData.levels) return skillData; // 既に新形式
+        
+        // 旧形式: { count: n, level: m } → 新形式: { levels: { m: 1, 0: n-1 } }
+        const levels = {};
+        const count = skillData.count || 0;
+        const maxLevel = skillData.level || 0;
+        
+        if (count > 0) {
+            levels[maxLevel] = 1; // 最高レベル1個
+            if (count > 1) {
+                levels[0] = count - 1; // 残りはレベル0
+            }
         }
-        this.data.ownedSkills[skillId].count++;
+        return { levels };
+    },
+
+    hasSkill(skillId) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return false;
+        const migrated = this.migrateSkillData(data);
+        return Object.values(migrated.levels).reduce((sum, n) => sum + n, 0) > 0;
+    },
+
+    // 全レベル合計の個数
+    getSkillCount(skillId) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return 0;
+        const migrated = this.migrateSkillData(data);
+        return Object.values(migrated.levels).reduce((sum, n) => sum + n, 0);
+    },
+
+    // 最高レベルを取得
+    getSkillLevel(skillId) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return 0;
+        const migrated = this.migrateSkillData(data);
+        const levels = Object.keys(migrated.levels).map(Number).filter(l => migrated.levels[l] > 0);
+        return levels.length > 0 ? Math.max(...levels) : 0;
+    },
+
+    // レベル別の個数を取得
+    getSkillCountByLevel(skillId, level) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return 0;
+        const migrated = this.migrateSkillData(data);
+        return migrated.levels[level] || 0;
+    },
+
+    // レベル別の詳細を取得 { 0: 3, 1: 2, 2: 1 }
+    getSkillLevelDetails(skillId) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return {};
+        const migrated = this.migrateSkillData(data);
+        return migrated.levels;
+    },
+
+    // 新規スキル追加（レベル0で追加）
+    addSkill(skillId, level = 0) {
+        if (!this.data.ownedSkills[skillId]) {
+            this.data.ownedSkills[skillId] = { levels: {} };
+        }
+        // 旧形式を新形式に移行
+        if (!this.data.ownedSkills[skillId].levels) {
+            this.data.ownedSkills[skillId] = this.migrateSkillData(this.data.ownedSkills[skillId]);
+        }
+        this.data.ownedSkills[skillId].levels[level] = (this.data.ownedSkills[skillId].levels[level] || 0) + 1;
         this.save();
     },
 
-    removeSkill(skillId, count = 1) {
-        if (this.data.ownedSkills[skillId]) {
-            this.data.ownedSkills[skillId].count = Math.max(0, this.data.ownedSkills[skillId].count - count);
-            this.save();
+    // 特定レベルのスキルを削除
+    removeSkillByLevel(skillId, level, count = 1) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return;
+        
+        // 旧形式を新形式に移行
+        if (!data.levels) {
+            this.data.ownedSkills[skillId] = this.migrateSkillData(data);
         }
+        
+        const current = this.data.ownedSkills[skillId].levels[level] || 0;
+        this.data.ownedSkills[skillId].levels[level] = Math.max(0, current - count);
+        this.save();
     },
 
-    upgradeSkill(skillId) {
-        if (this.data.ownedSkills[skillId]) {
-            this.data.ownedSkills[skillId].level++;
-            this.save();
+    // 互換性用（レベル0から削除）
+    removeSkill(skillId, count = 1) {
+        this.removeSkillByLevel(skillId, 0, count);
+    },
+
+    // スキル強化（指定レベルを1つ減らし、次レベルを1つ増やす）
+    upgradeSkill(skillId, fromLevel = 0) {
+        const data = this.data.ownedSkills[skillId];
+        if (!data) return false;
+        
+        // 旧形式を新形式に移行
+        if (!data.levels) {
+            this.data.ownedSkills[skillId] = this.migrateSkillData(data);
         }
+        
+        const current = this.data.ownedSkills[skillId].levels[fromLevel] || 0;
+        if (current <= 0) return false;
+        
+        // 強化元を減らす
+        this.data.ownedSkills[skillId].levels[fromLevel]--;
+        // 強化後を増やす
+        const toLevel = fromLevel + 1;
+        this.data.ownedSkills[skillId].levels[toLevel] = (this.data.ownedSkills[skillId].levels[toLevel] || 0) + 1;
+        
+        this.save();
+        return true;
     },
 
     // ========================================

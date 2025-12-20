@@ -101,36 +101,54 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateSkillInventory() {
         const container = document.getElementById('skill-inventory');
-        const ownedSkills = GameData.getOwnedSkills();
         const equippedSkills = GameData.getEquippedSkills();
-        
-        // 現在の総コストと残りコストを計算
-        let currentTotalCost = 0;
-        equippedSkills.forEach(sid => {
-            if (sid && SKILLS[sid]) {
-                currentTotalCost += SKILLS[sid].cost;
-            }
-        });
-        const remainingCost = 20 - currentTotalCost;
         
         // 全スキルをIDリストで取得
         const allSkillIds = Object.keys(SKILLS);
         
-        // 所持スキルと未所持スキルを分離
-        const ownedIds = [];
+        // 所持スキル（レベル別に展開）と未所持スキルを分離
+        const ownedCards = [];  // { skillId, level, count }
         const notOwnedIds = [];
         
         allSkillIds.forEach(skillId => {
-            const ownedData = ownedSkills[skillId];
-            if (ownedData && ownedData.count > 0) {
-                ownedIds.push(skillId);
+            const levelDetails = GameData.getSkillLevelDetails(skillId);
+            const hasAny = Object.values(levelDetails).some(count => count > 0);
+            
+            if (hasAny) {
+                // レベル別にカードを生成（高レベル順）
+                const levels = Object.keys(levelDetails).map(Number).sort((a, b) => b - a);
+                levels.forEach(level => {
+                    const count = levelDetails[level];
+                    if (count > 0) {
+                        ownedCards.push({ skillId, level, count });
+                    }
+                });
             } else {
                 notOwnedIds.push(skillId);
             }
         });
         
-        // ソート関数
-        const sortFn = (aId, bId) => {
+        // ソート関数（所持カード用）
+        const sortOwnedFn = (a, b) => {
+            const skillA = SKILLS[a.skillId];
+            const skillB = SKILLS[b.skillId];
+            if (!skillA || !skillB) return 0;
+            
+            switch (currentSort) {
+                case 'rarity':
+                    return skillB.rarity - skillA.rarity || b.level - a.level || skillB.cost - skillA.cost;
+                case 'cost':
+                    return skillB.cost - skillA.cost || b.level - a.level;
+                case 'category':
+                    const catOrder = { attack: 0, defense: 1, effect: 2 };
+                    return (catOrder[skillA.category] - catOrder[skillB.category]) || b.level - a.level;
+                default:
+                    return 0;
+            }
+        };
+        
+        // ソート関数（未所持用）
+        const sortNotOwnedFn = (aId, bId) => {
             const a = SKILLS[aId];
             const b = SKILLS[bId];
             if (!a || !b) return 0;
@@ -144,70 +162,65 @@ document.addEventListener('DOMContentLoaded', () => {
                     const catOrder = { attack: 0, defense: 1, effect: 2 };
                     return (catOrder[a.category] - catOrder[b.category]) || (b.rarity - a.rarity);
                 default:
-                    return 0;  // デフォルトは定義順
+                    return 0;
             }
         };
         
-        // 各グループ内でソート
+        // ソート
         if (currentSort !== 'default') {
-            ownedIds.sort(sortFn);
-            notOwnedIds.sort(sortFn);
+            ownedCards.sort(sortOwnedFn);
+            notOwnedIds.sort(sortNotOwnedFn);
         }
-        
-        // 所持→未所持の順で結合
-        const orderedIds = [...ownedIds, ...notOwnedIds];
         
         container.innerHTML = '';
         
-        orderedIds.forEach(skillId => {
+        // 所持スキル（レベル別カード）
+        ownedCards.forEach(({ skillId, level, count }) => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
-            const ownedData = ownedSkills[skillId];
-            const isOwned = ownedData && ownedData.count > 0;
             const isEquipped = equippedSkills.includes(skillId);
-            const canEquip = isOwned && skill.cost <= remainingCost && !isEquipped && equippedSkills.filter(Boolean).length < 5;
+            const levelStars = '★'.repeat(level);
             
             const card = document.createElement('div');
+            card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             
-            if (isOwned) {
-                // 所持している場合：通常表示
-                card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
-                
-                if (isEquipped) {
-                    card.classList.add('equipped-indicator');
-                }
-                // この画面ではコストオーバー暗転しない（プリセット編集画面のみ）
-                
-                const level = ownedData.level || 0;
-                const levelStars = '★'.repeat(level);  // 取得した星だけ表示
-                
-                card.innerHTML = `
-                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
-                    <div class="frame-inner">
-                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
-                        <span class="skill-name">${skill.name}</span>
-                    </div>
-                    ${ownedData.count > 1 ? `<span class="skill-count">×${ownedData.count}</span>` : ''}
-                    ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
-                    ${isEquipped ? '<span class="equipped-badge">装備中</span>' : ''}
-                `;
-                
-                card.addEventListener('click', () => openSkillDetail(skillId));
-            } else {
-                // 未所持の場合：グレー表示（構造はそのまま）
-                card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity} not-owned`;
-                
-                card.innerHTML = `
-                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
-                    <div class="frame-inner">
-                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
-                        <span class="skill-name">${skill.name}</span>
-                    </div>
-                `;
-                
-                // 未所持でも詳細は見れる（ボタンは無効）
-                card.addEventListener('click', () => openSkillDetail(skillId, false));
+            if (isEquipped) {
+                card.classList.add('equipped-indicator');
+            }
+            
+            card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                    <span class="skill-name">${skill.name}</span>
+                </div>
+                ${count > 1 ? `<span class="skill-count">×${count}</span>` : ''}
+                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                ${isEquipped ? '<span class="equipped-badge">装備中</span>' : ''}
+            `;
+            
+            card.addEventListener('click', () => openSkillDetail(skillId, true, level));
+            container.appendChild(card);
+        });
+        
+        // 未所持スキル
+        notOwnedIds.forEach(skillId => {
+            const skill = SKILLS[skillId];
+            if (!skill) return;
+            
+            const card = document.createElement('div');
+            card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity} not-owned`;
+            
+            card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                    <span class="skill-name">${skill.name}</span>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => openSkillDetail(skillId, false));
             }
             
             card.dataset.skillId = skillId;
@@ -733,14 +746,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentDetailSkillId = null;
     
-    function openSkillDetail(skillId, forceNotOwned = false) {
+    let currentDetailSkillLevel = 0;
+    
+    function openSkillDetail(skillId, isOwned = true, level = null) {
         currentDetailSkillId = skillId;
         const skill = SKILLS[skillId];
         if (!skill) return;
         
-        // 実際の所持状態をGameDataから取得（バグ修正）
-        const ownedCount = GameData.getSkillCount(skillId);
-        const isOwned = !forceNotOwned && ownedCount > 0;
+        // レベルが指定されていない場合は最高レベルを取得
+        if (level === null) {
+            level = isOwned ? GameData.getSkillLevel(skillId) : 0;
+        }
+        currentDetailSkillLevel = level;
         
         const modal = document.getElementById('skill-detail-modal');
         
@@ -752,11 +769,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // フル版フレーム付きアイコン
+        const levelStars = '★'.repeat(level);
         document.getElementById('detail-skill-icon').innerHTML = `
             <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
                 <img src="${skill.icon}" alt="${skill.name}">
                 ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
             </div>
+            ${level > 0 ? `<span class="detail-level-badge">${levelStars}</span>` : ''}
         `;
         document.getElementById('detail-skill-name').textContent = skill.name;
         document.getElementById('detail-skill-rarity').textContent = '★'.repeat(skill.rarity);
@@ -772,7 +791,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // 強化レベル表示（ピンクの★）
-        const level = GameData.getSkillLevel(skillId);
         const levelStarsEl = document.getElementById('detail-skill-level');
         if (levelStarsEl) {
             levelStarsEl.innerHTML = '';
@@ -959,12 +977,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillIcons = skills.filter(Boolean).map(sid => {
                 const skill = SKILLS[sid];
                 if (!skill) return '';
+                const level = GameData.getSkillLevel(sid);
+                const levelStars = '★'.repeat(level);
                 return `
-                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:40px;height:44px;">
+                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:40px;height:44px;position:relative;">
                         ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                         <div class="frame-inner">
                             <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:24px;height:24px;">
                         </div>
+                        ${level > 0 ? `<span class="skill-level-badge" style="font-size:0.5rem;">${levelStars}</span>` : ''}
                     </div>
                 `;
             }).join('');
@@ -1023,13 +1044,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (skillId && SKILLS[skillId]) {
                 const skill = SKILLS[skillId];
+                const level = GameData.getSkillLevel(skillId);
+                const levelStars = '★'.repeat(level);
                 slot.classList.add('filled');
                 slot.innerHTML = `
-                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:50px;height:55px;">
+                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:50px;height:55px;position:relative;">
                         ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                         <div class="frame-inner">
                             <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:30px;height:30px;">
                         </div>
+                        ${level > 0 ? `<span class="skill-level-badge" style="font-size:0.55rem;">${levelStars}</span>` : ''}
                     </div>
                 `;
                 slot.addEventListener('click', () => removeFromPreset(i));
@@ -1050,24 +1074,41 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updatePresetSkillInventory(currentCost) {
         const container = document.getElementById('preset-skill-inventory');
-        const ownedSkills = GameData.getOwnedSkills();
         const remainingCost = 20 - currentCost;
         
-        // 所持スキルと未所持を分離
+        // 所持スキル（レベル別に展開）
         const allSkillIds = Object.keys(SKILLS);
-        const ownedIds = allSkillIds.filter(id => ownedSkills[id]?.count > 0);
+        const ownedCards = [];
         
-        // ソート（レア順）
-        ownedIds.sort((a, b) => SKILLS[b].rarity - SKILLS[a].rarity || SKILLS[b].cost - SKILLS[a].cost);
+        allSkillIds.forEach(skillId => {
+            const levelDetails = GameData.getSkillLevelDetails(skillId);
+            const levels = Object.keys(levelDetails).map(Number).sort((a, b) => b - a);
+            
+            levels.forEach(level => {
+                const count = levelDetails[level];
+                if (count > 0) {
+                    ownedCards.push({ skillId, level, count });
+                }
+            });
+        });
+        
+        // ソート（レア順、レベル順）
+        ownedCards.sort((a, b) => {
+            const skillA = SKILLS[a.skillId];
+            const skillB = SKILLS[b.skillId];
+            return skillB.rarity - skillA.rarity || b.level - a.level || skillB.cost - skillA.cost;
+        });
         
         container.innerHTML = '';
         
-        ownedIds.forEach(skillId => {
+        ownedCards.forEach(({ skillId, level, count }) => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
             const isEquippedInEdit = editingSkills.includes(skillId);
             const canEquip = skill.cost <= remainingCost && !isEquippedInEdit && editingSkills.filter(Boolean).length < 5;
+            
+            const levelStars = '★'.repeat(level);
             
             const card = document.createElement('div');
             card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
@@ -1079,16 +1120,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('disabled');
             }
             
-            const ownedData = ownedSkills[skillId];
-            const level = ownedData?.level || 0;
-            const levelStars = '★'.repeat(level);
-            
             card.innerHTML = `
                 ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                 <div class="frame-inner">
                     <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
                     <span class="skill-name">${skill.name}</span>
                 </div>
+                ${count > 1 ? `<span class="skill-count">×${count}</span>` : ''}
                 ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
                 ${isEquippedInEdit ? '<span class="equipped-badge">選択中</span>' : ''}
             `;
@@ -1146,10 +1184,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================
     
     let upgradeTargetSkillId = null;
-    let upgradeMaterials = [];
+    let upgradeTargetLevel = 0;
+    let upgradeMaterials = [];  // { skillId, level }[]
     
-    function openUpgradeScreen(presetSkillId = null) {
-        upgradeTargetSkillId = presetSkillId;
+    function openUpgradeScreen(presetSkillId = null, presetLevel = null) {
+        if (presetSkillId) {
+            upgradeTargetSkillId = presetSkillId;
+            upgradeTargetLevel = presetLevel !== null ? presetLevel : GameData.getSkillLevel(presetSkillId);
+        } else {
+            upgradeTargetSkillId = null;
+            upgradeTargetLevel = 0;
+        }
         upgradeMaterials = [];
         
         const screen = document.getElementById('screen-skill-upgrade');
@@ -1167,7 +1212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (upgradeTargetSkillId && SKILLS[upgradeTargetSkillId]) {
             const skill = SKILLS[upgradeTargetSkillId];
-            const level = GameData.getSkillLevel(upgradeTargetSkillId);
+            const level = upgradeTargetLevel;
             const levelStars = '★'.repeat(level);
             
             beforeSlot.innerHTML = `
@@ -1197,30 +1242,54 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             afterSlot.classList.add('filled');
             
-            // 素材スロット
+            // 素材スロット（同スキル + 同レア）
             const req = getUpgradeRequirement(level, skill.rarity);
             materialsRow.innerHTML = '';
             
+            // 同スキル素材スロット
             for (let i = 0; i < req.sameSkill; i++) {
                 const matSlot = document.createElement('div');
-                matSlot.className = 'material-slot';
+                matSlot.className = 'material-slot same-skill';
                 
-                if (upgradeMaterials[i]) {
-                    const matSkill = SKILLS[upgradeMaterials[i]];
+                const mat = upgradeMaterials[i];
+                if (mat && mat.skillId === upgradeTargetSkillId) {
+                    const matSkill = SKILLS[mat.skillId];
                     if (matSkill) {
                         matSlot.classList.add('filled');
                         matSlot.innerHTML = `<img src="${matSkill.icon}" style="width:30px;height:30px;">`;
                         matSlot.addEventListener('click', () => removeMaterial(i));
                     }
                 } else {
-                    matSlot.textContent = '素材';
+                    matSlot.textContent = '同';
+                }
+                
+                materialsRow.appendChild(matSlot);
+            }
+            
+            // 同レア素材スロット（★2→★3以降）
+            for (let i = 0; i < req.sameRarity; i++) {
+                const matSlot = document.createElement('div');
+                matSlot.className = 'material-slot same-rarity';
+                
+                const matIndex = req.sameSkill + i;
+                const mat = upgradeMaterials[matIndex];
+                if (mat) {
+                    const matSkill = SKILLS[mat.skillId];
+                    if (matSkill) {
+                        matSlot.classList.add('filled');
+                        matSlot.innerHTML = `<img src="${matSkill.icon}" style="width:30px;height:30px;">`;
+                        matSlot.addEventListener('click', () => removeMaterial(matIndex));
+                    }
+                } else {
+                    matSlot.textContent = '★' + skill.rarity;
                 }
                 
                 materialsRow.appendChild(matSlot);
             }
             
             // 強化ボタン有効化チェック
-            confirmBtn.disabled = upgradeMaterials.filter(Boolean).length < req.sameSkill;
+            const requiredTotal = req.sameSkill + req.sameRarity;
+            confirmBtn.disabled = upgradeMaterials.filter(Boolean).length < requiredTotal;
             
         } else {
             beforeSlot.innerHTML = '<span class="slot-label">選択スキル</span>';
@@ -1237,30 +1306,43 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateUpgradeSkillInventory() {
         const container = document.getElementById('upgrade-skill-inventory');
-        const ownedSkills = GameData.getOwnedSkills();
         
-        // 所持スキルのみ
+        // 所持スキル（レベル別に展開）
         const allSkillIds = Object.keys(SKILLS);
-        const ownedIds = allSkillIds.filter(id => ownedSkills[id]?.count > 0);
+        const ownedCards = [];
         
-        // ソート（レア順）
-        ownedIds.sort((a, b) => SKILLS[b].rarity - SKILLS[a].rarity || SKILLS[b].cost - SKILLS[a].cost);
+        allSkillIds.forEach(skillId => {
+            const levelDetails = GameData.getSkillLevelDetails(skillId);
+            const levels = Object.keys(levelDetails).map(Number).sort((a, b) => b - a);
+            
+            levels.forEach(level => {
+                const count = levelDetails[level];
+                if (count > 0) {
+                    ownedCards.push({ skillId, level, count });
+                }
+            });
+        });
+        
+        // ソート（レア順、レベル順）
+        ownedCards.sort((a, b) => {
+            const skillA = SKILLS[a.skillId];
+            const skillB = SKILLS[b.skillId];
+            return skillB.rarity - skillA.rarity || b.level - a.level;
+        });
         
         container.innerHTML = '';
         
-        ownedIds.forEach(skillId => {
+        ownedCards.forEach(({ skillId, level, count }) => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
-            const ownedData = ownedSkills[skillId];
-            const level = ownedData?.level || 0;
-            const count = ownedData?.count || 0;
             const levelStars = '★'.repeat(level);
+            const isTarget = skillId === upgradeTargetSkillId && level === upgradeTargetLevel;
             
             const card = document.createElement('div');
             card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             
-            if (skillId === upgradeTargetSkillId) {
+            if (isTarget) {
                 card.classList.add('equipped-indicator');
             }
             
@@ -1276,21 +1358,38 @@ document.addEventListener('DOMContentLoaded', () => {
             
             card.addEventListener('click', () => {
                 if (!upgradeTargetSkillId) {
-                    // 強化対象として選択
+                    // 強化対象として選択（レベル5未満のみ）
                     if (level < 5) {
                         upgradeTargetSkillId = skillId;
+                        upgradeTargetLevel = level;
                         upgradeMaterials = [];
                         updateUpgradeUI();
                     }
-                } else if (skillId === upgradeTargetSkillId) {
-                    // 素材として追加（同スキル）
-                    const req = getUpgradeRequirement(level, skill.rarity);
-                    const usedCount = upgradeMaterials.filter(m => m === skillId).length;
-                    const available = count - 1 - usedCount; // 本体1枚を除く
+                } else {
+                    // 素材として追加
+                    const targetSkill = SKILLS[upgradeTargetSkillId];
+                    const req = getUpgradeRequirement(upgradeTargetLevel, targetSkill.rarity);
                     
-                    if (available > 0 && upgradeMaterials.length < req.sameSkill) {
-                        upgradeMaterials.push(skillId);
-                        updateUpgradeUI();
+                    if (skillId === upgradeTargetSkillId) {
+                        // 同スキル素材
+                        const usedSameSkill = upgradeMaterials.filter(m => m && m.skillId === skillId).length;
+                        const isTargetCard = (level === upgradeTargetLevel);
+                        const available = isTargetCard ? count - 1 : count; // 対象カード自身を除く
+                        const usedThisLevel = upgradeMaterials.filter(m => m && m.skillId === skillId && m.level === level).length;
+                        
+                        if (usedThisLevel < available && usedSameSkill < req.sameSkill) {
+                            upgradeMaterials.push({ skillId, level });
+                            updateUpgradeUI();
+                        }
+                    } else if (skill.rarity === targetSkill.rarity && req.sameRarity > 0) {
+                        // 同レア素材
+                        const usedSameRarity = upgradeMaterials.filter(m => m && m.skillId !== upgradeTargetSkillId).length;
+                        const usedThisCard = upgradeMaterials.filter(m => m && m.skillId === skillId && m.level === level).length;
+                        
+                        if (usedThisCard < count && usedSameRarity < req.sameRarity) {
+                            upgradeMaterials.push({ skillId, level });
+                            updateUpgradeUI();
+                        }
                     }
                 }
             });
@@ -1308,24 +1407,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!upgradeTargetSkillId) return;
         
         const skill = SKILLS[upgradeTargetSkillId];
-        const level = GameData.getSkillLevel(upgradeTargetSkillId);
-        const req = getUpgradeRequirement(level, skill.rarity);
+        const req = getUpgradeRequirement(upgradeTargetLevel, skill.rarity);
+        const requiredTotal = req.sameSkill + req.sameRarity;
         
-        if (upgradeMaterials.length < req.sameSkill) {
+        if (upgradeMaterials.filter(Boolean).length < requiredTotal) {
             alert('素材が足りません');
             return;
         }
         
-        // 素材消費
-        upgradeMaterials.forEach(matId => {
-            GameData.removeSkill(matId, 1);
+        // 素材消費（レベル別）
+        upgradeMaterials.forEach(mat => {
+            if (mat) {
+                GameData.removeSkillByLevel(mat.skillId, mat.level, 1);
+            }
         });
         
-        // 強化
-        GameData.upgradeSkill(upgradeTargetSkillId);
+        // 強化（指定レベルから次レベルへ）
+        GameData.upgradeSkill(upgradeTargetSkillId, upgradeTargetLevel);
         
         // リセット
         upgradeTargetSkillId = null;
+        upgradeTargetLevel = 0;
         upgradeMaterials = [];
         updateUpgradeUI();
         updateSkillInventory();
@@ -1336,6 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeUpgradeScreen() {
         document.getElementById('screen-skill-upgrade').classList.add('hidden');
         upgradeTargetSkillId = null;
+        upgradeTargetLevel = 0;
         upgradeMaterials = [];
     }
     
