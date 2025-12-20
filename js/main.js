@@ -1038,7 +1038,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const matSkill = SKILLS[mat.skillId];
                     if (matSkill) {
                         matSlot.classList.add('filled');
-                        // プリセットと同じようにスキルカードを表示
                         matSlot.innerHTML = `
                             <div class="skill-frame-card cat-${matSkill.category} rarity-${matSkill.rarity}">
                                 ${matSkill.rarity === 5 ? '<div class="particles"></div>' : ''}
@@ -1050,7 +1049,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         matSlot.addEventListener('click', () => removeMaterialByData(mat));
                     }
                 } else {
-                    matSlot.textContent = '同';
+                    // 空の時：対象スキルをグレーアウトで表示
+                    matSlot.innerHTML = `
+                        <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity} material-preview">
+                            <div class="frame-inner">
+                                <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                            </div>
+                        </div>
+                    `;
                 }
                 
                 materialsRow.appendChild(matSlot);
@@ -1066,7 +1072,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const matSkill = SKILLS[mat.skillId];
                     if (matSkill) {
                         matSlot.classList.add('filled');
-                        // プリセットと同じようにスキルカードを表示
                         matSlot.innerHTML = `
                             <div class="skill-frame-card cat-${matSkill.category} rarity-${matSkill.rarity}">
                                 ${matSkill.rarity === 5 ? '<div class="particles"></div>' : ''}
@@ -1078,7 +1083,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         matSlot.addEventListener('click', () => removeMaterialByData(mat));
                     }
                 } else {
-                    matSlot.textContent = '★' + skill.rarity;
+                    // 空の時：「★N」のラベルを表示
+                    matSlot.innerHTML = `<span class="material-hint">★${skill.rarity}</span>`;
                 }
                 
                 materialsRow.appendChild(matSlot);
@@ -1137,6 +1143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         container.innerHTML = '';
         
+        // 強化対象スキルの情報
+        const targetSkill = upgradeTargetSkillId ? SKILLS[upgradeTargetSkillId] : null;
+        const req = targetSkill ? getUpgradeRequirement(upgradeTargetLevel, targetSkill.rarity) : null;
+        const sameSkillMats = upgradeMaterials.filter(m => m.type === 'same-skill');
+        const sameRarityMats = upgradeMaterials.filter(m => m.type === 'same-rarity');
+        
         ownedCards.forEach(({ skillId, level, count }) => {
             const skill = SKILLS[skillId];
             if (!skill) return;
@@ -1151,6 +1163,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // 残り枚数
             const remainingCount = count - usedAsMaterial - usedAsTarget;
             
+            // 素材として選択可能かどうか判定
+            let canUseMaterial = false;
+            if (upgradeTargetSkillId && !isTarget && remainingCount > 0) {
+                // 同スキル素材として使えるか
+                if (skillId === upgradeTargetSkillId && sameSkillMats.length < req.sameSkill) {
+                    canUseMaterial = true;
+                }
+                // 同レア素材として使えるか
+                if (skillId !== upgradeTargetSkillId && skill.rarity === targetSkill.rarity && sameRarityMats.length < req.sameRarity) {
+                    canUseMaterial = true;
+                }
+            }
+            
             const card = document.createElement('div');
             card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
             
@@ -1158,7 +1183,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('equipped-indicator');
             }
             
-            // 使い切った場合は暗転
+            // 強化対象選択済みで、素材として使えない場合は暗転
+            if (upgradeTargetSkillId && !isTarget && !canUseMaterial) {
+                card.classList.add('disabled');
+            }
+            
+            // 使い切った場合も暗転
             if (remainingCount <= 0 && !isTarget) {
                 card.classList.add('disabled');
             }
@@ -1182,22 +1212,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         upgradeMaterials = [];
                         updateUpgradeUI();
                     }
-                } else if (remainingCount > 0) {
+                } else if (canUseMaterial) {
                     // 素材として追加
-                    const targetSkill = SKILLS[upgradeTargetSkillId];
-                    const req = getUpgradeRequirement(upgradeTargetLevel, targetSkill.rarity);
-                    
-                    // 同スキル素材
-                    const sameSkillMats = upgradeMaterials.filter(m => m.type === 'same-skill');
-                    // 同レア素材
-                    const sameRarityMats = upgradeMaterials.filter(m => m.type === 'same-rarity');
-                    
                     if (skillId === upgradeTargetSkillId && sameSkillMats.length < req.sameSkill) {
-                        // 同スキル素材として追加
                         upgradeMaterials.push({ skillId, level, type: 'same-skill' });
                         updateUpgradeUI();
                     } else if (skillId !== upgradeTargetSkillId && skill.rarity === targetSkill.rarity && sameRarityMats.length < req.sameRarity) {
-                        // 同レア素材として追加
                         upgradeMaterials.push({ skillId, level, type: 'same-rarity' });
                         updateUpgradeUI();
                     }

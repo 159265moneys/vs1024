@@ -1224,6 +1224,19 @@ body {
     background: transparent !important;
 }
 
+/* 素材プレビュー（空スロット時のグレーアウト表示） */
+.material-slot .skill-frame-card.material-preview {
+    filter: grayscale(100%) opacity(0.4);
+    pointer-events: none;
+}
+
+/* 同レア素材のヒントテキスト */
+.material-slot .material-hint {
+    font-size: 0.75rem;
+    color: var(--accent-purple);
+    font-weight: 700;
+}
+
 /* 素材スロット内のスキルカード（プリセットと同じスタイル） */
 .material-slot .skill-frame-card {
     width: 100% !important;
