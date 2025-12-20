@@ -1767,16 +1767,27 @@ body {
     transition: all 0.3s ease;
 }
 
-/* 🔵 効果系 - 角丸八角形（神秘） - 丸・四角と同じ構造 */
+/* 🔵 効果系 - 角丸八角形（神秘） - 2層構造で枠線表現 */
+/* 外側：枠線色の八角形 */
 .skill-frame-card.cat-effect::before {
+    content: '';
+    position: absolute;
+    width: 88px;
+    height: 92px;
+    clip-path: var(--sk-octagon);
+    background: var(--frame-color);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+/* 内側：背景色の八角形（少し小さい） */
+.skill-frame-card.cat-effect::after {
     content: '';
     position: absolute;
     width: 84px;
     height: 88px;
     clip-path: var(--sk-octagon);
     background: var(--rarity-bg, #999);
-    border: 2px solid var(--frame-color);
-    z-index: 1;
+    z-index: 2;
     transition: all 0.3s ease;
 }
 
@@ -1793,8 +1804,8 @@ body {
 .skill-frame-card.rarity-1.cat-defense::before {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
-/* 効果系（丸・四角と同じく::beforeが背景） */
-.skill-frame-card.rarity-1.cat-effect::before {
+/* 効果系（::afterが背景） */
+.skill-frame-card.rarity-1.cat-effect::after {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
 
@@ -1815,7 +1826,7 @@ body {
 .skill-frame-card.rarity-2.cat-defense::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
-.skill-frame-card.rarity-2.cat-effect::before {
+.skill-frame-card.rarity-2.cat-effect::after {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
 
@@ -1837,7 +1848,7 @@ body {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
-.skill-frame-card.rarity-3.cat-effect::before {
+.skill-frame-card.rarity-3.cat-effect::after {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
@@ -1883,7 +1894,7 @@ body {
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
 /* 効果系の背景（丸・四角と同じく::before） */
-.skill-frame-card.rarity-4.cat-effect::before {
+.skill-frame-card.rarity-4.cat-effect::after {
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
@@ -1989,7 +2000,7 @@ body {
 }
 
 /* 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
-.skill-frame-card.rarity-5.cat-effect::before {
+.skill-frame-card.rarity-5.cat-effect::after {
     background: conic-gradient(
         from var(--r5-angle),
         #2d0000 0deg,
@@ -3597,7 +3608,7 @@ body {
 }
 
 /* ★5 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
-.skill-frame-full.rarity-5.cat-effect::before {
+.skill-frame-full.rarity-5.cat-effect::after {
     background: conic-gradient(
         from var(--r5-angle),
         #2d0000 0deg,
