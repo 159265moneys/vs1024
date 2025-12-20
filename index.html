@@ -135,7 +135,7 @@
             <!-- ホーム画面 -->
             <div id="tab-home" class="tab-content active">
                 <div class="tab-inner home-tab">
-                    <!-- 上部: プレイヤー情報 -->
+                    <!-- 上部: プレイヤー情報（横幅いっぱい） -->
                     <div class="home-header">
                         <div class="player-info">
                             <div class="player-avatar">
@@ -149,16 +149,25 @@
                                     <span class="rank-text">ビギナー</span>
                                 </div>
                             </div>
+                            <div class="player-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="home-win-count">0</span>
+                                    <span class="stat-label">勝利</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="home-highest-stage">-</span>
+                                    <span class="stat-label">最高</span>
+                                </div>
+                            </div>
                         </div>
-                        <!-- 右上: ショップボタン -->
-                        <button class="home-icon-btn shop-btn" id="btn-shop">
-                            <span class="icon-emoji">🛒</span>
-                            <span class="icon-label">ショップ</span>
-                        </button>
                     </div>
                     
-                    <!-- 左サイド: メニューボタン群 -->
+                    <!-- 右サイド: メニューボタン群 -->
                     <div class="home-side-menu">
+                        <button class="home-menu-btn" id="btn-shop">
+                            <span class="menu-icon">🛒</span>
+                            <span class="menu-label">ショップ</span>
+                        </button>
                         <button class="home-menu-btn" id="btn-mail">
                             <span class="menu-icon">📬</span>
                             <span class="menu-label">メール</span>
