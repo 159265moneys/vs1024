@@ -77,6 +77,68 @@ body {
     touch-action: none;
 }
 
+/* ラバランプ風背景 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: 
+        radial-gradient(ellipse 80% 80% at 20% 30%, rgba(255, 100, 100, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 70% at 80% 20%, rgba(255, 200, 50, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 90% at 70% 80%, rgba(100, 200, 100, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 60% at 10% 70%, rgba(100, 150, 255, 0.15) 0%, transparent 50%);
+    animation: lavaLamp 20s ease-in-out infinite;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: 
+        radial-gradient(ellipse 50% 60% at 60% 50%, rgba(255, 80, 80, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 50% at 30% 60%, rgba(255, 220, 80, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 80% at 40% 20%, rgba(80, 180, 80, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 70% at 85% 50%, rgba(80, 130, 255, 0.12) 0%, transparent 50%);
+    animation: lavaLamp2 25s ease-in-out infinite reverse;
+}
+
+@keyframes lavaLamp {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(5%, 10%) scale(1.1);
+    }
+    50% {
+        transform: translate(-5%, 5%) scale(0.95);
+    }
+    75% {
+        transform: translate(3%, -8%) scale(1.05);
+    }
+}
+
+@keyframes lavaLamp2 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    33% {
+        transform: translate(-8%, 5%) scale(1.08) rotate(2deg);
+    }
+    66% {
+        transform: translate(6%, -6%) scale(0.92) rotate(-2deg);
+    }
+}
+
 /* ========================================
    アプリコンテナ
    ======================================== */
