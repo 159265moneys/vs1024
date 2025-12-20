@@ -1534,9 +1534,32 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => switchTab(btn.dataset.tab));
         });
         
-        // ホーム - VSボタン
-        document.getElementById('btn-vs-battle').addEventListener('click', () => {
+        // ホーム - CPU対戦ボタン
+        document.getElementById('btn-cpu-battle').addEventListener('click', () => {
             switchTab('stage');
+        });
+        
+        // ホーム - PvP対戦ボタン（Coming Soon）
+        document.getElementById('btn-pvp-battle').addEventListener('click', () => {
+            // 準備中なので何もしない
+            console.log('PvP対戦は準備中です');
+        });
+        
+        // ホーム - 各種メニューボタン（機能なし、ログのみ）
+        document.getElementById('btn-shop')?.addEventListener('click', () => {
+            console.log('ショップは準備中です');
+        });
+        document.getElementById('btn-mail')?.addEventListener('click', () => {
+            console.log('メールは準備中です');
+        });
+        document.getElementById('btn-login-bonus')?.addEventListener('click', () => {
+            console.log('ログインボーナスは準備中です');
+        });
+        document.getElementById('btn-daily-mission')?.addEventListener('click', () => {
+            console.log('デイリーミッションは準備中です');
+        });
+        document.getElementById('btn-achievement')?.addEventListener('click', () => {
+            console.log('実績は準備中です');
         });
         
         // ステージ選択（プリセット選択画面を表示）

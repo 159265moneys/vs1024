@@ -135,36 +135,72 @@
             <!-- ホーム画面 -->
             <div id="tab-home" class="tab-content active">
                 <div class="tab-inner home-tab">
-                    <h1 class="game-title">
-                        <span class="title-vs">VS</span>
-                        <span class="title-1024">1024</span>
-                    </h1>
-                    
-                    <button id="btn-vs-battle" class="vs-button">
-                        <span class="vs-text">BATTLE</span>
-                        <span class="vs-sub">CPU対戦</span>
-                    </button>
-                    
-                    <div class="quick-info">
-                        <div class="info-card">
-                            <span class="info-icon">🏆</span>
-                            <span class="info-label">最高ステージ</span>
-                            <span class="info-value" id="highest-stage">-</span>
+                    <!-- 上部: プレイヤー情報 -->
+                    <div class="home-header">
+                        <div class="player-info">
+                            <div class="player-avatar">
+                                <img src="assets/skills/skill_01.png" alt="avatar" class="avatar-img">
+                                <span class="player-level">Lv.1</span>
+                            </div>
+                            <div class="player-details">
+                                <span class="player-name">プレイヤー</span>
+                                <div class="player-rank">
+                                    <span class="rank-icon">🏆</span>
+                                    <span class="rank-text">ビギナー</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-card">
-                            <span class="info-icon">⚔️</span>
-                            <span class="info-label">総ダメージ</span>
-                            <span class="info-value" id="total-damage">0</span>
-                        </div>
+                        <!-- 右上: ショップボタン -->
+                        <button class="home-icon-btn shop-btn" id="btn-shop">
+                            <span class="icon-emoji">🛒</span>
+                            <span class="icon-label">ショップ</span>
+                        </button>
                     </div>
                     
-                    <div class="rules-preview">
-                        <h3>基本ルール</h3>
-                        <ul>
-                            <li><span class="badge b128">128</span> 妨害×1</li>
-                            <li><span class="badge b512">512</span> 1ダメ+妨害×3</li>
-                            <li><span class="badge b1024">1024</span> 4ダメージ</li>
-                        </ul>
+                    <!-- 左サイド: メニューボタン群 -->
+                    <div class="home-side-menu">
+                        <button class="home-menu-btn" id="btn-mail">
+                            <span class="menu-icon">📬</span>
+                            <span class="menu-label">メール</span>
+                            <span class="menu-badge">3</span>
+                        </button>
+                        <button class="home-menu-btn" id="btn-login-bonus">
+                            <span class="menu-icon">🎁</span>
+                            <span class="menu-label">ログボ</span>
+                            <span class="menu-badge new">!</span>
+                        </button>
+                        <button class="home-menu-btn" id="btn-daily-mission">
+                            <span class="menu-icon">📋</span>
+                            <span class="menu-label">デイリー</span>
+                            <span class="menu-badge">2/3</span>
+                        </button>
+                        <button class="home-menu-btn" id="btn-achievement">
+                            <span class="menu-icon">🏅</span>
+                            <span class="menu-label">実績</span>
+                        </button>
+                    </div>
+                    
+                    <!-- 中央: ゲームタイトルロゴ -->
+                    <div class="home-center">
+                        <h1 class="game-title">
+                            <span class="title-vs">VS</span>
+                            <span class="title-1024">1024</span>
+                        </h1>
+                    </div>
+                    
+                    <!-- 下部: バトルボタン2つ -->
+                    <div class="home-battle-area">
+                        <button class="battle-main-btn cpu-battle" id="btn-cpu-battle">
+                            <span class="battle-icon">🤖</span>
+                            <span class="battle-title">CPU対戦</span>
+                            <span class="battle-sub">ステージを選んで戦う</span>
+                        </button>
+                        <button class="battle-main-btn pvp-battle disabled" id="btn-pvp-battle">
+                            <span class="battle-icon">👥</span>
+                            <span class="battle-title">PvP対戦</span>
+                            <span class="battle-sub">COMING SOON</span>
+                            <span class="coming-soon-ribbon">準備中</span>
+                        </button>
                     </div>
                 </div>
             </div>

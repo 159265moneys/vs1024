@@ -326,13 +326,185 @@ body::after {
 /* ========================================
    ホームタブ
    ======================================== */
+/* ========================================
+   ホーム画面（スマホゲー風）
+   ======================================== */
 .home-tab {
     display: flex;
     flex-direction: column;
+    height: calc(100% - var(--tab-height));
+    padding: 15px;
+    position: relative;
+}
+
+/* 上部: プレイヤー情報 */
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 15px;
+    border-radius: 50px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.player-avatar {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-cyan);
+}
+
+.player-level {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.player-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.player-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.player-rank {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.rank-icon {
+    font-size: 0.8rem;
+}
+
+/* 右上: ショップボタン */
+.home-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.home-icon-btn:active {
+    transform: scale(0.95);
+}
+
+.icon-emoji {
+    font-size: 1.5rem;
+}
+
+.icon-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* 左サイド: メニューボタン群 */
+.home-side-menu {
+    position: absolute;
+    left: 10px;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.home-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.home-menu-btn:active {
+    transform: scale(0.95);
+}
+
+.menu-icon {
+    font-size: 1.2rem;
+}
+
+.menu-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.menu-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent-red);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.menu-badge.new {
+    background: var(--accent-yellow);
+    color: #333;
+    animation: badgePulse 1s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* 中央: ゲームタイトル */
+.home-center {
+    flex: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100% - var(--tab-height));
-    gap: 25px;
 }
 
 .game-title {
@@ -341,131 +513,104 @@ body::after {
 
 .title-vs {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 900;
     color: var(--accent-yellow);
     display: block;
     letter-spacing: 0.3em;
+    text-shadow: 0 2px 10px rgba(245, 166, 35, 0.3);
 }
 
 .title-1024 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-weight: 900;
     background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     display: block;
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: titleGlow 2s ease-in-out infinite alternate;
 }
 
-@keyframes glow {
-    from { filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5)); }
-    to { filter: drop-shadow(0 0 20px rgba(255, 0, 170, 0.5)); }
+@keyframes titleGlow {
+    from { filter: drop-shadow(0 0 10px rgba(0, 149, 246, 0.5)); }
+    to { filter: drop-shadow(0 0 20px rgba(233, 30, 140, 0.5)); }
 }
 
-.vs-button {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
-    border: none;
-    cursor: pointer;
+/* 下部: バトルボタン */
+.home-battle-area {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    padding: 10px 0 20px;
+}
+
+.battle-main-btn {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    box-shadow: 0 0 40px rgba(0, 245, 255, 0.4), 0 0 80px rgba(255, 0, 170, 0.2);
-    transition: all 0.3s ease;
-    animation: vsButtonPulse 2s ease infinite;
+    padding: 20px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-@keyframes vsButtonPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 245, 255, 0.4); }
-    50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 245, 255, 0.6), 0 0 100px rgba(255, 0, 170, 0.3); }
+.battle-main-btn.cpu-battle {
+    background: linear-gradient(135deg, #00c6fb, #005bea);
+    box-shadow: 0 4px 20px rgba(0, 91, 234, 0.4);
 }
 
-.vs-button:active {
-    transform: scale(0.95) !important;
+.battle-main-btn.pvp-battle {
+    background: linear-gradient(135deg, #f857a6, #ff5858);
+    box-shadow: 0 4px 20px rgba(255, 88, 88, 0.4);
 }
 
-.vs-text {
-    font-family: 'Orbitron', sans-serif;
+.battle-main-btn.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.battle-main-btn:not(.disabled):active {
+    transform: scale(0.97);
+}
+
+.battle-icon {
     font-size: 2rem;
-    font-weight: 900;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.vs-sub {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.quick-info {
-    display: flex;
-    gap: 15px;
-}
-
-.info-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 12px 20px;
-    background: var(--bg-card);
-    border-radius: 12px;
-    min-width: 100px;
-}
-
-.info-icon {
-    font-size: 1.2rem;
-}
-
-.info-label {
-    font-size: 0.65rem;
-    color: var(--text-secondary);
-}
-
-.info-value {
+.battle-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--accent-cyan);
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.rules-preview {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 15px 20px;
-    width: 100%;
-    max-width: 300px;
-}
-
-.rules-preview h3 {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.rules-preview ul {
-    list-style: none;
-    display: flex;
-    justify-content: space-around;
-}
-
-.rules-preview li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
+.battle-sub {
     font-size: 0.7rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.85);
 }
 
+.coming-soon-ribbon {
+    position: absolute;
+    top: 10px;
+    right: -25px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 3px 30px;
+    transform: rotate(45deg);
+}
+
+/* 旧ホーム画面の互換用（使わないけど残す） */
 .badge {
     display: inline-flex;
     align-items: center;
