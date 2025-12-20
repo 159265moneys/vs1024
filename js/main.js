@@ -985,11 +985,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const levelStars = '★'.repeat(level);
             
             beforeSlot.innerHTML = `
-                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:70px;height:80px;">
+                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}">
                     ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                     <div class="frame-inner">
-                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">
-                        <span class="skill-name" style="font-size:0.6rem;">${skill.name}</span>
+                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                        <span class="skill-name">${skill.name}</span>
                     </div>
                     ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
                 </div>
@@ -1000,11 +1000,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const nextLevel = level + 1;
             const nextLevelStars = '★'.repeat(nextLevel);
             afterSlot.innerHTML = `
-                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:70px;height:80px;">
+                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}">
                     ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                     <div class="frame-inner">
-                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">
-                        <span class="skill-name" style="font-size:0.6rem;">${skill.name}</span>
+                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                        <span class="skill-name">${skill.name}</span>
                     </div>
                     <span class="skill-level-badge">${nextLevelStars}</span>
                 </div>
