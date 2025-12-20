@@ -1545,7 +1545,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-back-from-preset-select').addEventListener('click', closePresetSelectScreen);
         
         // プリセット編集画面
-        document.getElementById('btn-back-from-preset-edit').addEventListener('click', closePresetEditScreen);
+        document.getElementById('btn-back-from-preset-edit').addEventListener('click', () => {
+            closePresetEditScreen();
+            openPresetSelectScreen(); // プリセット選択画面に戻る
+        });
         document.getElementById('btn-save-preset').addEventListener('click', saveCurrentPreset);
         
         // スキル強化画面
