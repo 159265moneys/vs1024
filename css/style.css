@@ -1767,26 +1767,17 @@ body {
     transition: all 0.3s ease;
 }
 
-/* 🔵 効果系 - 角丸八角形（神秘） */
+/* 🔵 効果系 - 角丸八角形（神秘） - 丸・四角と同じ構造 */
 .skill-frame-card.cat-effect::before {
-    content: '';
-    position: absolute;
-    width: 88px;
-    height: 92px;
-    background: var(--frame-color);
-    clip-path: var(--sk-octagon);
-    z-index: 1;
-    transition: all 0.3s ease;
-}
-
-.skill-frame-card.cat-effect::after {
     content: '';
     position: absolute;
     width: 84px;
     height: 88px;
-    background: var(--rarity-bg, #999);
     clip-path: var(--sk-octagon);
-    z-index: 2;
+    background: var(--rarity-bg, #999);
+    border: 2px solid var(--frame-color);
+    z-index: 1;
+    transition: all 0.3s ease;
 }
 
 /* ========================================
@@ -1802,8 +1793,8 @@ body {
 .skill-frame-card.rarity-1.cat-defense::before {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
-/* 効果系（::afterが背景） */
-.skill-frame-card.rarity-1.cat-effect::after {
+/* 効果系（丸・四角と同じく::beforeが背景） */
+.skill-frame-card.rarity-1.cat-effect::before {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
 
@@ -1824,7 +1815,7 @@ body {
 .skill-frame-card.rarity-2.cat-defense::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
-.skill-frame-card.rarity-2.cat-effect::after {
+.skill-frame-card.rarity-2.cat-effect::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
 
@@ -1846,7 +1837,7 @@ body {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
-.skill-frame-card.rarity-3.cat-effect::after {
+.skill-frame-card.rarity-3.cat-effect::before {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
@@ -1891,8 +1882,8 @@ body {
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
-/* 効果系の背景 */
-.skill-frame-card.rarity-4.cat-effect::after {
+/* 効果系の背景（丸・四角と同じく::before） */
+.skill-frame-card.rarity-4.cat-effect::before {
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
@@ -1997,8 +1988,8 @@ body {
     animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
 
-/* 効果系の背景 - 渦巻き（枠は固定、グラデ角度だけ回転） */
-.skill-frame-card.rarity-5.cat-effect::after {
+/* 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
+.skill-frame-card.rarity-5.cat-effect::before {
     background: conic-gradient(
         from var(--r5-angle),
         #2d0000 0deg,
@@ -2898,10 +2889,6 @@ body {
     height: 62px;
 }
 .skill-frame-card.battle-size.cat-effect::before {
-    width: 60px;
-    height: 63px;
-}
-.skill-frame-card.battle-size.cat-effect::after {
     width: 56px;
     height: 59px;
 }
@@ -3477,26 +3464,18 @@ body {
     z-index: 1;
 }
 
-/* 🔵 効果系 - 八角形（フル版） */
+/* 🔵 効果系 - 八角形（フル版）- 丸・四角と同じ構造 */
 .skill-frame-full.cat-effect::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
-    background: var(--frame-color, var(--sk-rarity-1));
     clip-path: var(--sk-octagon);
+    background: var(--rarity-bg, #999);
+    border: 2px solid var(--frame-color, var(--sk-rarity-1));
     z-index: 1;
 }
 
-.skill-frame-full.cat-effect::after {
-    content: '';
-    position: absolute;
-    width: 94%;
-    height: 94%;
-    background: var(--rarity-bg, #999);
-    clip-path: var(--sk-octagon);
-    z-index: 2;
-}
 
 /* レアリティ別（フル版） - カード版と同じスタイル */
 /* ★1 - コモン（微かな明滅） */
@@ -3504,8 +3483,7 @@ body {
     --frame-color: #888;
     --rarity-bg: linear-gradient(145deg, #666, #555);
 }
-.skill-frame-full.rarity-1::before,
-.skill-frame-full.rarity-1.cat-effect::after {
+.skill-frame-full.rarity-1::before {
     animation: rarity1Pulse 4s ease-in-out infinite;
 }
 
@@ -3514,8 +3492,7 @@ body {
     --frame-color: #2ecc71;
     --rarity-bg: linear-gradient(145deg, #27ae60, #0d4d2a);
 }
-.skill-frame-full.rarity-2::before,
-.skill-frame-full.rarity-2.cat-effect::after {
+.skill-frame-full.rarity-2::before {
     animation: rarity2Pulse 3s ease-in-out infinite;
 }
 
@@ -3524,8 +3501,7 @@ body {
     --frame-color: #3498db;
     --rarity-bg: linear-gradient(45deg, #1a5276, #2980b9, #3498db, #2471a3);
 }
-.skill-frame-full.rarity-3::before,
-.skill-frame-full.rarity-3.cat-effect::after {
+.skill-frame-full.rarity-3::before {
     background-size: 300% 300%;
     animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
 }
@@ -3551,16 +3527,17 @@ body {
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
-/* ★4 効果系の背景アニメーション（::afterが背景） */
-.skill-frame-full.rarity-4.cat-effect::after { 
+/* ★4 効果系の背景アニメーション（丸・四角と同じく::before） */
+.skill-frame-full.rarity-4.cat-effect::before { 
     background: var(--rarity-bg) !important;
     background-size: 100% 400% !important;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
 
-/* ★4 シマーエフェクト（スキル詳細用 - 攻撃・防御系） */
+/* ★4 シマーエフェクト（スキル詳細用 - 全カテゴリ共通） */
 .skill-frame-full.rarity-4.cat-attack::after,
-.skill-frame-full.rarity-4.cat-defense::after {
+.skill-frame-full.rarity-4.cat-defense::after,
+.skill-frame-full.rarity-4.cat-effect::after {
     content: '';
     position: absolute;
     top: 0;
@@ -3579,25 +3556,7 @@ body {
     z-index: 2;
     border-radius: inherit;
 }
-
-/* ★4 シマーエフェクト（スキル詳細用 - 効果系：八角形） */
-.skill-frame-full.rarity-4.cat-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(4px 4px at 25% 20%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 70% 35%, #ffd700 0%, transparent 70%),
-        radial-gradient(4px 4px at 45% 60%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 15% 75%, #ffd700 0%, transparent 70%),
-        radial-gradient(4px 4px at 80% 70%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%);
-    animation: rarity4Shimmer 2s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 3;
+.skill-frame-full.rarity-4.cat-effect::after {
     clip-path: var(--sk-octagon);
 }
 
@@ -3637,8 +3596,8 @@ body {
     animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
 
-/* ★5 効果系の背景 - 渦巻き（skill-frame-cardと同一） */
-.skill-frame-full.rarity-5.cat-effect::after {
+/* ★5 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
+.skill-frame-full.rarity-5.cat-effect::before {
     background: conic-gradient(
         from var(--r5-angle),
         #2d0000 0deg,
@@ -3665,8 +3624,7 @@ body {
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
 .skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
 .skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
-/* 効果系は枠がbackgroundなのでbackgroundで上書き */
-.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
+.skill-frame-full.cat-effect::before { border-color: #3b82f6 !important; }
 
 @keyframes full4Float {
     0%, 100% { transform: translateY(0); }
