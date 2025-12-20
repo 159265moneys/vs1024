@@ -1226,8 +1226,19 @@ body {
 
 /* 素材プレビュー（空スロット時のグレーアウト表示） */
 .material-slot .skill-frame-card.material-preview {
-    filter: grayscale(100%) opacity(0.4);
+    filter: grayscale(100%) opacity(0.4) !important;
     pointer-events: none;
+    animation: none !important;
+}
+
+.material-slot .skill-frame-card.material-preview::before,
+.material-slot .skill-frame-card.material-preview::after {
+    filter: grayscale(100%) !important;
+    animation: none !important;
+}
+
+.material-slot .skill-frame-card.material-preview .particles {
+    display: none !important;
 }
 
 /* 同レア素材のヒントテキスト */
