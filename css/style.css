@@ -185,47 +185,7 @@ body::after {
 /* ========================================
    ヘッダー（通貨表示）
    ======================================== */
-.app-header {
-    height: var(--header-height);
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--bg-card);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 15px;
-    flex-shrink: 0;
-}
-
-.currency-display {
-    display: flex;
-    gap: 15px;
-}
-
-.currency {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 12px;
-    background: var(--bg-card);
-    border-radius: 20px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.currency.crystal {
-    border: 1px solid var(--accent-cyan);
-    color: var(--accent-cyan);
-}
-
-.currency.sp {
-    border: 1px solid var(--accent-yellow);
-    color: var(--accent-yellow);
-}
-
-.currency-icon {
-    font-size: 1rem;
-}
+/* ヘッダー削除済み - 通貨はホーム画面のプレイヤー情報内に表示 */
 
 /* ========================================
    タブコンテンツエリア
@@ -376,6 +336,40 @@ body::after {
 .stat-label {
     font-size: 0.6rem;
     color: var(--text-secondary);
+}
+
+/* プレイヤー情報内の通貨表示 */
+.player-currency {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 15px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.currency-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.currency-item .currency-icon {
+    font-size: 0.9rem;
+}
+
+.currency-item .currency-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.currency-item.crystal .currency-value {
+    color: var(--accent-cyan);
+}
+
+.currency-item.sp .currency-value {
+    color: var(--accent-yellow);
 }
 
 .player-avatar {
@@ -624,6 +618,42 @@ body::after {
 /* ========================================
    ガチャ画面
    ======================================== */
+.gacha-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.gacha-header .tab-title {
+    margin-bottom: 0;
+}
+
+.gacha-currency {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 14px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gacha-currency .currency-icon {
+    font-size: 1.1rem;
+}
+
+.gacha-currency .currency-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.gacha-currency.sp-mode .currency-value {
+    color: var(--accent-yellow);
+}
+
 .gacha-toggle {
     display: flex;
     gap: 10px;

@@ -24,26 +24,18 @@
     
     <!-- メインアプリ（タブ付き） -->
     <div id="main-app" class="app-container">
-        <!-- ヘッダー（通貨表示） -->
-        <header class="app-header">
-            <div class="currency-display">
-                <div class="currency crystal">
-                    <span class="currency-icon">💎</span>
-                    <span class="currency-value" id="crystal-count">0</span>
-                </div>
-                <div class="currency sp">
-                    <span class="currency-icon">⚡</span>
-                    <span class="currency-value" id="sp-count">0</span>
-                </div>
-            </div>
-        </header>
-
         <!-- タブコンテンツエリア -->
         <main class="tab-content-area">
             <!-- ガチャ画面 -->
             <div id="tab-gacha" class="tab-content">
                 <div class="tab-inner">
-                    <h2 class="tab-title">ガチャ</h2>
+                    <div class="gacha-header">
+                        <h2 class="tab-title">ガチャ</h2>
+                        <div class="gacha-currency" id="gacha-currency-display">
+                            <span class="currency-icon">💎</span>
+                            <span class="currency-value" id="gacha-currency-value">0</span>
+                        </div>
+                    </div>
                     
                     <div class="gacha-toggle">
                         <button class="gacha-type-btn active" data-type="tile">タイルガチャ</button>
@@ -157,6 +149,16 @@
                                 <div class="stat-item">
                                     <span class="stat-value" id="home-highest-stage">-</span>
                                     <span class="stat-label">最高</span>
+                                </div>
+                            </div>
+                            <div class="player-currency">
+                                <div class="currency-item crystal">
+                                    <span class="currency-icon">💎</span>
+                                    <span class="currency-value" id="crystal-count">0</span>
+                                </div>
+                                <div class="currency-item sp">
+                                    <span class="currency-icon">⚡</span>
+                                    <span class="currency-value" id="sp-count">0</span>
                                 </div>
                             </div>
                         </div>

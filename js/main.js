@@ -65,14 +65,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================
     
     function updateCurrencyDisplay() {
+        // ホーム画面のプレイヤー情報内の通貨表示
         document.getElementById('crystal-count').textContent = GameData.getCrystal().toLocaleString();
         document.getElementById('sp-count').textContent = GameData.getSP().toLocaleString();
+        
+        // ガチャ画面の通貨表示も更新
+        updateGachaCurrencyDisplay();
+    }
+    
+    function updateGachaCurrencyDisplay() {
+        const currencyDisplay = document.getElementById('gacha-currency-display');
+        const currencyValue = document.getElementById('gacha-currency-value');
+        if (!currencyDisplay || !currencyValue) return;
+        
+        if (currentGachaType === 'tile') {
+            currencyDisplay.querySelector('.currency-icon').textContent = '💎';
+            currencyValue.textContent = GameData.getCrystal().toLocaleString();
+            currencyDisplay.classList.remove('sp-mode');
+        } else {
+            currencyDisplay.querySelector('.currency-icon').textContent = '⚡';
+            currencyValue.textContent = GameData.getSP().toLocaleString();
+            currencyDisplay.classList.add('sp-mode');
+        }
     }
     
     function updateHomeStats() {
         const highest = GameData.getHighestStage();
-        document.getElementById('highest-stage').textContent = highest > 0 ? STAGES[highest - 1].name : '-';
-        document.getElementById('total-damage').textContent = GameData.getTotalDamage().toLocaleString();
+        const homeHighest = document.getElementById('home-highest-stage');
+        const homeWin = document.getElementById('home-win-count');
+        
+        if (homeHighest) {
+            homeHighest.textContent = highest > 0 ? highest : '-';
+        }
+        if (homeWin) {
+            homeWin.textContent = GameData.getWinCount ? GameData.getWinCount().toLocaleString() : '0';
+        }
     }
     
     function updateStageList() {
@@ -1586,6 +1613,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const icon = currentGachaType === 'tile' ? '💎' : '⚡';
                 costDisplay[0].textContent = `${icon} 300`;
                 costDisplay[1].textContent = `${icon} 3000`;
+                
+                // ガチャ画面上部の通貨表示を切り替え
+                updateGachaCurrencyDisplay();
             });
         });
         
