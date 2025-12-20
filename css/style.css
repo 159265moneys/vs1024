@@ -1071,6 +1071,7 @@ body {
     cursor: pointer;
     background: var(--bg-card);
     overflow: hidden;
+    position: relative;
 }
 
 .material-slot.same-skill {
@@ -1082,25 +1083,42 @@ body {
 }
 
 .material-slot.filled {
-    border-style: solid !important;
-    border-width: 3px !important;
+    border: none !important;
+    background: transparent !important;
 }
 
-.material-slot.same-skill.filled {
-    border-color: var(--accent-cyan) !important;
-    background: linear-gradient(135deg, rgba(0, 100, 120, 0.9), rgba(0, 60, 80, 0.95)) !important;
+/* 素材スロット内のスキルカード（プリセットと同じスタイル） */
+.material-slot .skill-frame-card {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    border-radius: 8px !important;
+    clip-path: none !important;
 }
 
-.material-slot.same-rarity.filled {
-    border-color: var(--accent-purple) !important;
-    background: linear-gradient(135deg, rgba(100, 50, 150, 0.9), rgba(60, 30, 100, 0.95)) !important;
+.material-slot .skill-frame-card::before,
+.material-slot .skill-frame-card::after {
+    border-radius: 8px !important;
+    clip-path: none !important;
 }
 
-.material-slot img {
-    width: 32px !important;
-    height: 32px !important;
-    object-fit: contain;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+.material-slot .skill-frame-card .frame-inner {
+    border-radius: 8px !important;
+    clip-path: none !important;
+}
+
+.material-slot .skill-frame-card .frame-inner img {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+.material-slot .skill-frame-card .skill-name {
+    display: none;
+}
+
+.material-slot .skill-frame-card .particles {
+    border-radius: 8px !important;
+    clip-path: none !important;
 }
 
 .upgrade-confirm-btn {

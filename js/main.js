@@ -1030,7 +1030,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const matSkill = SKILLS[mat.skillId];
                     if (matSkill) {
                         matSlot.classList.add('filled');
-                        matSlot.innerHTML = `<img src="${matSkill.icon}">`;
+                        // プリセットと同じようにスキルカードを表示
+                        matSlot.innerHTML = `
+                            <div class="skill-frame-card cat-${matSkill.category} rarity-${matSkill.rarity}">
+                                ${matSkill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                                <div class="frame-inner">
+                                    <img class="skill-icon-img" src="${matSkill.icon}" alt="${matSkill.name}">
+                                </div>
+                            </div>
+                        `;
                         matSlot.addEventListener('click', () => removeMaterialByData(mat));
                     }
                 } else {
@@ -1050,7 +1058,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const matSkill = SKILLS[mat.skillId];
                     if (matSkill) {
                         matSlot.classList.add('filled');
-                        matSlot.innerHTML = `<img src="${matSkill.icon}">`;
+                        // プリセットと同じようにスキルカードを表示
+                        matSlot.innerHTML = `
+                            <div class="skill-frame-card cat-${matSkill.category} rarity-${matSkill.rarity}">
+                                ${matSkill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                                <div class="frame-inner">
+                                    <img class="skill-icon-img" src="${matSkill.icon}" alt="${matSkill.name}">
+                                </div>
+                            </div>
+                        `;
                         matSlot.addEventListener('click', () => removeMaterialByData(mat));
                     }
                 } else {
