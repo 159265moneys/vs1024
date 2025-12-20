@@ -720,8 +720,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = results[index];
         
         if (result.type === 'skill') {
-            // スキル画面と同じ詳細モーダルを表示
-            openSkillDetail(result.item.id);
+            // スキル画面と同じ詳細モーダルを表示（ガチャ入手は常にレベル0）
+            openSkillDetail(result.item.id, true, 0);
         } else {
             // タイルの詳細（簡易表示）
             alert(`${result.item.name}\n${'★'.repeat(result.rarity)} タイルスキン`);
@@ -867,35 +867,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // スキル強化
-    function upgradeSkill(skillId) {
-        const skill = SKILLS[skillId];
-        if (!skill) return;
-        
-        const currentLevel = GameData.getSkillLevel(skillId);
-        if (currentLevel >= 5) {
-            alert('最大強化済みです');
-            return;
-        }
-        
-        const req = getUpgradeRequirement(currentLevel, skill.rarity);
-        const ownedCount = GameData.getSkillCount(skillId);
-        
-        // 同スキルのチェック（本体1枚 + 素材分）
-        if (ownedCount < req.sameSkill + 1) {
-            alert('素材が足りません');
-            return;
-        }
-        
-        // 素材消費（本体は残す）
-        GameData.removeSkill(skillId, req.sameSkill);
-        
-        // 強化
-        GameData.upgradeSkill(skillId);
-        
-        // UI更新
-        updateSkillInventory();
-        openSkillDetail(skillId); // 詳細画面を更新
-    }
+    // 注: 旧upgradeSkill関数は削除。スキル強化は専用画面(openUpgradeScreen)で行う
     
     function equipSkill(skillId) {
         const skill = SKILLS[skillId];
@@ -946,10 +918,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const skill = SKILLS[skillId];
         if (!skill) return;
         
-        if (!confirm(`${skill.name}を売却しますか？`)) return;
+        const levelStars = currentDetailSkillLevel > 0 ? ` ★${currentDetailSkillLevel}` : '';
+        if (!confirm(`${skill.name}${levelStars}を売却しますか？`)) return;
         
         const sellPrice = GachaSystem.sellPrices.skill[skill.rarity];
-        GameData.removeSkill(skillId, 1);
+        GameData.removeSkillByLevel(skillId, currentDetailSkillLevel, 1);
         GameData.addSP(sellPrice);
         
         updateCurrencyDisplay();
@@ -1716,7 +1689,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-upgrade-skill').addEventListener('click', () => {
             // スキル強化画面を開き、このスキルを強化元として設定
             hideModal('skillDetail');
-            openUpgradeScreen(currentDetailSkillId);
+            openUpgradeScreen(currentDetailSkillId, currentDetailSkillLevel);
         });
         document.getElementById('btn-close-skill-detail').addEventListener('click', () => hideModal('skillDetail'));
         

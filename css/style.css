@@ -989,11 +989,29 @@ body {
     justify-content: center;
     font-size: 0.6rem;
     color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.material-slot.same-skill {
+    border-color: var(--accent-cyan);
+}
+
+.material-slot.same-rarity {
+    border-color: var(--accent-purple);
 }
 
 .material-slot.filled {
     border-style: solid;
-    border-color: var(--accent-green);
+}
+
+.material-slot.same-skill.filled {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.material-slot.same-rarity.filled {
+    border-color: var(--accent-purple);
+    background: rgba(168, 85, 247, 0.1);
 }
 
 .upgrade-confirm-btn {
@@ -1450,6 +1468,7 @@ body {
 
 /* スキルカードの強化レベルバッジ - 見やすく改善 */
 /* 強化レベル星バッジ（ピンク、背景なし） */
+/* 強化レベル星バッジ（ピンク、背景なし） */
 .skill-level-badge {
     position: absolute;
     bottom: 2px;
@@ -1466,6 +1485,19 @@ body {
     letter-spacing: 1px;
     z-index: 25;
     white-space: nowrap;
+}
+
+/* 詳細画面用レベルバッジ */
+.detail-level-badge {
+    display: block;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 1rem;
+    color: #ff69b4;
+    text-shadow: 
+        0 0 6px rgba(255, 105, 180, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
 }
 
 @keyframes starShine {
