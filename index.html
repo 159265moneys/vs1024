@@ -415,19 +415,18 @@
         </div>
     </div>
 
-    <!-- バトル前プリセット選択モーダル -->
-    <div id="preset-select-modal" class="modal">
-        <div class="modal-content preset-select">
+    <!-- バトル前プリセット選択画面 -->
+    <div id="screen-battle-preset" class="sub-screen hidden">
+        <div class="sub-screen-header">
             <h2>スキルプリセット選択</h2>
-            <p class="preset-hint">使用するプリセットを選んでください</p>
-            <div class="preset-select-list" id="preset-select-list">
-                <!-- JSで生成 -->
-            </div>
-            <div class="preset-select-actions">
-                <button class="action-btn start" id="btn-preset-start">バトル開始</button>
-                <button class="action-btn cancel" id="btn-preset-cancel">キャンセル</button>
-            </div>
         </div>
+        <div class="preset-list" id="preset-select-list">
+            <!-- JSで生成 -->
+        </div>
+        <div class="battle-start-area">
+            <button class="battle-start-btn" id="btn-preset-start">バトル開始</button>
+        </div>
+        <button class="floating-back-btn" id="btn-preset-cancel">←</button>
     </div>
 
     <!-- スキル詳細モーダル -->

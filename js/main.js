@@ -1277,29 +1277,47 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalCost = skills.reduce((sum, sid) => {
                 return sum + (SKILLS[sid]?.cost || 0);
             }, 0);
-            const isValid = (totalCost >= 19 && totalCost <= 20) || skills.filter(Boolean).length === 0; // 空かコスト19-20
+            const isValid = (totalCost >= 19 && totalCost <= 20) || skills.filter(Boolean).length === 0;
             
             const item = document.createElement('div');
-            item.className = `preset-select-item ${i === selectedPresetForBattle ? 'selected' : ''} ${!isValid ? 'invalid' : ''}`;
+            item.className = `preset-item ${i === selectedPresetForBattle ? 'selected' : ''} ${!isValid ? 'invalid' : ''}`;
             item.dataset.preset = i;
             
-            const skillIcons = skills.filter(Boolean).map(sid => {
-                const skill = SKILLS[sid];
-                return skill ? `<div class="preset-skill-icon cat-${skill.category} rarity-${skill.rarity}"><img src="${skill.icon}" alt="${skill.name}"></div>` : '';
-            }).join('');
+            // 5スロット分を生成（空きスロットも表示）
+            let skillSlots = '';
+            for (let j = 0; j < 5; j++) {
+                const sid = skills[j];
+                if (sid && SKILLS[sid]) {
+                    const skill = SKILLS[sid];
+                    const level = GameData.getSkillLevel(sid);
+                    const levelStars = '★'.repeat(level);
+                    skillSlots += `
+                        <div class="preset-skill-slot filled">
+                            <div class="skill-frame-card preset-mini-size cat-${skill.category} rarity-${skill.rarity}">
+                                <div class="frame-inner">
+                                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                                </div>
+                                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    skillSlots += `<div class="preset-skill-slot empty"></div>`;
+                }
+            }
             
             item.innerHTML = `
                 <div class="preset-item-header">
-                    <span class="preset-number">プリセット ${i + 1}</span>
-                    <span class="preset-cost ${!isValid ? 'invalid' : ''}">${totalCost}/20</span>
+                    <span class="preset-item-name">プリセット ${i + 1}</span>
+                    <span class="preset-item-cost ${!isValid ? 'invalid' : ''}">${totalCost}/20</span>
                 </div>
-                <div class="preset-skills">
-                    ${skillIcons || '<span class="preset-empty-text">スキル未設定</span>'}
+                <div class="preset-item-skills">
+                    ${skillSlots}
                 </div>
             `;
             
             item.addEventListener('click', () => {
-                document.querySelectorAll('.preset-select-item').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll('.preset-item').forEach(el => el.classList.remove('selected'));
                 item.classList.add('selected');
                 selectedPresetForBattle = i;
                 updatePresetStartButton();
@@ -1309,7 +1327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         updatePresetStartButton();
-        showModal('presetSelect');
+        document.getElementById('screen-battle-preset').classList.remove('hidden');
     }
     
     function updatePresetStartButton() {
@@ -1332,8 +1350,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 選択したプリセットを現在のプリセットに設定
         GameData.setCurrentPreset(selectedPresetForBattle);
         
-        hideModal('presetSelect');
+        document.getElementById('screen-battle-preset').classList.add('hidden');
         startGame(pendingStageId);
+        pendingStageId = null;
+    }
+    
+    function closeBattlePresetScreen() {
+        document.getElementById('screen-battle-preset').classList.add('hidden');
         pendingStageId = null;
     }
     
@@ -1499,12 +1522,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // プリセット選択モーダル
+        // バトル前プリセット選択画面
         document.getElementById('btn-preset-start').addEventListener('click', confirmPresetAndStartBattle);
-        document.getElementById('btn-preset-cancel').addEventListener('click', () => {
-            hideModal('presetSelect');
-            pendingStageId = null;
-        });
+        document.getElementById('btn-preset-cancel').addEventListener('click', closeBattlePresetScreen);
         
         // ガチャタイプ切り替え
         document.querySelectorAll('.gacha-type-btn').forEach(btn => {

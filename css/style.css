@@ -827,7 +827,7 @@ body {
 /* 戻るボタン - 左下固定 */
 .sub-screen .floating-back-btn {
     position: fixed;
-    bottom: calc(var(--tab-height) + 10px);
+    bottom: calc(var(--tab-height) + 5px);
     left: 15px;
     width: 50px;
     height: 50px;
@@ -864,6 +864,39 @@ body {
     gap: 15px;
 }
 
+/* バトル開始エリア */
+.battle-start-area {
+    padding: 15px;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--text-disabled);
+}
+
+.battle-start-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.battle-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.battle-start-btn:disabled {
+    background: var(--text-disabled);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .preset-item {
     background: var(--bg-card);
     border-radius: 10px;
@@ -875,6 +908,15 @@ body {
 
 .preset-item:hover {
     border-color: var(--accent-cyan);
+}
+
+.preset-item.selected {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.preset-item.invalid .preset-item-cost {
+    color: #ef4444;
 }
 
 .preset-item-header {
