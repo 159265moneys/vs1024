@@ -841,8 +841,8 @@ body {
 
 .preset-item {
     background: var(--bg-card);
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 10px;
+    padding: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     border: 2px solid transparent;
@@ -855,28 +855,28 @@ body {
 .preset-item-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .preset-item-name {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.54rem;
 }
 
 .preset-item-cost {
     color: var(--accent-cyan);
-    font-size: 0.85rem;
+    font-size: 0.51rem;
 }
 
 .preset-item-skills {
     display: flex;
-    gap: 6px;
+    gap: 4px;
 }
 
 /* プリセット選択画面のスキルスロット */
 .preset-skill-slot {
-    width: 40px;
-    height: 44px;
+    width: 50px;
+    height: 55px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -894,25 +894,25 @@ body {
 
 /* プリセット選択画面用ミニサイズ */
 .skill-frame-card.preset-mini-size {
-    width: 40px;
-    height: 44px;
+    width: 50px;
+    height: 55px;
 }
 .skill-frame-card.preset-mini-size .frame-inner {
     width: 100%;
     height: 100%;
 }
 .skill-frame-card.preset-mini-size .skill-icon-img {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
 }
 .skill-frame-card.preset-mini-size .skill-name {
     display: none;
 }
 .skill-frame-card.preset-mini-size .skill-level-badge {
-    font-size: 0.45rem;
+    font-size: 0.5rem;
     bottom: 2px;
     right: 2px;
-    padding: 1px 2px;
+    padding: 1px 3px;
 }
 /* 角丸四角に統一 */
 .skill-frame-card.preset-mini-size::before,
@@ -923,20 +923,20 @@ body {
     height: 100% !important;
 }
 .skill-frame-card.preset-mini-size.cat-attack::before {
-    width: 38px !important;
-    height: 42px !important;
+    width: 48px !important;
+    height: 53px !important;
 }
 .skill-frame-card.preset-mini-size.cat-defense::before {
-    width: 36px !important;
-    height: 40px !important;
+    width: 46px !important;
+    height: 51px !important;
 }
 .skill-frame-card.preset-mini-size.cat-effect::before {
-    width: 40px !important;
-    height: 44px !important;
+    width: 50px !important;
+    height: 55px !important;
 }
 .skill-frame-card.preset-mini-size.cat-effect::after {
-    width: 36px !important;
-    height: 40px !important;
+    width: 46px !important;
+    height: 51px !important;
 }
 
 .preset-skill-mini {
