@@ -163,7 +163,7 @@ body {
 
 .tab-inner {
     padding: 20px 15px;
-    padding-bottom: calc(var(--tab-height) + 20px);
+    padding-bottom: var(--tab-height);
 }
 
 .tab-title {
@@ -776,7 +776,6 @@ body {
 .skill-scroll-area {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 20px;
 }
 
 /* サブ画面共通 */
