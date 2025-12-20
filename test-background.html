@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>背景テスト - シャボン玉風 6パターン</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .phone-frame {
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            background: #ffffff;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .pattern-label {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 100;
+            white-space: nowrap;
+        }
+        
+        /* 共通スタイル */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* ========================================
+           パターン1: ソフトパステル（ピンク系）
+           ======================================== */
+        .pattern-1 .bubble {
+            filter: blur(60px);
+            opacity: 0.7;
+        }
+        .pattern-1 .bubble-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #ffd1dc, #ffb6c1, #dda0dd);
+            top: -10%;
+            left: -20%;
+            animation: soft1a 20s ease-in-out infinite;
+        }
+        .pattern-1 .bubble-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #e6e6fa, #d8bfd8, #dda0dd);
+            bottom: 10%;
+            right: -15%;
+            animation: soft1b 25s ease-in-out infinite;
+        }
+        .pattern-1 .bubble-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(-45deg, #ffe4e1, #ffc0cb, #ffb6c1);
+            top: 50%;
+            left: 30%;
+            animation: soft1c 18s ease-in-out infinite;
+        }
+        
+        @keyframes soft1a {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(40px, 50px); }
+        }
+        @keyframes soft1b {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, -40px); }
+        }
+        @keyframes soft1c {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -20px); }
+            66% { transform: translate(-20px, 30px); }
+        }
+        
+        /* ========================================
+           パターン2: クール系（ブルー・ミント）
+           ======================================== */
+        .pattern-2 .bubble {
+            filter: blur(70px);
+            opacity: 0.6;
+        }
+        .pattern-2 .bubble-1 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(120deg, #b0e0e6, #87ceeb, #add8e6);
+            top: -15%;
+            right: -25%;
+            animation: cool2a 22s ease-in-out infinite;
+        }
+        .pattern-2 .bubble-2 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(200deg, #98fb98, #90ee90, #b0e0e6);
+            bottom: -10%;
+            left: -20%;
+            animation: cool2b 28s ease-in-out infinite;
+        }
+        .pattern-2 .bubble-3 {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(60deg, #afeeee, #e0ffff, #b0e0e6);
+            top: 40%;
+            left: 50%;
+            animation: cool2c 15s ease-in-out infinite;
+        }
+        
+        @keyframes cool2a {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-60px, 40px) scale(1.1); }
+        }
+        @keyframes cool2b {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -30px) scale(0.9); }
+        }
+        @keyframes cool2c {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-40px, 50px); }
+        }
+        
+        /* ========================================
+           パターン3: ウォーム系（オレンジ・イエロー）
+           ======================================== */
+        .pattern-3 .bubble {
+            filter: blur(65px);
+            opacity: 0.5;
+        }
+        .pattern-3 .bubble-1 {
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(150deg, #ffecd2, #fcb69f, #ffdab9);
+            top: -20%;
+            left: -15%;
+            animation: warm3a 24s ease-in-out infinite;
+        }
+        .pattern-3 .bubble-2 {
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(30deg, #fff9c4, #ffe082, #ffecb3);
+            bottom: 5%;
+            right: -10%;
+            animation: warm3b 19s ease-in-out infinite;
+        }
+        .pattern-3 .bubble-3 {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(-60deg, #ffccbc, #ffab91, #ffe0b2);
+            top: 45%;
+            right: 30%;
+            animation: warm3c 21s ease-in-out infinite;
+        }
+        
+        @keyframes warm3a {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, 40px); }
+            66% { transform: translate(50px, 10px); }
+        }
+        @keyframes warm3b {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-40px, -50px); }
+        }
+        @keyframes warm3c {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(25px, -35px); }
+        }
+        
+        /* ========================================
+           パターン4: ドリーミー（虹色ミックス）
+           ======================================== */
+        .pattern-4 .bubble {
+            filter: blur(80px);
+            opacity: 0.5;
+        }
+        .pattern-4 .bubble-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #ffd1dc, #c9b1ff, #a0d2eb);
+            top: -25%;
+            left: -30%;
+            animation: dream4a 30s ease-in-out infinite;
+        }
+        .pattern-4 .bubble-2 {
+            width: 280px;
+            height: 280px;
+            background: linear-gradient(45deg, #b5ead7, #ffdac1, #e2f0cb);
+            bottom: -15%;
+            right: -20%;
+            animation: dream4b 26s ease-in-out infinite;
+        }
+        .pattern-4 .bubble-3 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(-135deg, #c7ceea, #f0e6ef, #ffd1dc);
+            top: 35%;
+            left: 40%;
+            animation: dream4c 22s ease-in-out infinite;
+        }
+        
+        @keyframes dream4a {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(80px, 60px) rotate(10deg); }
+        }
+        @keyframes dream4b {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-70px, -50px) rotate(-10deg); }
+        }
+        @keyframes dream4c {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-30px, 40px); }
+            66% { transform: translate(40px, -20px); }
+        }
+        
+        /* ========================================
+           パターン5: ミニマル（2色シンプル）
+           ======================================== */
+        .pattern-5 .bubble {
+            filter: blur(100px);
+            opacity: 0.4;
+        }
+        .pattern-5 .bubble-1 {
+            width: 450px;
+            height: 450px;
+            background: linear-gradient(160deg, #e8daef, #d5dbdb);
+            top: -30%;
+            left: -35%;
+            animation: mini5a 35s ease-in-out infinite;
+        }
+        .pattern-5 .bubble-2 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(340deg, #d5f5e3, #d6eaf8);
+            bottom: -25%;
+            right: -30%;
+            animation: mini5b 30s ease-in-out infinite;
+        }
+        .pattern-5 .bubble-3 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(90deg, #fdebd0, #fadbd8);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: mini5c 25s ease-in-out infinite;
+        }
+        
+        @keyframes mini5a {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 80px); }
+        }
+        @keyframes mini5b {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-80px, -60px); }
+        }
+        @keyframes mini5c {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+        
+        /* ========================================
+           パターン6: ビビッドパステル（濃いめ）
+           ======================================== */
+        .pattern-6 .bubble {
+            filter: blur(50px);
+            opacity: 0.6;
+        }
+        .pattern-6 .bubble-1 {
+            width: 280px;
+            height: 280px;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef);
+            top: -5%;
+            left: -15%;
+            animation: vivid6a 16s ease-in-out infinite;
+        }
+        .pattern-6 .bubble-2 {
+            width: 240px;
+            height: 240px;
+            background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+            bottom: 0%;
+            right: -10%;
+            animation: vivid6b 20s ease-in-out infinite;
+        }
+        .pattern-6 .bubble-3 {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(-45deg, #84fab0, #8fd3f4);
+            top: 40%;
+            left: 35%;
+            animation: vivid6c 14s ease-in-out infinite;
+        }
+        
+        @keyframes vivid6a {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(40px, 120px) scale(1.05); }
+            50% { transform: translate(80px, 200px) scale(0.95); }
+            75% { transform: translate(30px, 100px) scale(1.02); }
+        }
+        @keyframes vivid6b {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-50px, -150px); }
+            66% { transform: translate(-80px, -250px); }
+        }
+        @keyframes vivid6c {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -100px) scale(1.1); }
+            50% { transform: translate(30px, 150px) scale(1.15); }
+            75% { transform: translate(-40px, 50px) scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- パターン1: ソフトパステル -->
+        <div class="phone-frame pattern-1">
+            <div class="pattern-label">1: ソフトパステル</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+        
+        <!-- パターン2: クール系 -->
+        <div class="phone-frame pattern-2">
+            <div class="pattern-label">2: クール系</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+        
+        <!-- パターン3: ウォーム系 -->
+        <div class="phone-frame pattern-3">
+            <div class="pattern-label">3: ウォーム系</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+        
+        <!-- パターン4: ドリーミー -->
+        <div class="phone-frame pattern-4">
+            <div class="pattern-label">4: ドリーミー</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+        
+        <!-- パターン5: ミニマル -->
+        <div class="phone-frame pattern-5">
+            <div class="pattern-label">5: ミニマル</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+        
+        <!-- パターン6: ビビッドパステル -->
+        <div class="phone-frame pattern-6">
+            <div class="pattern-label">6: ビビッド</div>
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+        </div>
+    </div>
+</body>
+</html>
