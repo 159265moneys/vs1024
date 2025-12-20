@@ -221,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             card.addEventListener('click', () => openSkillDetail(skillId, false));
-            }
             
             card.dataset.skillId = skillId;
             container.appendChild(card);
