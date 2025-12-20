@@ -825,12 +825,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const levelStars = '★'.repeat(level);
                 slot.classList.add('filled');
                 slot.innerHTML = `
-                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:50px;height:55px;position:relative;">
+                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}">
                         ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
                         <div class="frame-inner">
-                            <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:30px;height:30px;">
+                            <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
                         </div>
-                        ${level > 0 ? `<span class="skill-level-badge" style="font-size:0.55rem;">${levelStars}</span>` : ''}
+                        ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
                     </div>
                 `;
                 slot.addEventListener('click', () => removeFromPreset(i));
@@ -917,23 +917,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function addToPreset(skillId) {
-        const emptyIndex = editingSkills.findIndex((s, i) => !s || i >= editingSkills.length);
-        if (editingSkills.filter(Boolean).length >= 5) return;
-        if (editingSkills.includes(skillId)) return;
+        if (editingSkills.length >= 5) return;  // 5個まで
+        if (editingSkills.includes(skillId)) return;  // 重複不可
         
-        // 空きスロットに追加
-        const insertIndex = editingSkills.length < 5 ? editingSkills.length : editingSkills.findIndex(s => !s);
-        if (insertIndex !== -1) {
-            editingSkills[insertIndex] = skillId;
-        } else {
-            editingSkills.push(skillId);
-        }
-        
+        editingSkills.push(skillId);  // 末尾に追加
         updatePresetEditUI();
     }
     
     function removeFromPreset(slotIndex) {
-        editingSkills[slotIndex] = null;
+        editingSkills.splice(slotIndex, 1);  // 削除して左詰め
         updatePresetEditUI();
     }
     

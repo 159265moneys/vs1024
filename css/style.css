@@ -901,11 +901,28 @@ body {
     justify-content: center;
     cursor: pointer;
     position: relative;
+    background: var(--bg-card);
 }
 
 .preset-edit-slot.filled {
-    border-style: solid;
-    border-color: var(--accent-cyan);
+    border: none;
+    background: transparent;
+}
+
+/* スロット内のスキルカードを統一サイズに */
+.preset-edit-slot .skill-frame-card {
+    width: 55px !important;
+    height: 60px !important;
+    margin: 0;
+}
+
+.preset-edit-slot .skill-frame-card .frame-inner img {
+    width: 28px !important;
+    height: 28px !important;
+}
+
+.preset-edit-slot .skill-frame-card .skill-name {
+    display: none;
 }
 
 .preset-cost-display {
