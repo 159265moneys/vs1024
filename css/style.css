@@ -336,19 +336,20 @@ body::after {
 .currency-item {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 6px;
 }
 
 .currency-item .currency-icon {
     font-size: 0.9rem;
+    width: 20px;
+    text-align: center;
 }
 
 .currency-item .currency-value {
     font-family: 'Orbitron', sans-serif;
     font-size: 0.9rem;
     font-weight: 700;
-    min-width: 50px;
+    flex: 1;
     text-align: right;
 }
 
