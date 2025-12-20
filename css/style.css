@@ -2000,6 +2000,20 @@ body {
 }
 
 /* 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
+/* 八角形★5 - 親要素にdrop-shadowを適用 */
+.skill-frame-card.rarity-5.cat-effect {
+    animation: rarity5EffectGlow 0.8s ease-in-out infinite;
+}
+
+@keyframes rarity5EffectGlow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 15px rgba(231, 76, 60, 0.7)) drop-shadow(0 0 30px rgba(192, 57, 43, 0.5));
+    }
+    50% { 
+        filter: drop-shadow(0 0 25px rgba(231, 76, 60, 1)) drop-shadow(0 0 50px rgba(192, 57, 43, 0.7)) drop-shadow(0 0 70px rgba(255, 100, 100, 0.4));
+    }
+}
+
 .skill-frame-card.rarity-5.cat-effect::after {
     background: conic-gradient(
         from var(--r5-angle),
@@ -2021,17 +2035,7 @@ body {
         #4a0000 337deg,
         #2d0000 360deg
     );
-    animation: rarity5Swirl 3s linear infinite, rarity5PulseOctagon 0.8s ease-in-out infinite;
-}
-
-/* 八角形用の鼓動する赤い光（drop-shadow使用） */
-@keyframes rarity5PulseOctagon {
-    0%, 100% { 
-        filter: brightness(1) saturate(1.2) drop-shadow(0 0 15px rgba(231, 76, 60, 0.7)) drop-shadow(0 0 30px rgba(192, 57, 43, 0.5));
-    }
-    50% { 
-        filter: brightness(1.5) saturate(1.5) drop-shadow(0 0 25px rgba(231, 76, 60, 1)) drop-shadow(0 0 50px rgba(192, 57, 43, 0.7)) drop-shadow(0 0 70px rgba(255, 100, 100, 0.4));
-    }
+    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
 
 /* 名前のちらつき */
@@ -3618,6 +3622,11 @@ body {
 }
 
 /* ★5 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
+/* 八角形★5（詳細画面）- 親要素にdrop-shadowを適用 */
+.skill-frame-full.rarity-5.cat-effect {
+    animation: rarity5EffectGlow 0.8s ease-in-out infinite;
+}
+
 .skill-frame-full.rarity-5.cat-effect::after {
     background: conic-gradient(
         from var(--r5-angle),
@@ -3639,7 +3648,7 @@ body {
         #4a0000 337deg,
         #2d0000 360deg
     ) !important;
-    animation: rarity5Swirl 3s linear infinite, rarity5PulseOctagon 0.8s ease-in-out infinite;
+    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
 }
 
 /* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
