@@ -940,6 +940,406 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // ========================================
+    // スキル装備画面（プリセット選択）
+    // ========================================
+    
+    function openPresetSelectScreen() {
+        const screen = document.getElementById('screen-preset-select');
+        const container = document.getElementById('preset-list');
+        container.innerHTML = '';
+        
+        for (let i = 0; i < 5; i++) {
+            const skills = GameData.getSkillPreset(i);
+            const totalCost = skills.reduce((sum, sid) => sum + (SKILLS[sid]?.cost || 0), 0);
+            
+            const item = document.createElement('div');
+            item.className = 'preset-item';
+            item.dataset.preset = i;
+            
+            const skillIcons = skills.filter(Boolean).map(sid => {
+                const skill = SKILLS[sid];
+                if (!skill) return '';
+                return `
+                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:40px;height:44px;">
+                        ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                        <div class="frame-inner">
+                            <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:24px;height:24px;">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            item.innerHTML = `
+                <div class="preset-item-header">
+                    <span class="preset-item-name">プリセット ${i + 1}</span>
+                    <span class="preset-item-cost">${totalCost}/20</span>
+                </div>
+                <div class="preset-item-skills">
+                    ${skillIcons || '<span style="color:var(--text-secondary);font-size:0.8rem;">スキル未設定</span>'}
+                </div>
+            `;
+            
+            item.addEventListener('click', () => openPresetEditScreen(i));
+            container.appendChild(item);
+        }
+        
+        screen.classList.remove('hidden');
+    }
+    
+    function closePresetSelectScreen() {
+        document.getElementById('screen-preset-select').classList.add('hidden');
+    }
+    
+    // ========================================
+    // スキル装備画面（プリセット編集）
+    // ========================================
+    
+    let currentEditingPreset = 0;
+    let editingSkills = [];
+    
+    function openPresetEditScreen(presetIndex) {
+        currentEditingPreset = presetIndex;
+        editingSkills = [...GameData.getSkillPreset(presetIndex)];
+        
+        // プリセット選択画面を閉じる
+        document.getElementById('screen-preset-select').classList.add('hidden');
+        
+        // 編集画面を開く
+        const screen = document.getElementById('screen-preset-edit');
+        screen.classList.remove('hidden');
+        
+        updatePresetEditUI();
+    }
+    
+    function updatePresetEditUI() {
+        // スロット表示
+        const slotsContainer = document.getElementById('preset-edit-slots');
+        slotsContainer.innerHTML = '';
+        
+        for (let i = 0; i < 5; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'preset-edit-slot';
+            const skillId = editingSkills[i];
+            
+            if (skillId && SKILLS[skillId]) {
+                const skill = SKILLS[skillId];
+                slot.classList.add('filled');
+                slot.innerHTML = `
+                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:50px;height:55px;">
+                        ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                        <div class="frame-inner">
+                            <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:30px;height:30px;">
+                        </div>
+                    </div>
+                `;
+                slot.addEventListener('click', () => removeFromPreset(i));
+            } else {
+                slot.textContent = '+';
+            }
+            
+            slotsContainer.appendChild(slot);
+        }
+        
+        // コスト表示
+        const totalCost = editingSkills.reduce((sum, sid) => sum + (SKILLS[sid]?.cost || 0), 0);
+        document.getElementById('edit-current-cost').textContent = totalCost;
+        
+        // スキル一覧
+        updatePresetSkillInventory(totalCost);
+    }
+    
+    function updatePresetSkillInventory(currentCost) {
+        const container = document.getElementById('preset-skill-inventory');
+        const ownedSkills = GameData.getOwnedSkills();
+        const remainingCost = 20 - currentCost;
+        
+        // 所持スキルと未所持を分離
+        const allSkillIds = Object.keys(SKILLS);
+        const ownedIds = allSkillIds.filter(id => ownedSkills[id]?.count > 0);
+        
+        // ソート（レア順）
+        ownedIds.sort((a, b) => SKILLS[b].rarity - SKILLS[a].rarity || SKILLS[b].cost - SKILLS[a].cost);
+        
+        container.innerHTML = '';
+        
+        ownedIds.forEach(skillId => {
+            const skill = SKILLS[skillId];
+            if (!skill) return;
+            
+            const isEquippedInEdit = editingSkills.includes(skillId);
+            const canEquip = skill.cost <= remainingCost && !isEquippedInEdit && editingSkills.filter(Boolean).length < 5;
+            
+            const card = document.createElement('div');
+            card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
+            
+            if (isEquippedInEdit) {
+                card.classList.add('equipped-indicator');
+            }
+            if (!canEquip && !isEquippedInEdit) {
+                card.classList.add('disabled');
+            }
+            
+            const ownedData = ownedSkills[skillId];
+            const level = ownedData?.level || 0;
+            const levelStars = '★'.repeat(level);
+            
+            card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                    <span class="skill-name">${skill.name}</span>
+                </div>
+                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                ${isEquippedInEdit ? '<span class="equipped-badge">選択中</span>' : ''}
+            `;
+            
+            if (canEquip) {
+                card.addEventListener('click', () => addToPreset(skillId));
+            }
+            
+            container.appendChild(card);
+        });
+    }
+    
+    function addToPreset(skillId) {
+        const emptyIndex = editingSkills.findIndex((s, i) => !s || i >= editingSkills.length);
+        if (editingSkills.filter(Boolean).length >= 5) return;
+        if (editingSkills.includes(skillId)) return;
+        
+        // 空きスロットに追加
+        const insertIndex = editingSkills.length < 5 ? editingSkills.length : editingSkills.findIndex(s => !s);
+        if (insertIndex !== -1) {
+            editingSkills[insertIndex] = skillId;
+        } else {
+            editingSkills.push(skillId);
+        }
+        
+        updatePresetEditUI();
+    }
+    
+    function removeFromPreset(slotIndex) {
+        editingSkills[slotIndex] = null;
+        updatePresetEditUI();
+    }
+    
+    function saveCurrentPreset() {
+        const totalCost = editingSkills.reduce((sum, sid) => sum + (SKILLS[sid]?.cost || 0), 0);
+        
+        // コストチェック（19-20 or 空）
+        const skillCount = editingSkills.filter(Boolean).length;
+        if (skillCount > 0 && (totalCost < 19 || totalCost > 20)) {
+            alert('コストを19〜20に調整してください');
+            return;
+        }
+        
+        GameData.setSkillPreset(currentEditingPreset, editingSkills.filter(Boolean));
+        closePresetEditScreen();
+        openPresetSelectScreen(); // プリセット選択に戻る
+    }
+    
+    function closePresetEditScreen() {
+        document.getElementById('screen-preset-edit').classList.add('hidden');
+    }
+    
+    // ========================================
+    // スキル強化画面
+    // ========================================
+    
+    let upgradeTargetSkillId = null;
+    let upgradeMaterials = [];
+    
+    function openUpgradeScreen(presetSkillId = null) {
+        upgradeTargetSkillId = presetSkillId;
+        upgradeMaterials = [];
+        
+        const screen = document.getElementById('screen-skill-upgrade');
+        screen.classList.remove('hidden');
+        
+        updateUpgradeUI();
+    }
+    
+    function updateUpgradeUI() {
+        // 強化元スキル表示
+        const beforeSlot = document.getElementById('upgrade-skill-before');
+        const afterSlot = document.getElementById('upgrade-skill-after');
+        const materialsRow = document.getElementById('upgrade-materials-row');
+        const confirmBtn = document.getElementById('btn-confirm-upgrade');
+        
+        if (upgradeTargetSkillId && SKILLS[upgradeTargetSkillId]) {
+            const skill = SKILLS[upgradeTargetSkillId];
+            const level = GameData.getSkillLevel(upgradeTargetSkillId);
+            const levelStars = '★'.repeat(level);
+            
+            beforeSlot.innerHTML = `
+                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:70px;height:80px;">
+                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                    <div class="frame-inner">
+                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">
+                        <span class="skill-name" style="font-size:0.6rem;">${skill.name}</span>
+                    </div>
+                    ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                </div>
+            `;
+            beforeSlot.classList.add('filled');
+            
+            // 強化後プレビュー
+            const nextLevel = level + 1;
+            const nextLevelStars = '★'.repeat(nextLevel);
+            afterSlot.innerHTML = `
+                <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:70px;height:80px;">
+                    ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                    <div class="frame-inner">
+                        <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:40px;height:40px;">
+                        <span class="skill-name" style="font-size:0.6rem;">${skill.name}</span>
+                    </div>
+                    <span class="skill-level-badge">${nextLevelStars}</span>
+                </div>
+            `;
+            afterSlot.classList.add('filled');
+            
+            // 素材スロット
+            const req = getUpgradeRequirement(level, skill.rarity);
+            materialsRow.innerHTML = '';
+            
+            for (let i = 0; i < req.sameSkill; i++) {
+                const matSlot = document.createElement('div');
+                matSlot.className = 'material-slot';
+                
+                if (upgradeMaterials[i]) {
+                    const matSkill = SKILLS[upgradeMaterials[i]];
+                    if (matSkill) {
+                        matSlot.classList.add('filled');
+                        matSlot.innerHTML = `<img src="${matSkill.icon}" style="width:30px;height:30px;">`;
+                        matSlot.addEventListener('click', () => removeMaterial(i));
+                    }
+                } else {
+                    matSlot.textContent = '素材';
+                }
+                
+                materialsRow.appendChild(matSlot);
+            }
+            
+            // 強化ボタン有効化チェック
+            confirmBtn.disabled = upgradeMaterials.filter(Boolean).length < req.sameSkill;
+            
+        } else {
+            beforeSlot.innerHTML = '<span class="slot-label">選択スキル</span>';
+            beforeSlot.classList.remove('filled');
+            afterSlot.innerHTML = '<span class="slot-label">強化後</span>';
+            afterSlot.classList.remove('filled');
+            materialsRow.innerHTML = '';
+            confirmBtn.disabled = true;
+        }
+        
+        // スキル一覧
+        updateUpgradeSkillInventory();
+    }
+    
+    function updateUpgradeSkillInventory() {
+        const container = document.getElementById('upgrade-skill-inventory');
+        const ownedSkills = GameData.getOwnedSkills();
+        
+        // 所持スキルのみ
+        const allSkillIds = Object.keys(SKILLS);
+        const ownedIds = allSkillIds.filter(id => ownedSkills[id]?.count > 0);
+        
+        // ソート（レア順）
+        ownedIds.sort((a, b) => SKILLS[b].rarity - SKILLS[a].rarity || SKILLS[b].cost - SKILLS[a].cost);
+        
+        container.innerHTML = '';
+        
+        ownedIds.forEach(skillId => {
+            const skill = SKILLS[skillId];
+            if (!skill) return;
+            
+            const ownedData = ownedSkills[skillId];
+            const level = ownedData?.level || 0;
+            const count = ownedData?.count || 0;
+            const levelStars = '★'.repeat(level);
+            
+            const card = document.createElement('div');
+            card.className = `skill-frame-card cat-${skill.category} rarity-${skill.rarity}`;
+            
+            if (skillId === upgradeTargetSkillId) {
+                card.classList.add('equipped-indicator');
+            }
+            
+            card.innerHTML = `
+                ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                    <span class="skill-name">${skill.name}</span>
+                </div>
+                ${count > 1 ? `<span class="skill-count">×${count}</span>` : ''}
+                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+            `;
+            
+            card.addEventListener('click', () => {
+                if (!upgradeTargetSkillId) {
+                    // 強化対象として選択
+                    if (level < 5) {
+                        upgradeTargetSkillId = skillId;
+                        upgradeMaterials = [];
+                        updateUpgradeUI();
+                    }
+                } else if (skillId === upgradeTargetSkillId) {
+                    // 素材として追加（同スキル）
+                    const req = getUpgradeRequirement(level, skill.rarity);
+                    const usedCount = upgradeMaterials.filter(m => m === skillId).length;
+                    const available = count - 1 - usedCount; // 本体1枚を除く
+                    
+                    if (available > 0 && upgradeMaterials.length < req.sameSkill) {
+                        upgradeMaterials.push(skillId);
+                        updateUpgradeUI();
+                    }
+                }
+            });
+            
+            container.appendChild(card);
+        });
+    }
+    
+    function removeMaterial(index) {
+        upgradeMaterials.splice(index, 1);
+        updateUpgradeUI();
+    }
+    
+    function confirmUpgrade() {
+        if (!upgradeTargetSkillId) return;
+        
+        const skill = SKILLS[upgradeTargetSkillId];
+        const level = GameData.getSkillLevel(upgradeTargetSkillId);
+        const req = getUpgradeRequirement(level, skill.rarity);
+        
+        if (upgradeMaterials.length < req.sameSkill) {
+            alert('素材が足りません');
+            return;
+        }
+        
+        // 素材消費
+        upgradeMaterials.forEach(matId => {
+            GameData.removeSkill(matId, 1);
+        });
+        
+        // 強化
+        GameData.upgradeSkill(upgradeTargetSkillId);
+        
+        // リセット
+        upgradeTargetSkillId = null;
+        upgradeMaterials = [];
+        updateUpgradeUI();
+        updateSkillInventory();
+        
+        alert('強化成功！');
+    }
+    
+    function closeUpgradeScreen() {
+        document.getElementById('screen-skill-upgrade').classList.add('hidden');
+        upgradeTargetSkillId = null;
+        upgradeMaterials = [];
+    }
+    
+    // ========================================
     // バトル前プリセット選択
     // ========================================
     
@@ -1205,25 +1605,28 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-gacha-ok').addEventListener('click', closeGachaResult);
         
         // スキル詳細
-        document.getElementById('btn-equip-skill').addEventListener('click', () => equipSkill(currentDetailSkillId));
         document.getElementById('btn-sell-skill').addEventListener('click', () => sellSkill(currentDetailSkillId));
-        document.getElementById('btn-upgrade-skill').addEventListener('click', () => upgradeSkill(currentDetailSkillId));
+        document.getElementById('btn-upgrade-skill').addEventListener('click', () => {
+            // スキル強化画面を開き、このスキルを強化元として設定
+            hideModal('skillDetail');
+            openUpgradeScreen(currentDetailSkillId);
+        });
         document.getElementById('btn-close-skill-detail').addEventListener('click', () => hideModal('skillDetail'));
         
-        // 装備スロットクリック（スキルを外す）
-        document.querySelectorAll('.asset-slot').forEach((slot, index) => {
-            slot.addEventListener('click', () => {
-                if (slot.classList.contains('filled')) {
-                    unequipSkill(index);
-                }
-            });
-        });
+        // スキル画面のメインボタン
+        document.getElementById('btn-skill-equip').addEventListener('click', openPresetSelectScreen);
+        document.getElementById('btn-skill-upgrade').addEventListener('click', () => openUpgradeScreen());
         
-        // オートセットボタン
-        document.getElementById('btn-auto-set').addEventListener('click', autoSetSkills);
+        // プリセット選択画面の戻るボタン
+        document.getElementById('btn-back-from-preset-select').addEventListener('click', closePresetSelectScreen);
         
-        // 全解除ボタン
-        document.getElementById('btn-clear-all').addEventListener('click', clearAllEquippedSkills);
+        // プリセット編集画面
+        document.getElementById('btn-back-from-preset-edit').addEventListener('click', closePresetEditScreen);
+        document.getElementById('btn-save-preset').addEventListener('click', saveCurrentPreset);
+        
+        // スキル強化画面
+        document.getElementById('btn-back-from-upgrade').addEventListener('click', closeUpgradeScreen);
+        document.getElementById('btn-confirm-upgrade').addEventListener('click', confirmUpgrade);
         
         // ソートボタン
         document.querySelectorAll('.sort-btn').forEach(btn => {
@@ -1232,16 +1635,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.add('active');
                 currentSort = btn.dataset.sort;
                 updateSkillInventory();
-            });
-        });
-        
-        // プリセット切り替え
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                GameData.setCurrentPreset(parseInt(btn.dataset.preset) - 1);
-                updateEquippedSkills();
             });
         });
         
