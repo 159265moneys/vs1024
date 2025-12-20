@@ -752,21 +752,28 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'preset-item';
             item.dataset.preset = i;
             
-            const skillIcons = skills.filter(Boolean).map(sid => {
-                const skill = SKILLS[sid];
-                if (!skill) return '';
-                const level = GameData.getSkillLevel(sid);
-                const levelStars = '★'.repeat(level);
-                return `
-                    <div class="skill-frame-card cat-${skill.category} rarity-${skill.rarity}" style="width:40px;height:44px;position:relative;">
-                        ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
-                        <div class="frame-inner">
-                            <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}" style="width:24px;height:24px;">
+            // 5スロット分を生成（空きスロットも表示）
+            let skillSlots = '';
+            for (let j = 0; j < 5; j++) {
+                const sid = skills[j];
+                if (sid && SKILLS[sid]) {
+                    const skill = SKILLS[sid];
+                    const level = GameData.getSkillLevel(sid);
+                    const levelStars = '★'.repeat(level);
+                    skillSlots += `
+                        <div class="preset-skill-slot filled">
+                            <div class="skill-frame-card preset-mini-size cat-${skill.category} rarity-${skill.rarity}">
+                                <div class="frame-inner">
+                                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                                </div>
+                                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
+                            </div>
                         </div>
-                        ${level > 0 ? `<span class="skill-level-badge" style="font-size:0.5rem;">${levelStars}</span>` : ''}
-                    </div>
-                `;
-            }).join('');
+                    `;
+                } else {
+                    skillSlots += `<div class="preset-skill-slot empty"></div>`;
+                }
+            }
             
             item.innerHTML = `
                 <div class="preset-item-header">
@@ -774,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="preset-item-cost">${totalCost}/20</span>
                 </div>
                 <div class="preset-item-skills">
-                    ${skillIcons || '<span style="color:var(--text-secondary);font-size:0.8rem;">スキル未設定</span>'}
+                    ${skillSlots}
                 </div>
             `;
             

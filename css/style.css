@@ -859,17 +859,84 @@ body {
 }
 
 .preset-item-name {
-    font-weight: 700;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .preset-item-cost {
     color: var(--accent-cyan);
+    font-size: 0.85rem;
 }
 
 .preset-item-skills {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* プリセット選択画面のスキルスロット */
+.preset-skill-slot {
+    width: 40px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preset-skill-slot.empty {
+    border: 2px dashed var(--text-disabled);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.preset-skill-slot.filled {
+    border: none;
+}
+
+/* プリセット選択画面用ミニサイズ */
+.skill-frame-card.preset-mini-size {
+    width: 40px;
+    height: 44px;
+}
+.skill-frame-card.preset-mini-size .frame-inner {
+    width: 100%;
+    height: 100%;
+}
+.skill-frame-card.preset-mini-size .skill-icon-img {
+    width: 22px;
+    height: 22px;
+}
+.skill-frame-card.preset-mini-size .skill-name {
+    display: none;
+}
+.skill-frame-card.preset-mini-size .skill-level-badge {
+    font-size: 0.45rem;
+    bottom: 2px;
+    right: 2px;
+    padding: 1px 2px;
+}
+/* 角丸四角に統一 */
+.skill-frame-card.preset-mini-size::before,
+.skill-frame-card.preset-mini-size::after {
+    border-radius: 8px !important;
+    clip-path: none !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+.skill-frame-card.preset-mini-size.cat-attack::before {
+    width: 38px !important;
+    height: 42px !important;
+}
+.skill-frame-card.preset-mini-size.cat-defense::before {
+    width: 36px !important;
+    height: 40px !important;
+}
+.skill-frame-card.preset-mini-size.cat-effect::before {
+    width: 40px !important;
+    height: 44px !important;
+}
+.skill-frame-card.preset-mini-size.cat-effect::after {
+    width: 36px !important;
+    height: 40px !important;
 }
 
 .preset-skill-mini {
