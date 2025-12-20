@@ -905,15 +905,29 @@ body {
 }
 
 .preset-edit-slot.filled {
-    border: none;
-    background: transparent;
+    border: 2px solid var(--accent-cyan);
+    background: var(--bg-card);
+    overflow: hidden;
 }
 
-/* スロット内のスキルカードを統一サイズに */
+/* スロット内のスキルカードをシンプルな角丸四角に統一 */
 .preset-edit-slot .skill-frame-card {
-    width: 55px !important;
-    height: 60px !important;
+    width: 100% !important;
+    height: 100% !important;
     margin: 0;
+    border-radius: 8px !important;
+    clip-path: none !important;
+}
+
+.preset-edit-slot .skill-frame-card::before,
+.preset-edit-slot .skill-frame-card::after {
+    border-radius: 8px !important;
+    clip-path: none !important;
+}
+
+.preset-edit-slot .skill-frame-card .frame-inner {
+    border-radius: 8px !important;
+    clip-path: none !important;
 }
 
 .preset-edit-slot .skill-frame-card .frame-inner img {
@@ -923,6 +937,11 @@ body {
 
 .preset-edit-slot .skill-frame-card .skill-name {
     display: none;
+}
+
+.preset-edit-slot .skill-frame-card .particles {
+    border-radius: 8px !important;
+    clip-path: none !important;
 }
 
 .preset-cost-display {
