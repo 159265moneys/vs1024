@@ -452,3 +452,67 @@ function getRandomSkillFromEquipped() {
     
     return equippedSkills[equippedSkills.length - 1];
 }
+
+// ========================================
+// CPUステージ別スキルセット
+// ========================================
+
+const CPU_SKILL_SETS = {
+    // ステージ1: EASY - 基本スキルのみ
+    1: ['jab', 'nudge', 'guard'],
+    
+    // ステージ2: NORMAL
+    2: ['jab', 'nudge', 'guard', 'vanish', 'heal'],
+    
+    // ステージ3: HARD
+    3: ['strike', 'nudge', 'barrier', 'vanish', 'heal'],
+    
+    // ステージ4: EXPERT
+    4: ['strike', 'barrage', 'barrier', 'reflect', 'grace'],
+    
+    // ステージ5: MASTER
+    5: ['heavy', 'barrage', 'armor', 'reflect', 'mirage'],
+    
+    // ステージ6: LEGEND
+    6: ['heavy', 'barrage', 'armor', 'reflect', 'mirage'],
+    
+    // ステージ7: NIGHTMARE
+    7: ['blitz', 'snipe', 'fortress', 'lastStand', 'rage'],
+    
+    // ステージ8: INFERNO
+    8: ['blitz', 'snipe', 'fortress', 'curse', 'slow'],
+    
+    // ステージ9: CHAOS
+    9: ['meteor', 'snipe', 'fortress', 'curse', 'freeze'],
+    
+    // ステージ10: WORLD END
+    10: ['meteor', 'annihilate', 'absolute', 'curse', 'apocalypse']
+};
+
+/**
+ * CPUのスキルセットから重み付きランダムで選択
+ * @param {number} stageLevel - ステージレベル (1-10)
+ * @returns {Object|null} スキルオブジェクト
+ */
+function getRandomSkillForCPU(stageLevel) {
+    const skillIds = CPU_SKILL_SETS[stageLevel] || CPU_SKILL_SETS[1];
+    
+    const skills = skillIds
+        .map(id => SKILLS[id])
+        .filter(skill => skill != null);
+    
+    if (skills.length === 0) return null;
+    
+    // 重み付き抽選
+    const totalWeight = skills.reduce((sum, skill) => sum + skill.weight, 0);
+    let rand = Math.random() * totalWeight;
+    
+    for (const skill of skills) {
+        rand -= skill.weight;
+        if (rand <= 0) {
+            return skill;
+        }
+    }
+    
+    return skills[skills.length - 1];
+}

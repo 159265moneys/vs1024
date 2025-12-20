@@ -124,6 +124,9 @@ class Game {
         this.playerBoard.init(playerBoardEl, true);
         this.enemyBoard.init(enemyBoardEl, false);
         
+        // CPUのスキルセットをステージレベルに基づいて設定
+        this.enemyBoard.cpuStageLevel = this.cpuLevel;
+        
         this.playerBoard.onAttackableTap = (value, row, col) => {
             this.handlePlayerAttack(value, row, col);
         };

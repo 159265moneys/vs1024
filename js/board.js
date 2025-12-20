@@ -18,6 +18,9 @@ class Board {
         
         // スキル付与確率（生成時）
         this.skillAttachChance = 0.05; // 5%でスキル付き
+        
+        // CPUステージレベル（CPU用）
+        this.cpuStageLevel = 1;
     }
 
     init(element, isPlayer = true) {
@@ -220,8 +223,8 @@ class Board {
         
         // スキル付与（妨害タイル以外、一定確率）
         if (!isInterference && Math.random() < this.skillAttachChance) {
-            // プレイヤーは装備スキルから、敵は全スキルからランダム
-            const skill = this.isPlayer ? getRandomSkillFromEquipped() : getRandomSkillFromAll();
+            // プレイヤーは装備スキルから、CPUはステージ別スキルセットから
+            const skill = this.isPlayer ? getRandomSkillFromEquipped() : getRandomSkillForCPU(this.cpuStageLevel);
             if (skill) {
                 this.skillTiles.set(`${cell.row},${cell.col}`, skill.id);
             }

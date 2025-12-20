@@ -1500,6 +1500,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const skill = SKILLS[skillId];
             if (!skill) return;
             
+            const level = GameData.getSkillLevel(skillId);
+            const levelStars = '★'.repeat(level);
+            
             // skill-frame-cardと同じ構造で生成（バトル用サイズ）
             const card = document.createElement('div');
             card.className = `skill-frame-card battle-size cat-${skill.category} rarity-${skill.rarity}`;
@@ -1510,6 +1513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="frame-inner">
                     <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
                 </div>
+                ${level > 0 ? `<span class="skill-level-badge">${levelStars}</span>` : ''}
             `;
             
             bar.appendChild(card);
