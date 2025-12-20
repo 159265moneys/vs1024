@@ -1495,16 +1495,16 @@ body {
 
 .level-stars {
     font-size: 0.9rem;
-    color: var(--accent-yellow);
+    color: #ff69b4;
     letter-spacing: 2px;
 }
 
 .level-stars .filled {
-    color: var(--accent-yellow);
+    color: #ff69b4;
 }
 
 .level-stars .empty {
-    color: var(--text-secondary);
+    color: #ccc;
     opacity: 0.5;
 }
 
@@ -3579,12 +3579,8 @@ body {
     background-size: 100% 400%;
     animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
 }
-/* ★4 効果系の背景アニメーション（丸・四角と同じく::before） */
-.skill-frame-full.rarity-4.cat-effect::before { 
-    background: var(--rarity-bg) !important;
-    background-size: 100% 400% !important;
-    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
-}
+/* ★4 効果系の枠（::beforeは枠色のまま維持） */
+/* 背景アニメーションは::afterで設定 */
 
 /* ★4 シマーエフェクト（スキル詳細用 - 全カテゴリ共通） */
 .skill-frame-full.rarity-4.cat-attack::after,
@@ -3592,23 +3588,22 @@ body {
 .skill-frame-full.rarity-4.cat-effect::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
+    top: 2px;
+    left: 2px;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    background: 
         radial-gradient(4px 4px at 25% 20%, #fff 0%, transparent 70%),
         radial-gradient(3px 3px at 70% 35%, #ffd700 0%, transparent 70%),
         radial-gradient(4px 4px at 45% 60%, #fff 0%, transparent 70%),
         radial-gradient(3px 3px at 15% 75%, #ffd700 0%, transparent 70%),
         radial-gradient(4px 4px at 80% 70%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%);
-    animation: rarity4Shimmer 2s ease-in-out infinite;
+        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%),
+        linear-gradient(180deg, #ffd700 0%, #ff8c00 25%, #ff6600 50%, #ff4500 75%, #ffd700 100%);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 400%;
+    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Shimmer 2s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
     pointer-events: none;
     z-index: 2;
-    border-radius: inherit;
-}
-.skill-frame-full.rarity-4.cat-effect::after {
     clip-path: var(--sk-octagon);
 }
 

@@ -622,7 +622,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${skill.icon}" alt="${skill.name}">
                 ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
             </div>
-            ${level > 0 ? `<span class="detail-level-badge">${levelStars}</span>` : ''}
         `;
         document.getElementById('detail-skill-name').textContent = skill.name;
         document.getElementById('detail-skill-rarity').textContent = '★'.repeat(skill.rarity);
