@@ -1165,12 +1165,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 素材として選択可能かどうか判定
             let canUseMaterial = false;
-            if (upgradeTargetSkillId && !isTarget && remainingCount > 0) {
-                // 同スキル素材として使えるか
+            if (upgradeTargetSkillId && remainingCount > 0) {
+                // 同スキル素材として使えるか（強化対象と同じスキルID、レベルは問わない）
                 if (skillId === upgradeTargetSkillId && sameSkillMats.length < req.sameSkill) {
                     canUseMaterial = true;
                 }
-                // 同レア素材として使えるか
+                // 同レア素材として使えるか（異なるスキルで同じレアリティ）
                 if (skillId !== upgradeTargetSkillId && skill.rarity === targetSkill.rarity && sameRarityMats.length < req.sameRarity) {
                     canUseMaterial = true;
                 }
@@ -1184,12 +1184,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // 強化対象選択済みで、素材として使えない場合は暗転
-            if (upgradeTargetSkillId && !isTarget && !canUseMaterial) {
+            if (upgradeTargetSkillId && !canUseMaterial) {
                 card.classList.add('disabled');
             }
             
             // 使い切った場合も暗転
-            if (remainingCount <= 0 && !isTarget) {
+            if (remainingCount <= 0) {
                 card.classList.add('disabled');
             }
             
