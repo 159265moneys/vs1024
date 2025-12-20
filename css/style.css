@@ -2067,10 +2067,10 @@ body {
     animation: nameFlicker 0.1s ease-in-out infinite alternate;
 }
 
-/* 攻撃・防御系 - 外側の赤い光（box-shadow） */
+/* 攻撃・防御系 - 外側の赤い光（drop-shadow） */
 .skill-frame-card.rarity-5.cat-attack,
 .skill-frame-card.rarity-5.cat-defense {
-    animation: rarity5BoxGlow 0.8s ease-in-out infinite;
+    animation: rarity5EffectGlow 0.8s ease-in-out infinite;
 }
 
 /* 攻撃・防御系の背景 - 渦巻き（枠は固定、グラデ角度だけ回転） */
@@ -2157,11 +2157,6 @@ body {
     50% { filter: brightness(1.5) saturate(1.5); }
 }
 
-/* 丸・四角の外側の赤い光（box-shadow） */
-@keyframes rarity5BoxGlow {
-    0%, 100% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.7), 0 0 50px rgba(192, 57, 43, 0.5); }
-    50% { box-shadow: 0 0 45px rgba(231, 76, 60, 1), 0 0 80px rgba(192, 57, 43, 0.7), 0 0 100px rgba(255, 100, 100, 0.4); }
-}
 
 /* ★5 火の粉エフェクト - 明るい粒子と暗い粒子 */
 .skill-frame-card.rarity-5 .particles {
