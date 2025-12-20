@@ -1183,6 +1183,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('equipped-indicator');
             }
             
+            // 強化対象未選択時：強化★5は選択不可（暗転）
+            if (!upgradeTargetSkillId && level >= 5) {
+                card.classList.add('disabled');
+            }
+            
             // 強化対象選択済みで、素材として使えない場合は暗転
             if (upgradeTargetSkillId && !canUseMaterial) {
                 card.classList.add('disabled');
