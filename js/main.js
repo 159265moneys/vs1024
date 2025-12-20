@@ -373,159 +373,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    function updateEquippedSkills() {
-        const slots = document.querySelectorAll('.asset-slot');
-        const equipped = GameData.getEquippedSkills();
-        let totalCost = 0;
-        
-        slots.forEach((slot, index) => {
-            const skillId = equipped[index];
-            if (skillId && SKILLS[skillId]) {
-                const skill = SKILLS[skillId];
-                // スロット内にミニフレーム付きアイコンを表示
-                slot.innerHTML = `
-                    <div class="asset-skill-icon cat-${skill.category} rarity-${skill.rarity}">
-                        <img src="${skill.icon}" alt="${skill.name}">
-                    </div>
-                `;
-                slot.classList.add('filled');
-                slot.classList.remove('empty');
-                slot.dataset.skillId = skillId;
-                totalCost += skill.cost;
-            } else {
-                slot.innerHTML = '+';
-                slot.classList.remove('filled');
-                slot.classList.add('empty');
-                slot.dataset.skillId = '';
-            }
-        });
-        
-        document.getElementById('current-cost').textContent = totalCost;
-        
-        // 残りコスト表示
-        const remainingCost = 20 - totalCost;
-        const remainingEl = document.getElementById('remaining-cost');
-        if (remainingEl) {
-            remainingEl.textContent = `(残り${remainingCost})`;
-            remainingEl.style.color = remainingCost === 0 ? 'var(--accent-green)' : '';
-        }
-        
-        // コスト警告（20ぴったりでないと警告）
-        const costDisplay = document.querySelector('.cost-display');
-        const costWarning = document.getElementById('cost-warning');
-        const hasEquipped = equipped.filter(Boolean).length > 0;
-        
-        if ((totalCost < 19 || totalCost > 20) && hasEquipped) {
-            costDisplay.style.color = 'var(--accent-red)';
-            costWarning?.classList.add('visible');
-        } else if (totalCost >= 19 && totalCost <= 20) {
-            costDisplay.style.color = 'var(--accent-green)';
-            costWarning?.classList.remove('visible');
-        } else {
-            costDisplay.style.color = '';
-            costWarning?.classList.remove('visible');
-        }
-        
-        // スキルインベントリも更新（暗転表示のため）
-        updateSkillInventory();
-    }
-    
-    // スロットからスキルを外す
-    function unequipSkill(slotIndex) {
-        const preset = GameData.getCurrentPreset();
-        const equipped = [...GameData.getSkillPreset(preset)];
-        
-        if (equipped[slotIndex]) {
-            equipped[slotIndex] = null;
-            // 空きを詰める
-            const filtered = equipped.filter(Boolean);
-            while (filtered.length < 5) filtered.push(null);
-            GameData.setSkillPreset(preset, filtered);
-            updateEquippedSkills();
-        }
-    }
-    
-    // 全スキル解除
-    function clearAllEquippedSkills() {
-        const preset = GameData.getCurrentPreset();
-        GameData.setSkillPreset(preset, []);
-        updateEquippedSkills();
-    }
-    
-    // オートセット - コスト20ぴったりになるスキルを自動選択
-    function autoSetSkills() {
-        const ownedSkills = GameData.getOwnedSkills();
-        
-        // 所持スキルをリスト化（レアリティ高い順、コスト高い順）
-        const availableSkills = Object.entries(ownedSkills)
-            .filter(([, data]) => data.count > 0)
-            .map(([skillId]) => ({ id: skillId, ...SKILLS[skillId] }))
-            .filter(s => s.cost)
-            .sort((a, b) => {
-                // レアリティ優先、同レアならコスト高い順
-                if (b.rarity !== a.rarity) return b.rarity - a.rarity;
-                return b.cost - a.cost;
-            });
-        
-        if (availableSkills.length === 0) {
-            alert('装備可能なスキルがありません');
-            return;
-        }
-        
-        // コスト20ぴったりの組み合わせを探す（最大5個）
-        const targetCost = 20;
-        const maxSlots = 5;
-        
-        // 動的計画法で解を探索
-        const result = findSkillCombination(availableSkills, targetCost, maxSlots);
-        
-        if (result.length === 0) {
-            alert('コスト20ぴったりの組み合わせが見つかりません');
-            return;
-        }
-        
-        // プリセットに設定
-        const preset = GameData.getCurrentPreset();
-        GameData.setSkillPreset(preset, result.map(s => s.id));
-        updateEquippedSkills();
-    }
-    
-    // コストぴったりの組み合わせを探す（バックトラッキング）
-    function findSkillCombination(skills, targetCost, maxCount) {
-        let bestResult = [];
-        let bestRaritySum = -1;
-        
-        function backtrack(index, currentCost, selected) {
-            // コストぴったりで見つかった
-            if (currentCost === targetCost) {
-                const raritySum = selected.reduce((sum, s) => sum + s.rarity, 0);
-                if (raritySum > bestRaritySum) {
-                    bestRaritySum = raritySum;
-                    bestResult = [...selected];
-                }
-                return;
-            }
-            
-            // 枝刈り
-            if (index >= skills.length || selected.length >= maxCount || currentCost > targetCost) {
-                return;
-            }
-            
-            // このスキルを選ぶ場合
-            const skill = skills[index];
-            if (currentCost + skill.cost <= targetCost) {
-                selected.push(skill);
-                backtrack(index + 1, currentCost + skill.cost, selected);
-                selected.pop();
-            }
-            
-            // このスキルを選ばない場合
-            backtrack(index + 1, currentCost, selected);
-        }
-        
-        backtrack(0, 0, []);
-        return bestResult;
-    }
+    // 注: 旧スキルアセット画面用の関数は削除済み
+    // スキル装備は新しいプリセット編集画面で行う
     
     // ========================================
     // タブ切り替え
@@ -544,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // タブ固有の更新
         if (tabName === 'skill') {
             updateSkillInventory();
-            updateEquippedSkills();
         } else if (tabName === 'collection') {
             updateTileCollection();
         } else if (tabName === 'stage') {
@@ -869,50 +717,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // スキル強化
     // 注: 旧upgradeSkill関数は削除。スキル強化は専用画面(openUpgradeScreen)で行う
     
-    function equipSkill(skillId) {
-        const skill = SKILLS[skillId];
-        if (!skill) return;
-        
-        const preset = GameData.getCurrentPreset();
-        const equipped = [...GameData.getSkillPreset(preset)];
-        
-        // 既に装備済みチェック
-        if (equipped.includes(skillId)) {
-            alert('このスキルは既に装備しています');
-            return;
-        }
-        
-        // 空きスロットに追加
-        const emptyIndex = equipped.findIndex(s => !s);
-        if (emptyIndex === -1 && equipped.length >= 5) {
-            alert('スロットがいっぱいです');
-            return;
-        }
-        
-        // コストチェック
-        let totalCost = skill.cost;
-        equipped.forEach(sid => {
-            if (sid && SKILLS[sid]) {
-                totalCost += SKILLS[sid].cost;
-            }
-        });
-        
-        if (totalCost > 20) {
-            alert('コストオーバー！(最大20)');
-            return;
-        }
-        
-        // 装備
-        if (emptyIndex !== -1) {
-            equipped[emptyIndex] = skillId;
-        } else {
-            equipped.push(skillId);
-        }
-        
-        GameData.setSkillPreset(preset, equipped);
-        updateEquippedSkills();
-        hideModal('skillDetail');
-    }
+    // 注: 旧equipSkill関数は削除済み。スキル装備はプリセット編集画面で行う
     
     function sellSkill(skillId) {
         const skill = SKILLS[skillId];
