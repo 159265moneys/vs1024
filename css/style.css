@@ -1277,7 +1277,7 @@ body {
 }
 
 /* 未所持スキル詳細モーダル - グレー表示 */
-.skill-detail-modal.not-owned-detail .skill-frame-full {
+.skill-detail-modal.not-owned-detail .skill-frame-card {
     filter: grayscale(100%);
 }
 
@@ -1645,7 +1645,6 @@ body {
 
 /* スキル専用カラー変数（.skill-*クラス内でのみ使用） */
 .skill-frame-card,
-.skill-frame-full,
 .tile-skill-frame {
     --sk-rarity-1: #9ca3af;
     --sk-rarity-1-glow: rgba(156, 163, 175, 0.5);
@@ -2061,8 +2060,7 @@ body {
 }
 
 /* ★5 火の粉エフェクト - 明るい粒子と暗い粒子 */
-.skill-frame-card.rarity-5 .particles,
-.skill-frame-full.rarity-5 .particles {
+.skill-frame-card.rarity-5 .particles {
     position: absolute;
     top: 0;
     left: 0;
@@ -2076,8 +2074,7 @@ body {
 }
 
 /* 明るい粒子（時計回りで漂う） - 黄色〜オレンジ */
-.skill-frame-card.rarity-5 .particles::before,
-.skill-frame-full.rarity-5 .particles::before {
+.skill-frame-card.rarity-5 .particles::before {
     content: '';
     position: absolute;
     width: 150%;
@@ -2097,8 +2094,7 @@ body {
 }
 
 /* 暗い粒子（反時計回りで漂う） - 深い赤〜暗赤 */
-.skill-frame-card.rarity-5 .particles::after,
-.skill-frame-full.rarity-5 .particles::after {
+.skill-frame-card.rarity-5 .particles::after {
     content: '';
     position: absolute;
     width: 150%;
@@ -2663,15 +2659,6 @@ body {
     flex-shrink: 0;
 }
 
-.skill-detail-header .skill-frame-full {
-    width: 70px;
-    height: 70px;
-}
-
-.skill-detail-header .skill-frame-full img {
-    width: 40px;
-    height: 40px;
-}
 
 .skill-category {
     font-weight: 700;
@@ -3475,276 +3462,6 @@ body {
     0%, 100% { box-shadow: 0 0 8px rgba(244, 114, 182, 0.7); }
     50% { box-shadow: 0 0 16px rgba(244, 114, 182, 1); }
 }
-
-/* ========================================
-   スキル詳細・ガチャ用フルフレーム
-   ======================================== */
-
-.skill-frame-full {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 75px;
-    height: 75px;
-}
-
-/* ★5粒子用のoverflow設定（枠線を隠さないように粒子だけに適用） */
-.skill-frame-full.rarity-5 .particles {
-    overflow: hidden;
-}
-.skill-frame-full.cat-attack .particles { border-radius: 50%; }
-.skill-frame-full.cat-defense .particles { border-radius: 16px; }
-.skill-frame-full.cat-effect .particles { clip-path: var(--sk-octagon); }
-
-.skill-frame-full img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    position: relative;
-    z-index: 5;
-    transition: all 0.3s ease;
-}
-
-/* 🔴 攻撃系 - 円枠（フル版） */
-.skill-frame-full.cat-attack::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--rarity-bg, #999);
-    border: 2px solid var(--frame-color, var(--sk-rarity-1));
-    z-index: 1;
-}
-
-/* 🟢 防御系 - 角丸正方形（フル版） */
-.skill-frame-full.cat-defense::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-    background: var(--rarity-bg, #999);
-    border: 2px solid var(--frame-color, var(--sk-rarity-1));
-    z-index: 1;
-}
-
-/* 🔵 効果系 - 八角形（フル版）- 丸・四角と同じ構造 */
-/* 🔵 効果系 - 八角形（フル版）- 2層構造で枠線表現 */
-/* 外側：枠線色の八角形 */
-.skill-frame-full.cat-effect::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    clip-path: var(--sk-octagon);
-    background: var(--frame-color, var(--sk-rarity-1));
-    z-index: 1;
-}
-/* 内側：背景色の八角形（少し小さい） */
-.skill-frame-full.cat-effect::after {
-    content: '';
-    position: absolute;
-    width: 94%;
-    height: 94%;
-    clip-path: var(--sk-octagon);
-    background: var(--rarity-bg, #999);
-    z-index: 2;
-}
-
-
-/* レアリティ別（フル版） - カード版と同じスタイル */
-/* ★1 - コモン（微かな明滅） */
-.skill-frame-full.rarity-1 { 
-    --frame-color: #888;
-    --rarity-bg: linear-gradient(145deg, #666, #555);
-}
-.skill-frame-full.rarity-1::before {
-    animation: rarity1Pulse 4s ease-in-out infinite;
-}
-.skill-frame-full.rarity-1.cat-effect::after {
-    animation: rarity1Pulse 4s ease-in-out infinite;
-}
-
-/* ★2 - アンコモン（緑の脈動）- 暗い緑に変更 */
-.skill-frame-full.rarity-2 { 
-    --frame-color: #2ecc71;
-    --rarity-bg: linear-gradient(145deg, #27ae60, #0d4d2a);
-}
-.skill-frame-full.rarity-2::before {
-    animation: rarity2Pulse 3s ease-in-out infinite;
-}
-.skill-frame-full.rarity-2.cat-effect::after {
-    animation: rarity2Pulse 3s ease-in-out infinite;
-}
-
-/* ★3 - レア（動くグラデーション） */
-.skill-frame-full.rarity-3 { 
-    --frame-color: #3498db;
-    --rarity-bg: linear-gradient(45deg, #1a5276, #2980b9, #3498db, #2471a3);
-}
-.skill-frame-full.rarity-3::before {
-    background-size: 300% 300%;
-    animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
-}
-.skill-frame-full.rarity-3.cat-effect::after {
-    background-size: 300% 300%;
-    animation: rarity3BgMove 2.5s ease infinite, rarity3Pulse 1.5s ease-in-out infinite;
-}
-
-.skill-frame-full.rarity-4 { 
-    --frame-color: #f1c40f;
-    /* 燃え上がる黄金の炎グラデーション（8色） */
-    --rarity-bg: linear-gradient(
-        0deg,
-        #5c4a00 0%,
-        #8b6914 15%,
-        #b8860b 30%,
-        #daa520 45%,
-        #f39c12 60%,
-        #f1c40f 75%,
-        #ffd700 90%,
-        #ffff00 100%
-    );
-}
-/* ★4 攻撃・防御系の背景アニメーション */
-.skill-frame-full.rarity-4.cat-attack::before,
-.skill-frame-full.rarity-4.cat-defense::before { 
-    background-size: 100% 400%;
-    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
-}
-/* ★4 効果系の枠（::beforeは枠色のまま維持） */
-/* 背景アニメーションは::afterで設定 */
-
-/* ★4 シマーエフェクト（スキル詳細用 - 全カテゴリ共通） */
-.skill-frame-full.rarity-4.cat-attack::after,
-.skill-frame-full.rarity-4.cat-defense::after,
-.skill-frame-full.rarity-4.cat-effect::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    background: 
-        radial-gradient(4px 4px at 25% 20%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 70% 35%, #ffd700 0%, transparent 70%),
-        radial-gradient(4px 4px at 45% 60%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 15% 75%, #ffd700 0%, transparent 70%),
-        radial-gradient(4px 4px at 80% 70%, #fff 0%, transparent 70%),
-        radial-gradient(3px 3px at 55% 85%, #ffd700 0%, transparent 70%),
-        linear-gradient(180deg, #ffd700 0%, #ff8c00 25%, #ff6600 50%, #ff4500 75%, #ffd700 100%);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 400%;
-    animation: rarity4Flame 1.5s ease-in-out infinite, rarity4Shimmer 2s ease-in-out infinite, rarity4Pulse 0.8s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 2;
-    clip-path: var(--sk-octagon);
-}
-
-/* ★5 - レジェンダリー（skill-frame-cardと完全同一の演出） */
-.skill-frame-full.rarity-5 { 
-    --frame-color: #e74c3c;
-    --r5-angle: 0deg;
-}
-.skill-frame-full.rarity-5 .skill-name { 
-    color: #fff; 
-    text-shadow: 0 0 8px #ff0000, 0 0 16px #ff4500, 0 0 24px #8b0000;
-}
-
-/* ★5 攻撃・防御系の背景 - 渦巻き（skill-frame-cardと同一） */
-.skill-frame-full.rarity-5.cat-attack::before,
-.skill-frame-full.rarity-5.cat-defense::before {
-    background: conic-gradient(
-        from var(--r5-angle),
-        #2d0000 0deg,
-        #8b0000 22deg,
-        #dc143c 45deg,
-        #ff0000 67deg,
-        #ff4500 90deg,
-        #dc143c 112deg,
-        #8b0000 135deg,
-        #2d0000 157deg,
-        #4a0000 180deg,
-        #b22222 202deg,
-        #ff0000 225deg,
-        #ff6347 247deg,
-        #ff4500 270deg,
-        #ff0000 292deg,
-        #b22222 315deg,
-        #4a0000 337deg,
-        #2d0000 360deg
-    ) !important;
-    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
-}
-
-/* ★5 効果系の背景 - 渦巻き（丸・四角と同じく::before） */
-/* 八角形★5（詳細画面）- 親要素にdrop-shadowを適用 */
-.skill-frame-full.rarity-5.cat-effect {
-    animation: rarity5EffectGlow 0.8s ease-in-out infinite;
-}
-
-.skill-frame-full.rarity-5.cat-effect::after {
-    background: conic-gradient(
-        from var(--r5-angle),
-        #2d0000 0deg,
-        #8b0000 22deg,
-        #dc143c 45deg,
-        #ff0000 67deg,
-        #ff4500 90deg,
-        #dc143c 112deg,
-        #8b0000 135deg,
-        #2d0000 157deg,
-        #4a0000 180deg,
-        #b22222 202deg,
-        #ff0000 225deg,
-        #ff6347 247deg,
-        #ff4500 270deg,
-        #ff0000 292deg,
-        #b22222 315deg,
-        #4a0000 337deg,
-        #2d0000 360deg
-    ) !important;
-    animation: rarity5Swirl 3s linear infinite, rarity5Pulse 0.8s ease-in-out infinite;
-}
-
-/* カテゴリ別枠色（攻撃=赤、防御=緑、効果=青） */
-.skill-frame-full.cat-attack::before { border-color: #ff3366 !important; }
-.skill-frame-full.cat-defense::before { border-color: #22c55e !important; }
-/* 効果系は2層構造なので::beforeがbackground（枠色） */
-.skill-frame-full.cat-effect::before { background: #3b82f6 !important; }
-
-@keyframes full4Float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-}
-
-@keyframes full4Glow {
-    0% { box-shadow: 0 0 20px var(--sk-rarity-4-glow), 0 0 40px rgba(251, 191, 36, 0.3); }
-    100% { box-shadow: 0 0 35px var(--sk-rarity-4-glow), 0 0 70px rgba(245, 158, 11, 0.6); }
-}
-
-@keyframes full4Icon {
-    0% { filter: drop-shadow(0 0 10px var(--sk-rarity-4)) drop-shadow(0 0 20px var(--sk-rarity-4-accent)); }
-    100% { filter: drop-shadow(0 0 18px var(--sk-rarity-4)) drop-shadow(0 0 35px var(--sk-rarity-4-accent)); }
-}
-
-@keyframes full5Float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.02); }
-}
-
-@keyframes full5Glow {
-    0% { box-shadow: 0 0 25px var(--sk-rarity-5-glow), 0 0 50px rgba(244, 114, 182, 0.4); }
-    100% { box-shadow: 0 0 45px var(--sk-rarity-5-glow), 0 0 90px rgba(236, 72, 153, 0.7); }
-}
-
-@keyframes full5Icon {
-    0% { filter: drop-shadow(0 0 12px var(--sk-rarity-5)) drop-shadow(0 0 25px var(--sk-rarity-5-accent)); }
-    100% { filter: drop-shadow(0 0 22px var(--sk-rarity-5)) drop-shadow(0 0 45px var(--sk-rarity-5-accent)); }
-}
-
-/* 古い粒子定義を削除 - 行1600付近の正しい定義を使用 */
 
 .player-area .tile.attack-target::after {
     content: '⚔️';
