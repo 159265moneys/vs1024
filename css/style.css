@@ -776,7 +776,7 @@ body {
 .skill-scroll-area {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 0;
+    padding-bottom: 20px;
 }
 
 /* サブ画面共通 */
@@ -1964,14 +1964,7 @@ body {
 .skill-frame-card.rarity-5 { 
     --frame-color: #e74c3c;
     --r5-angle: 0deg;
-    animation: rarity5OuterGlow 1.5s ease-in-out infinite;
 }
-
-@keyframes rarity5OuterGlow {
-    0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), 0 0 30px rgba(255, 69, 0, 0.4); }
-    50% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 50px rgba(255, 69, 0, 0.6); }
-}
-
 .skill-frame-card.rarity-5 .skill-name { 
     color: #fff; 
     text-shadow: 0 0 8px #ff0000, 0 0 16px #ff4500, 0 0 24px #8b0000;
