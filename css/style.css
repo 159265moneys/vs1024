@@ -304,54 +304,40 @@ body::after {
 
 .player-info {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: stretch;
     background: rgba(255, 255, 255, 0.95);
-    padding: 12px 18px;
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
+    overflow: hidden;
 }
 
-.player-stats {
+/* 左側65%: プレイヤー情報 */
+.player-info-left {
+    flex: 0 0 65%;
     display: flex;
-    gap: 15px;
-    margin-left: auto;
-}
-
-.stat-item {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 10px;
+    padding: 10px 12px;
 }
 
-.stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent-cyan);
-}
-
-.stat-label {
-    font-size: 0.6rem;
-    color: var(--text-secondary);
-}
-
-/* プレイヤー情報内の通貨表示 */
+/* 右側35%: 通貨表示 */
 .player-currency {
+    flex: 0 0 35%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 4px;
-    margin-left: 15px;
-    padding-left: 15px;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.03);
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .currency-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: flex-end;
+    gap: 6px;
 }
 
 .currency-item .currency-icon {
@@ -360,8 +346,10 @@ body::after {
 
 .currency-item .currency-value {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
+    min-width: 50px;
+    text-align: right;
 }
 
 .currency-item.crystal .currency-value {
@@ -370,6 +358,11 @@ body::after {
 
 .currency-item.sp .currency-value {
     color: var(--accent-yellow);
+}
+
+/* 旧スタッツ（使用しない） */
+.player-stats {
+    display: none;
 }
 
 .player-avatar {
