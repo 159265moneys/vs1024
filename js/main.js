@@ -618,9 +618,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // フル版フレーム付きアイコン
         const levelStars = '★'.repeat(level);
         document.getElementById('detail-skill-icon').innerHTML = `
-            <div class="skill-frame-full cat-${skill.category} rarity-${skill.rarity}">
-                <img src="${skill.icon}" alt="${skill.name}">
+            <div class="skill-frame-card detail-size cat-${skill.category} rarity-${skill.rarity}">
                 ${skill.rarity === 5 ? '<div class="particles"></div>' : ''}
+                <div class="frame-inner">
+                    <img class="skill-icon-img" src="${skill.icon}" alt="${skill.name}">
+                </div>
             </div>
         `;
         document.getElementById('detail-skill-name').textContent = skill.name;
