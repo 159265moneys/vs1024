@@ -3458,14 +3458,14 @@ body::after {
     padding: 0 5px;
 }
 
-.player-info {
+.battle-player-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.player-info.player-enemy {
+.battle-player-info.player-enemy {
     align-items: flex-end;
 }
 
